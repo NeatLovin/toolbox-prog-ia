@@ -1,0 +1,255 @@
+[
+  {
+    "id": 1,
+    "year": "S1",
+    "concept_family": "Syntaxe",
+    "concept_example": "C1.1 Variables et types",
+    "bloom": "Remember-Apply",
+    "function": "Sommative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M01",
+      "M07",
+      "M08"
+    ],
+    "recommended_label": "M01 Examen papier + M07 Worked examples + M08 Code reading tasks",
+    "justification": "Robustesse maximale face à l'IA en S1. Worked examples pour amorcer, code reading pour vérifier la compréhension précurseur, examen papier en certification."
+  },
+  {
+    "id": 2,
+    "year": "S1",
+    "concept_family": "Syntaxe",
+    "concept_example": "C1.2 Structures de contrôle",
+    "bloom": "Apply",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M07",
+      "I04",
+      "M08"
+    ],
+    "recommended_label": "M07 Worked examples + I04 CS50 Duck + M08 Code reading tasks",
+    "justification": "Pratique autonome scaffoldée. CS50 Duck pour l'aide hors heures de cours (garde-fous explicites). M08 en routine d'auto-évaluation."
+  },
+  {
+    "id": 3,
+    "year": "S1",
+    "concept_family": "Logique",
+    "concept_example": "C2.1 Décomposition algorithmique",
+    "bloom": "Analyze",
+    "function": "Formative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M10",
+      "M07",
+      "M09"
+    ],
+    "recommended_label": "M10 Algorithmique papier + M07 Worked examples + M09 Think-aloud (ciblé)",
+    "justification": "Refonte type Issom : 2 mois d'algo papier avant tout codage. Think-aloud pour les étudiants en difficulté identifiés."
+  },
+  {
+    "id": 4,
+    "year": "S1",
+    "concept_family": "Logique",
+    "concept_example": "C2.2 Traçage de code",
+    "bloom": "Understand-Apply",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M08",
+      "I02"
+    ],
+    "recommended_label": "M08 Code reading tasks + I02 CodeHelp",
+    "justification": "Compétence précurseur Lister 2004 : pratique massive via I02 scaffoldé hors classe, validation par M08 ponctuel en classe."
+  },
+  {
+    "id": 5,
+    "year": "S2",
+    "concept_family": "Syntaxe",
+    "concept_example": "C1.5 Syntaxe orientée objet",
+    "bloom": "Apply-Analyze",
+    "function": "Sommative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M02",
+      "M06",
+      "I02"
+    ],
+    "recommended_label": "M02 Examen contrôlé (Electron/Nexus) + M06 Pair programming + I02 CodeHelp",
+    "justification": "Plateforme sécurisée pour l'évaluation finale. Pair programming en classe pour la pratique. I02 entre les séances pour le soutien."
+  },
+  {
+    "id": 6,
+    "year": "S2",
+    "concept_family": "Logique",
+    "concept_example": "C2.3 Debugging",
+    "bloom": "Analyze",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M07",
+      "I02",
+      "I04"
+    ],
+    "recommended_label": "M07 Worked examples + I02 CodeHelp + I04 CS50 Duck",
+    "justification": "Apprentissage initial par exemples résolus, puis pratique scaffoldée massive avec deux tuteurs IA aux garde-fous différents."
+  },
+  {
+    "id": 7,
+    "year": "S2",
+    "concept_family": "Logique",
+    "concept_example": "C2.4 Tests et validation",
+    "bloom": "Apply-Evaluate",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M13",
+      "I01",
+      "T01"
+    ],
+    "recommended_label": "M13 Contrôle continu TPs + I01 CodeAid + T01 Git monitoring",
+    "justification": "Test ancré dans la pratique quotidienne via TPs notés. CodeAid scaffolde la TDD. Git monitoring trace le processus sans intrusion."
+  },
+  {
+    "id": 8,
+    "year": "S3",
+    "concept_family": "Logique",
+    "concept_example": "C2.5 Complexité algorithmique",
+    "bloom": "Analyze-Evaluate",
+    "function": "Sommative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M07",
+      "M03",
+      "I07"
+    ],
+    "recommended_label": "M07 Worked examples + M03 Examen oral + I07 NotebookLM (corpus CLRS)",
+    "justification": "Apprentissage par exemples résolus. Évaluation orale révèle la compréhension réelle. NotebookLM pour révisions ciblées sur corpus de référence."
+  },
+  {
+    "id": 9,
+    "year": "S3",
+    "concept_family": "Architecture",
+    "concept_example": "C3.1 Conception modulaire",
+    "bloom": "Analyze-Create",
+    "function": "Formative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M07",
+      "I05",
+      "M05"
+    ],
+    "recommended_label": "M07 Worked examples + I05 GenAI-Ped + M05 Peer review",
+    "justification": "Apprentissage explicite via worked examples sur cas réels. GenAI-Ped framework pour la phase de design. Peer review pour développer le jugement Bloom Evaluate."
+  },
+  {
+    "id": 10,
+    "year": "S3",
+    "concept_family": "Architecture",
+    "concept_example": "C3.2 Design patterns",
+    "bloom": "Apply-Analyze",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M07",
+      "I07",
+      "M05"
+    ],
+    "recommended_label": "M07 Worked examples + I07 NotebookLM (corpus GoF) + M05 Peer review",
+    "justification": "Méthode classique d'enseignement des patterns. NotebookLM ancré sur Gang of Four et refactoring.guru pour exploration ciblée."
+  },
+  {
+    "id": 11,
+    "year": "S4",
+    "concept_family": "Architecture",
+    "concept_example": "C3.3 Architecture multi-tiers",
+    "bloom": "Analyze",
+    "function": "Sommative",
+    "context": "Présentiel encadré",
+    "recommended_tools": [
+      "M04",
+      "A03"
+    ],
+    "recommended_label": "M04 Soutenance projet + études de cas réels + A03 Claude Code (audit limité)",
+    "justification": "Soutenance reste la référence d'évaluation. Cas réels pour la pertinence métier. A03 utilisable en phase prototype avec supervision enseignante."
+  },
+  {
+    "id": 12,
+    "year": "S4",
+    "concept_family": "Architecture",
+    "concept_example": "C3.5 Sécurité OWASP",
+    "bloom": "Apply-Evaluate",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M07",
+      "A03",
+      "M03"
+    ],
+    "recommended_label": "M07 Worked examples (OWASP Top 10) + A03 Claude Code (audit code) + M03 Examen oral",
+    "justification": "Apprentissage explicite des 10 vulnérabilités principales. Claude Code en audit du code étudiant. Oral final pour vérifier la compréhension."
+  },
+  {
+    "id": 13,
+    "year": "S5-S6",
+    "concept_family": "Architecture",
+    "concept_example": "C3.6 Maintenabilité",
+    "bloom": "Evaluate-Create",
+    "function": "Sommative",
+    "context": "Projet long",
+    "recommended_tools": [
+      "M12",
+      "M05",
+      "A01",
+      "A03"
+    ],
+    "recommended_label": "M12 Portfolio + M05 Peer review + A01-A03 Outils agentiques (phase prototype)",
+    "justification": "Portfolio longitudinal pour évaluer la durabilité. Peer review pour la culture du code review. Outils agentiques en phase prototype seulement."
+  },
+  {
+    "id": 14,
+    "year": "S5-S6",
+    "concept_family": "Architecture",
+    "concept_example": "C3.7 Documentation ADR",
+    "bloom": "Create",
+    "function": "Sommative",
+    "context": "Projet long",
+    "recommended_tools": [
+      "M04",
+      "M05",
+      "I07"
+    ],
+    "recommended_label": "M04 Soutenance + M05 Peer review + I07 NotebookLM (corpus ADR)",
+    "justification": "Production documentaire par l'étudiant en Bloom Create. NotebookLM comme assistant de référence sur les conventions ADR. Soutenance pour vérifier."
+  },
+  {
+    "id": 15,
+    "year": "Transversal",
+    "concept_family": "Syntaxe-Logique",
+    "concept_example": "C1.7 Conventions de style",
+    "bloom": "Understand-Evaluate",
+    "function": "Formative",
+    "context": "Autonomie supervisée",
+    "recommended_tools": [
+      "M05",
+      "I07"
+    ],
+    "recommended_label": "M05 Peer review + I07 NotebookLM (conventions langage) + linting automatique",
+    "justification": "Peer review pour développer le jugement. NotebookLM pour s'approprier les conventions (PEP-8, Google Style). Linting comme garde-fou automatique."
+  },
+  {
+    "id": 16,
+    "year": "Transversal",
+    "concept_family": "Toutes familles",
+    "concept_example": "Évaluation diagnostique initiale",
+    "bloom": "Multi-niveaux",
+    "function": "Formative",
+    "context": "Diagnostic",
+    "recommended_tools": [
+      "M08",
+      "M09"
+    ],
+    "recommended_label": "M08 Code reading tasks + M09 Think-aloud (sur étudiants identifiés en difficulté)",
+    "justification": "Méthode Lister 2004 pour identifier les compétences précurseurs. Think-aloud ciblé pour comprendre les processus cognitifs des étudiants les plus fragiles."
+  }
+]
