@@ -1,0 +1,484 @@
+{
+  "meta": {
+    "ancrage_theorique": "Alignement constructif (Biggs 1996). Chaque patron aligne une compétence observable, une activité pour l'exercer et une évaluation cohérente.",
+    "role": "Couche au-dessus de la matrice concept x outil. La matrice dit quels outils sont pertinents pour un concept, le patron dit quoi faire avec, comment l'exercer et comment l'évaluer.",
+    "phases": [
+      "apprendre",
+      "exercer",
+      "évaluer"
+    ],
+    "tracabilite": "Les outils cités existent dans tools.json. Le contenu pedagogique est redige a la main, jamais genere. Un modele peut seulement contextualiser un patron au cours reel de l'enseignant.",
+    "couverture": "21 patrons, un par sous-concept"
+  },
+  "patrons": [
+    {
+      "id": "AP-C1.1",
+      "concepts": [
+        "C1.1"
+      ],
+      "competence": "Déclarer et manipuler des variables typées en justifiant le choix du type et de la portée",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Traduction de spécifications en déclarations typées",
+      "activite": "Donner un cahier des charges en langage naturel (par exemple gérer un panier d'achat avec quantités, prix et remise). Sur papier, sans IDE ni assistant, l'étudiant déclare les variables nécessaires avec leur type, leur portée et leur valeur initiale, puis justifie en une phrase chaque choix de type.",
+      "outils": [
+        "M01",
+        "M08",
+        "M07"
+      ],
+      "risque_ia": "Un assistant génère les déclarations correctes en une seconde. Le choix de type, compétence fondatrice, n'est jamais exercé si l'étudiant délègue. La robustesse des outils généralistes est nulle sur ce concept.",
+      "parade": "Production manuscrite ou sur plateforme sécurisée (M02, T06), évaluée avant tout accès à un assistant.",
+      "evaluation": "Quiz court de lecture de code (M08) où l'étudiant prédit le type et la valeur de variables à différents points du programme, noté sur la justesse du raisonnement de typage.",
+      "references": "Brennan & Resnick 2012, Fuller et al. 2007"
+    },
+    {
+      "id": "AP-C1.2",
+      "concepts": [
+        "C1.2"
+      ],
+      "competence": "Concevoir et tracer un flux de contrôle (conditions, boucles) produisant un comportement attendu",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Prédiction de sortie avant exécution",
+      "activite": "Fournir cinq extraits courts avec boucles imbriquées et conditions. Avant toute exécution, l'étudiant écrit la sortie attendue et l'état des compteurs à chaque itération. On exécute ensuite pour comparer, et la discussion porte sur les écarts.",
+      "outils": [
+        "M08",
+        "M07",
+        "M06"
+      ],
+      "risque_ia": "Coller l'extrait dans un assistant donne immédiatement la trace. La simulation mentale, précurseur établi de la réussite en programmation, reste non développée.",
+      "parade": "Exercice en présentiel ou rendu manuscrit. CS50 Duck (I04) ou CodeHelp (I02) en mode socratique sur des extraits différents de ceux évalués.",
+      "evaluation": "Question de prédiction d'état type Lister 2004, en environnement contrôlé.",
+      "references": "Lister et al. 2004"
+    },
+    {
+      "id": "AP-C1.3",
+      "concepts": [
+        "C1.3"
+      ],
+      "competence": "Extraire des fonctions paramétrées et justifier le mode de passage des paramètres",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Refactorisation de code dupliqué en fonctions",
+      "activite": "Donner un programme volontairement répétitif (le même bloc copié avec de légères variations). En binôme, l'étudiant identifie la duplication, extrait une fonction paramétrée, et explique à voix haute chaque choix de paramètre (valeur ou référence) et la valeur de retour.",
+      "outils": [
+        "M06",
+        "M07",
+        "M08"
+      ],
+      "risque_ia": "Un assistant refactorise automatiquement. Sans verbalisation, l'étudiant ne comprend ni le choix des paramètres ni la différence valeur ou référence.",
+      "parade": "Pair programming où chaque décision est justifiée au binôme, suivi d'une brève restitution orale à l'enseignant.",
+      "evaluation": "Examen contrôlé (M02) demandant d'écrire une fonction à partir d'une spécification et d'expliquer le passage des paramètres.",
+      "references": "McCracken et al. 2001"
+    },
+    {
+      "id": "AP-C1.4",
+      "concepts": [
+        "C1.4"
+      ],
+      "competence": "Choisir la structure de données adaptée à un besoin et justifier ce choix en termes d'accès et de coût",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Choix justifié de structure pour un besoin donné",
+      "activite": "Présenter trois petits problèmes (recherche fréquente par clé, parcours ordonné, ensemble sans doublons). L'étudiant choisit la structure adaptée, justifie en termes d'accès et de coût, et écrit l'opération principale à la main.",
+      "outils": [
+        "M08",
+        "M02",
+        "M06"
+      ],
+      "risque_ia": "L'assistant propose directement la structure optimale. Le raisonnement de comparaison, vraie compétence de niveau Analyze, est court-circuité.",
+      "parade": "Justification écrite du choix avant le code, évaluée séparément. Plateforme sécurisée (T06, T07) pour la partie certifiante.",
+      "evaluation": "Code reading (M08) sur un programme à structure mal choisie, l'étudiant repère l'inadéquation et propose mieux.",
+      "references": "Lister et al. 2004, Fuller et al. 2007"
+    },
+    {
+      "id": "AP-C1.5",
+      "concepts": [
+        "C1.5"
+      ],
+      "competence": "Modéliser un domaine en classes cohérentes et justifier le découpage objet",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Modélisation objet d'un domaine concret",
+      "activite": "Donner un mini-domaine (bibliothèque, garage, école). L'étudiant identifie classes, attributs et méthodes, dessine le diagramme à la main, puis implémente une classe avec héritage. Le binôme critique la cohérence du modèle (encapsulation, responsabilités claires).",
+      "outils": [
+        "M06",
+        "M02",
+        "I02"
+      ],
+      "risque_ia": "Un assistant génère la hiérarchie de classes complète. L'étudiant obtient un code juste mais ne sait pas justifier le découpage ni distinguer composition et héritage.",
+      "parade": "Modélisation papier évaluée avant l'implémentation. CodeHelp (I02) en tuteur socratique pour débloquer sans donner la solution.",
+      "evaluation": "Examen sur plateforme sécurisée (M02, T06) demandant de concevoir et justifier une petite hiérarchie de classes.",
+      "references": "Anderson & Krathwohl 2001"
+    },
+    {
+      "id": "AP-C1.6",
+      "concepts": [
+        "C1.6"
+      ],
+      "competence": "Distinguer les erreurs à rattraper de celles à laisser remonter et appliquer une gestion défensive ciblée",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Durcissement d'un code naïf",
+      "activite": "Fournir une fonction qui suppose des entrées parfaites. L'étudiant liste les cas d'échec possibles (entrée nulle, type inattendu, ressource indisponible), puis ajoute la gestion appropriée. Il doit distinguer les erreurs à rattraper de celles à laisser remonter.",
+      "outils": [
+        "M07",
+        "M02",
+        "M06"
+      ],
+      "risque_ia": "L'assistant enrobe tout dans des try ou catch génériques. L'étudiant n'apprend pas le jugement sur quoi rattraper et où, qui est le cœur de la compétence.",
+      "parade": "Worked example (M07) opposant un bon et un mauvais traitement d'erreur, puis exercice sans assistant.",
+      "evaluation": "Examen contrôlé demandant de justifier chaque choix de gestion d'erreur.",
+      "references": "Anthropic 2025a"
+    },
+    {
+      "id": "AP-C1.7",
+      "concepts": [
+        "C1.7"
+      ],
+      "competence": "Évaluer la lisibilité d'un code et argumenter des améliorations",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Revue de lisibilité entre pairs",
+      "activite": "Chaque étudiant soumet un extrait de son propre code. En peer review, un autre évalue la lisibilité (nommage, structure, commentaires utiles ou bruit) selon une grille et propose des améliorations argumentées. L'auteur répond. C'est le jugement évaluatif qui est travaillé, pas la production.",
+      "outils": [
+        "M05",
+        "I07",
+        "M06"
+      ],
+      "risque_ia": "Un linter ou un assistant reformate automatiquement. L'étudiant ne développe pas son propre jugement de lisibilité, qui relève du niveau Evaluate.",
+      "parade": "Peer review centré sur l'argumentation des choix, pas sur l'application mécanique de règles. NotebookLM (I07) ancré sur le guide de style du cours.",
+      "evaluation": "Note portant sur la qualité de la critique produite (la revue), pas seulement sur le code soumis.",
+      "references": "Brooks 1983, Wiedenbeck 1986, Chi & Wylie 2014"
+    },
+    {
+      "id": "AP-C2.1",
+      "concepts": [
+        "C2.1"
+      ],
+      "competence": "Décomposer un problème en sous-problèmes résolubles et identifier les invariants avant de coder",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Décomposition avant tout code",
+      "activite": "Donner un problème non trivial (planifier des tournées de livraison, détecter des doublons dans un grand jeu). Avant toute ligne de code, l'étudiant décompose en sous-problèmes sur papier, identifie les invariants et présente son arbre de décomposition. En S1, idéalement précédé d'un module d'algorithmique pure (M10).",
+      "outils": [
+        "M10",
+        "M07",
+        "M09"
+      ],
+      "risque_ia": "L'assistant fournit une solution complète et structurée. L'étudiant saute la décomposition, compétence Analyze fondatrice et la plus transférable.",
+      "parade": "Phase de décomposition manuscrite, validée avant l'accès au clavier. Think-aloud (M09) pour rendre le raisonnement visible.",
+      "evaluation": "Évaluation de la qualité de la décomposition elle-même (cohérence, complétude), indépendamment du code final.",
+      "references": "McCracken et al. 2001, Wing 2006"
+    },
+    {
+      "id": "AP-C2.2",
+      "concepts": [
+        "C2.2"
+      ],
+      "competence": "Exécuter mentalement un programme et prédire son état à chaque étape",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Lecture de code avec bugs intentionnels",
+      "activite": "Donner un programme de vingt lignes contenant trois erreurs logiques. L'étudiant trace l'exécution à la main, note l'état des variables à chaque tour de boucle, puis identifie les écarts avant tout accès à un outil.",
+      "outils": [
+        "M08",
+        "I02",
+        "M09"
+      ],
+      "risque_ia": "L'étudiant colle le code dans un assistant qui livre la correction sans qu'il ait tracé quoi que ce soit. La compétence précurseur (Lister 2004) n'est jamais exercée.",
+      "parade": "Traçage manuscrit rendu avant tout accès à l'IA, ou évaluation orale courte. CodeHelp (I02) en mode indices, jamais en mode solution.",
+      "evaluation": "Quiz de prédiction d'état (Lister 2004), noté sur la justesse du raisonnement et non du résultat.",
+      "references": "Lister et al. 2004, Perkins & Martin 1986"
+    },
+    {
+      "id": "AP-C2.3",
+      "concepts": [
+        "C2.3"
+      ],
+      "competence": "Localiser un bug par une démarche d'hypothèses et de tests",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Diagnostic guidé par hypothèses",
+      "activite": "Fournir un programme produisant une sortie fausse sans message d'erreur. L'étudiant formule une hypothèse sur la cause, conçoit un test qui la confirme ou l'infirme, et itère. Il consigne sa démarche (hypothèse, test, observation, révision). Le bug n'est trouvé qu'au bout du raisonnement.",
+      "outils": [
+        "M07",
+        "I02",
+        "M09"
+      ],
+      "risque_ia": "L'assistant identifie et corrige le bug instantanément. La démarche diagnostique, compétence Analyze visée, disparaît au profit d'un résultat.",
+      "parade": "Évaluer le journal de diagnostic (la démarche), pas seulement le code corrigé. Worked example (M07) d'un bon raisonnement d'abord.",
+      "evaluation": "Examen oral court (M03) où l'étudiant explique comment il localiserait un bug donné, ou think-aloud (M09).",
+      "references": "Perkins et al. 1989, Soloway 1986"
+    },
+    {
+      "id": "AP-C2.4",
+      "concepts": [
+        "C2.4"
+      ],
+      "competence": "Concevoir des cas de test pertinents, dont les cas limites, à partir d'une spécification",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Tests d'abord sur spécification ambiguë",
+      "activite": "Donner une spécification volontairement incomplète. L'étudiant écrit d'abord les tests (cas nominaux, cas limites, cas d'erreur) qui explicitent le comportement attendu, puis seulement l'implémentation. La qualité des cas limites identifiés est le cœur de l'exercice.",
+      "outils": [
+        "M13",
+        "I01",
+        "I03"
+      ],
+      "risque_ia": "Un assistant génère une suite de tests plausible mais souvent superficielle, sans les cas limites pertinents. Le jugement Evaluate sur ce qui mérite d'être testé n'est pas développé.",
+      "parade": "Évaluation des cas limites trouvés, en contrôle continu (M13) ancré dans la pratique. CodeAid (I01) en tuteur contraint.",
+      "evaluation": "TP noté ou examen évaluant la couverture et la pertinence des cas de test, pas seulement leur présence.",
+      "references": "Biggs 1996"
+    },
+    {
+      "id": "AP-C2.5",
+      "concepts": [
+        "C2.5"
+      ],
+      "competence": "Comparer deux solutions par leur complexité et recommander selon le contexte",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Comparaison argumentée de deux solutions",
+      "activite": "Donner deux algorithmes résolvant le même problème avec des complexités différentes. L'étudiant établit le O() de chacun, identifie le point de bascule selon la taille des données, et recommande lequel utiliser dans deux contextes opposés (petit jeu fréquent, gros jeu rare).",
+      "outils": [
+        "M07",
+        "M03",
+        "I07"
+      ],
+      "risque_ia": "L'assistant donne la complexité et la recommandation toute faite. Le raisonnement comparatif et la décision contextualisée, de niveau Evaluate, ne sont pas construits.",
+      "parade": "Examen oral (M03) où l'étudiant défend son choix face à des objections. Worked examples (M07) d'analyses de complexité d'abord.",
+      "evaluation": "Soutenance orale courte sur la justification du choix, robuste face à l'IA.",
+      "references": "Fuller et al. 2007"
+    },
+    {
+      "id": "AP-C2.6",
+      "concepts": [
+        "C2.6"
+      ],
+      "competence": "Énoncer et vérifier les invariants d'une boucle, ses préconditions et postconditions",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Formulation d'invariants de boucle",
+      "activite": "Fournir des boucles non triviales (tri, recherche, accumulation). L'étudiant énonce l'invariant maintenu à chaque itération, les préconditions et postconditions, et démontre informellement la correction. Il identifie ensuite une boucle dont l'invariant est violé et corrige.",
+      "outils": [
+        "M07",
+        "I02",
+        "M09"
+      ],
+      "risque_ia": "L'assistant peut énoncer un invariant plausible, mais l'étudiant ne sait ni le vérifier ni le construire. La compétence de raisonnement sur l'état reste creuse.",
+      "parade": "Construction de l'invariant à la main, verbalisée (M09). Tuteur (I02, I03) pour guider sans révéler.",
+      "evaluation": "Question type Lister 2004 Q8 sur les invariants, en environnement contrôlé.",
+      "references": "Lister et al. 2004 (Q8)"
+    },
+    {
+      "id": "AP-C2.7",
+      "concepts": [
+        "C2.7"
+      ],
+      "competence": "Reconnaître un pattern algorithmique dans un problème déguisé et l'adapter",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Transposition d'un pattern à un nouveau contexte",
+      "activite": "Présenter un pattern algorithmique sur un exemple (fenêtre glissante, diviser pour régner). L'étudiant doit ensuite le reconnaître dans un problème déguisé, sans qu'on lui dise lequel utiliser, et l'adapter. La reconnaissance et l'adaptation sont la compétence visée.",
+      "outils": [
+        "M07",
+        "M06",
+        "I03"
+      ],
+      "risque_ia": "L'assistant reconnaît le pattern et code la solution directement. L'étudiant ne développe pas la reconnaissance, qui distingue le novice de l'expert.",
+      "parade": "Exercices de reconnaissance sans accès à l'IA, worked examples variés (M07) pour construire le répertoire.",
+      "evaluation": "Problème nouveau en présentiel exigeant l'identification et l'adaptation d'un pattern vu en cours.",
+      "references": "Soloway & Ehrlich 1984, Clancy & Linn 1999"
+    },
+    {
+      "id": "AP-C3.1",
+      "concepts": [
+        "C3.1"
+      ],
+      "competence": "Concevoir un découpage modulaire et justifier chaque frontière de module",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Justification d'un découpage modulaire",
+      "activite": "L'étudiant conçoit le découpage en modules d'une petite application, puis rédige une note courte justifiant chaque frontière (responsabilité unique, couplage, cohésion). En peer review, un pair attaque les choix discutables et l'auteur défend ou révise.",
+      "outils": [
+        "M07",
+        "M05",
+        "M04"
+      ],
+      "risque_ia": "Un agent (Cursor, Claude Code) produit une architecture modulaire raisonnable. Le risque n'est plus de produire mais de juger et défendre les choix, qui devient la compétence centrale en architecture.",
+      "parade": "Évaluation de la justification orale ou écrite, pas du code généré. Soutenance (M04) où l'étudiant défend son découpage.",
+      "evaluation": "Soutenance ou défense écrite des décisions de modularité, robuste face à l'IA.",
+      "references": "Brennan & Resnick 2012, Anthropic 2025a"
+    },
+    {
+      "id": "AP-C3.2",
+      "concepts": [
+        "C3.2"
+      ],
+      "competence": "Décider d'appliquer ou non un design pattern et justifier au regard de la sur-ingénierie",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Pattern justifié contre sur-ingénierie",
+      "activite": "Donner un cas où un design pattern est pertinent et un cas où il serait de la sur-ingénierie. L'étudiant décide d'appliquer ou non un pattern et justifie. L'objectif est le discernement, pas la récitation du catalogue Gang of Four.",
+      "outils": [
+        "M07",
+        "I07",
+        "M05"
+      ],
+      "risque_ia": "L'assistant applique des patterns à la demande, souvent à l'excès. L'étudiant ne développe pas le jugement sur quand un pattern est justifié, qui est le vrai apprentissage.",
+      "parade": "NotebookLM (I07) ancré sur le catalogue du cours comme référence. Discussion en peer review des choix d'application.",
+      "evaluation": "Examen oral (M03) ou étude de cas demandant de justifier l'usage ou le non-usage d'un pattern.",
+      "references": "Soloway & Ehrlich 1984"
+    },
+    {
+      "id": "AP-C3.3",
+      "concepts": [
+        "C3.3"
+      ],
+      "competence": "Évaluer une architecture multi-tiers et diagnostiquer un défaut de séparation",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Critique d'une architecture imposée",
+      "activite": "Fournir une architecture n-tiers déjà conçue (diagramme et brève description). L'étudiant identifie les responsabilités de chaque couche, repère un défaut de séparation, et propose une correction argumentée. Partir d'une critique avant de demander une conception est plus accessible et tout aussi formateur.",
+      "outils": [
+        "M04",
+        "M02",
+        "M06"
+      ],
+      "risque_ia": "Un agent génère une architecture multi-tiers complète. La compétence devient l'évaluation critique, que l'IA ne remplace pas pour l'étudiant qui doit pouvoir la défendre.",
+      "parade": "Soutenance de projet (M04) avec questions sur les choix d'architecture. Étude de cas critique en présentiel.",
+      "evaluation": "Défense orale des choix architecturaux, ou critique écrite notée sur la pertinence du diagnostic.",
+      "references": "Anthropic 2025a"
+    },
+    {
+      "id": "AP-C3.4",
+      "concepts": [
+        "C3.4"
+      ],
+      "competence": "Optimiser un code en fondant la démarche sur la mesure plutôt que sur la supposition",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Optimisation guidée par la mesure",
+      "activite": "Donner un code lent mais fonctionnel. L'étudiant profile d'abord pour localiser le vrai goulot (pas le supposé), propose une optimisation, puis mesure le gain réel. La discipline mesurer avant d'optimiser est le cœur.",
+      "outils": [
+        "M04",
+        "M06",
+        "M13"
+      ],
+      "risque_ia": "L'assistant suggère des optimisations hors contexte de mesure. L'étudiant optimise à l'aveugle et n'apprend pas la démarche fondée sur le profilage.",
+      "parade": "Exiger les mesures avant et après comme livrable. Travail encadré où la démarche prime sur le résultat.",
+      "evaluation": "Rapport ou soutenance démontrant la démarche de profilage et justifiant l'optimisation par les chiffres.",
+      "references": "Wiedenbeck 1985"
+    },
+    {
+      "id": "AP-C3.5",
+      "concepts": [
+        "C3.5"
+      ],
+      "competence": "Identifier et prioriser des vulnérabilités selon l'OWASP Top 10 et corriger les plus critiques",
+      "phase_couverte": [
+        "apprendre",
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Chasse aux vulnérabilités OWASP",
+      "activite": "Fournir une petite application volontairement vulnérable (injection, validation absente, secret en clair). L'étudiant identifie les failles en s'appuyant sur l'OWASP Top 10, les classe par gravité, et corrige les plus critiques en justifiant.",
+      "outils": [
+        "M07",
+        "M03",
+        "M02"
+      ],
+      "risque_ia": "Un assistant peut signaler des failles, mais l'étudiant doit développer le réflexe et le jugement de gravité. Sans pratique, il fait une confiance aveugle aux suggestions de l'outil.",
+      "parade": "Worked examples sur les dix vulnérabilités OWASP, puis exercice sans assistant. Examen oral sur les choix de remédiation.",
+      "evaluation": "Examen contrôlé ou oral évaluant l'identification et la priorisation des failles.",
+      "references": "HES-SO Guide 2024"
+    },
+    {
+      "id": "AP-C3.6",
+      "concepts": [
+        "C3.6"
+      ],
+      "competence": "Évaluer la dette technique et refactoriser pour préparer une évolution sans régression",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "Refactoring sous contrainte d'évolution",
+      "activite": "Donner un code fonctionnel mais rigide, et une nouvelle exigence à intégrer. L'étudiant évalue la dette technique, refactorise pour préparer l'évolution, et ajoute des tests de régression garantissant que l'existant ne casse pas. Anticiper l'évolution est la compétence Create visée.",
+      "outils": [
+        "M12",
+        "M05",
+        "A01"
+      ],
+      "risque_ia": "Les agents (Cursor A01, Claude Code A03) refactorisent vite. Le risque est que l'étudiant accepte un refactoring sans évaluer s'il sert vraiment l'évolutivité, jugement Evaluate qui le distingue d'un junior.",
+      "parade": "Portfolio longitudinal (M12) montrant l'évolution du code dans le temps. Peer review des décisions de refactoring.",
+      "evaluation": "Évaluation par portfolio sur la qualité et la justification des refactorings successifs.",
+      "references": "Biggs 1996"
+    },
+    {
+      "id": "AP-C3.7",
+      "concepts": [
+        "C3.7"
+      ],
+      "competence": "Rédiger un ADR justifiant un choix architectural réellement vécu",
+      "phase_couverte": [
+        "exercer",
+        "évaluer"
+      ],
+      "titre": "ADR justifiant un choix architectural",
+      "activite": "Après une décision d'architecture prise en projet, l'étudiant rédige un Architecture Decision Record, le contexte, les options envisagées, la décision et ses conséquences. La valeur est dans la justification du compromis, pas dans la mise en forme.",
+      "outils": [
+        "M04",
+        "M05",
+        "I07"
+      ],
+      "risque_ia": "Un assistant rédige un ADR bien formaté en quelques secondes. Mais sans avoir vécu la décision, l'étudiant produit un document creux. La compétence est la justification réelle d'un compromis.",
+      "parade": "ADR adossé à une décision réellement prise en projet, défendu en soutenance (M04). NotebookLM (I07) ancré sur les ADR du cours comme modèles.",
+      "evaluation": "Soutenance et revue par les pairs (M05) de la qualité de l'argumentation, pas de la forme.",
+      "references": "Biggs 1996"
+    }
+  ]
+}

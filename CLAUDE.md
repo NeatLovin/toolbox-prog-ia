@@ -17,6 +17,36 @@ Le detail des choix techniques est dans @Choix_stack_technique_PoC_Toolbox.md
 - Hebergement : GitHub Pages, depot NeatLovin/toolbox-prog-ia. base: '/toolbox-prog-ia/' dans vite.config.js.
 - Ne pas reintroduire React, Svelte, ni framework UI lourd.
 
+## Modele de donnees etendu : patrons.json
+
+**Role :** couche actionnable au-dessus de la matrice. La matrice dit quels outils sont pertinents pour un concept ; le patron dit quoi faire concretement avec, comment l'exercer et comment l'evaluer. Un patron par sous-concept (21 patrons, indexes par ID concept).
+
+**Structure de chaque patron :**
+```
+id          : "AP-C2.3" (prefixe AP- + ID concept)
+concepts    : ["C2.3"]  (tableau d'IDs, reference vers concepts.json)
+competence  : description observable de ce que l'etudiant sait faire
+phase_couverte : ["apprendre", "exercer", "evaluer"]
+titre       : intitule court de l'activite
+activite    : description de l'activite pedagogique concrete
+outils      : tableau d'IDs d'outils existants dans tools.json
+risque_ia   : description du risque de delegation IA sur ce concept
+parade      : contre-mesure pedagogique
+evaluation  : modalite d'evaluation alignee (Biggs 1996)
+references  : sources academiques
+```
+
+**Ancrage theorique :** alignement constructif Biggs 1996 (competence + activite + evaluation coherents). Contenu redige a la main, non genere.
+
+**Points d'affichage :**
+- `ConceptsView` : `<details>` collapsible au bas de chaque carte concept
+- `ArboreView` : affiche ouvert sous la liste d'outils quand source === 'combo' (extrait l'ID concept depuis `combo.concept_example` via regex `C\d+\.\d+`)
+- `CourseAudit` : par section, apres les outils recommandes, pour chaque concept valide
+
+**Composant partage :** `PatronBlock.vue` - prend `:patron` en prop, gere son propre `ToolDetailModal` en interne. Les outils du patron sont cliquables.
+
+**Helper :** `getPatronByConcept(conceptId)` expose par `useData()`, retourne le patron ou `null`.
+
 ## Deux modes d'execution
 
 **Mode statique (GitHub Pages)** : catalogue + concepts + arbre de decision + methodologie. Aucun appel reseau. Le lien "Audit PDF" est invisible (detection localhost au runtime).

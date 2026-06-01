@@ -51,6 +51,8 @@
           <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
         </div>
 
+        <PatronBlock v-if="patronForResult" :patron="patronForResult" class="result-patron" />
+
         <div class="result-actions">
           <button class="btn-primary" @click="restart">Nouvelle recherche</button>
           <router-link to="/catalogue" class="btn-secondary">Voir le catalogue complet</router-link>
@@ -63,7 +65,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { getRecommendation } from '../composables/useRecommendation.js'
+import { useData } from '../composables/useData.js'
 import ToolCard from '../components/ToolCard.vue'
+import PatronBlock from '../components/PatronBlock.vue'
+
+const { getPatronByConcept } = useData()
 
 const questions = [
   {
@@ -163,6 +169,14 @@ function restart() {
   currentStep.value = 0
   result.value = null
 }
+
+// Extrait l'ID de concept depuis combo.concept_example (ex. "C2.3 Debugging") et cherche le patron
+const patronForResult = computed(() => {
+  if (!result.value || result.value.source !== 'combo') return null
+  const raw = result.value.combo?.concept_example || ''
+  const match = raw.match(/^(C\d+\.\d+)/)
+  return match ? getPatronByConcept(match[1]) : null
+})
 </script>
 
 <style scoped>
@@ -379,5 +393,10 @@ function restart() {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.result-patron {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.25rem;
 }
 </style>

@@ -107,6 +107,13 @@
             <p class="rtc-desc">{{ tool.description }}</p>
           </div>
         </div>
+
+        <template v-for="cid in (validatedBySection[rec.section_index]?.concept_ids || [])" :key="cid">
+          <PatronBlock
+            v-if="getPatronByConcept(cid)"
+            :patron="getPatronByConcept(cid)"
+          />
+        </template>
       </div>
 
       <div v-if="recommendations.length === 0" class="empty-state">
@@ -118,6 +125,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useData } from '../composables/useData.js'
+import PatronBlock from './PatronBlock.vue'
+
+const { getPatronByConcept } = useData()
 
 const props = defineProps({
   swot: { type: Object, required: true },
@@ -130,6 +141,11 @@ defineEmits(['reset'])
 
 const validatedCount = computed(() => props.validated.length)
 const allConceptIds = computed(() => [...new Set(props.validated.flatMap(s => s.concept_ids))])
+
+// Index section_index -> validated entry pour acces O(1) dans le template
+const validatedBySection = computed(() =>
+  Object.fromEntries(props.validated.map(v => [v.section_index, v]))
+)
 
 function sectionTitle(idx) {
   return props.sections.find(s => s.index === idx)?.title || `Section ${idx + 1}`

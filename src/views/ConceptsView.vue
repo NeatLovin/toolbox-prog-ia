@@ -230,6 +230,14 @@
             <div v-if="concept.references" class="concept-refs">
               {{ concept.references }}
             </div>
+
+            <details v-if="getPatronByConcept(concept.id)" class="patron-details">
+              <summary class="patron-summary">
+                Patron pedagogique
+                <span class="patron-summary-titre">{{ getPatronByConcept(concept.id).titre }}</span>
+              </summary>
+              <PatronBlock :patron="getPatronByConcept(concept.id)" class="patron-in-card" />
+            </details>
           </article>
         </div>
       </section>
@@ -244,8 +252,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
+import PatronBlock from '../components/PatronBlock.vue'
 
-const { concepts, tools, matrix } = useData()
+const { concepts, tools, matrix, getPatronByConcept } = useData()
 
 const selectedFamily = ref('')
 const selectedBloom = ref('')
@@ -622,6 +631,50 @@ function bloomClass(b) {
   color: #94a3b8;
   font-style: italic;
   line-height: 1.4;
+}
+
+.patron-details {
+  border-top: 1px solid #fde68a;
+  padding-top: 0.5rem;
+}
+
+.patron-summary {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #92400e;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  user-select: none;
+  padding: 0.2rem 0;
+}
+
+.patron-summary::-webkit-details-marker { display: none; }
+
+.patron-summary::before {
+  content: '▶';
+  font-size: 0.6rem;
+  color: #d97706;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+details[open] .patron-summary::before {
+  transform: rotate(90deg);
+}
+
+.patron-summary-titre {
+  font-weight: 400;
+  color: #78350f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patron-in-card {
+  margin-top: 0.5rem;
 }
 
 .empty-state {
