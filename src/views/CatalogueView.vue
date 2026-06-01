@@ -8,12 +8,7 @@
     <div class="filters">
       <div class="filter-group">
         <label>Recherche</label>
-        <input
-          v-model="search"
-          type="text"
-          placeholder="Nom ou description..."
-          class="filter-input"
-        />
+        <input v-model="search" type="text" placeholder="Nom ou description..." class="filter-input" />
       </div>
 
       <div class="filter-group">
@@ -44,9 +39,27 @@
         </select>
       </div>
 
-      <button v-if="hasFilters" class="reset-btn" @click="resetFilters">
-        Reinitialiser les filtres
-      </button>
+      <div class="filter-group">
+        <label>Robustesse IA</label>
+        <select v-model="selectedRobustness" class="filter-select">
+          <option value="">Toutes</option>
+          <option value="0">Nulle</option>
+          <option value="1">Faible</option>
+          <option value="2">Moderee</option>
+          <option value="3">Elevee</option>
+          <option value="4">Tres elevee</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Fil rouge</label>
+        <select v-model="selectedFil" class="filter-select">
+          <option value="">Tous</option>
+          <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.id }} — {{ f.label }}</option>
+        </select>
+      </div>
+
+      <button v-if="hasFilters" class="reset-btn" @click="resetFilters">Reinitialiser</button>
     </div>
 
     <div v-if="filtered.length === 0" class="empty-state">
@@ -54,8 +67,16 @@
     </div>
 
     <div v-else class="tools-grid">
-      <ToolCard v-for="tool in filtered" :key="tool.id" :tool="tool" />
+      <ToolCard
+        v-for="tool in filtered"
+        :key="tool.id"
+        :tool="tool"
+        :clickable="true"
+        @open="openModal"
+      />
     </div>
+
+    <ToolDetailModal :tool="selectedTool" @close="selectedTool = null" />
   </div>
 </template>
 
@@ -63,13 +84,17 @@
 import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import ToolCard from '../components/ToolCard.vue'
+import ToolDetailModal from '../components/ToolDetailModal.vue'
 
-const { tools } = useData()
+const { tools, meta } = useData()
 
 const search = ref('')
 const selectedFamily = ref('')
 const selectedFunction = ref('')
 const selectedCost = ref('')
+const selectedRobustness = ref('')
+const selectedFil = ref('')
+const selectedTool = ref(null)
 
 const families = [
   { id: 'FM1', label: 'Methodes pedagogiques traditionnelles' },
@@ -80,7 +105,8 @@ const families = [
 
 const hasFilters = computed(() =>
   search.value !== '' || selectedFamily.value !== '' ||
-  selectedFunction.value !== '' || selectedCost.value !== ''
+  selectedFunction.value !== '' || selectedCost.value !== '' ||
+  selectedRobustness.value !== '' || selectedFil.value !== ''
 )
 
 const filtered = computed(() => {
@@ -90,6 +116,8 @@ const filtered = computed(() => {
     if (selectedFamily.value && t.family !== selectedFamily.value) return false
     if (selectedFunction.value && t.function !== selectedFunction.value) return false
     if (selectedCost.value && String(t.cost_num) !== selectedCost.value) return false
+    if (selectedRobustness.value !== '' && String(t.robustness_num) !== selectedRobustness.value) return false
+    if (selectedFil.value && !(t.fils_rouges || []).includes(selectedFil.value)) return false
     return true
   })
 })
@@ -99,6 +127,12 @@ function resetFilters() {
   selectedFamily.value = ''
   selectedFunction.value = ''
   selectedCost.value = ''
+  selectedRobustness.value = ''
+  selectedFil.value = ''
+}
+
+function openModal(tool) {
+  selectedTool.value = tool
 }
 </script>
 
@@ -160,7 +194,7 @@ function resetFilters() {
   font-size: 0.875rem;
   color: #1e293b;
   background: #f8fafc;
-  min-width: 180px;
+  min-width: 170px;
   outline: none;
   transition: border-color 0.15s;
 }

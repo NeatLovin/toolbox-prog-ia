@@ -2,368 +2,323 @@
   {
     "id": "M01",
     "name": "Examen papier-crayon",
-    "description": "Évaluation écrite sur copie papier sans accès à un appareil électronique. Re-valorisée face à l'IA.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Evaluation ecrite sur copie papier sans acces a un appareil electronique. Re-valorisee face a l'IA.",
+    "detail": "Re-valorisee par la quasi-totalite des enseignants interviews comme rempart face aux derives generatives. Par construction, aucun outil IA ne peut interferer avec une production sur papier. Cout de correction eleve mais robustesse maximale garantie.",
+    "scenarios": ["S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S1-S6",
     "cyberlearn": "Non applicable",
-    "cost_teacher": "Élevé (correction manuelle)",
+    "cost_teacher": "Eleve (correction manuelle)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "S",
     "sources": "E01 · E15 · E04 · E27"
   },
   {
     "id": "M02",
-    "name": "Examen contrôlé en environnement sécurisé",
-    "description": "Évaluation sur poste informatique en salle dédiée, sans ou avec connexion restreinte.",
-    "scenarios": [
-      "S2"
-    ],
+    "name": "Examen controle en environnement securise",
+    "description": "Evaluation sur poste informatique en salle dediee, sans ou avec connexion restreinte.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
     "cyberlearn": "Variable",
-    "cost_teacher": "Modéré (préparation infra)",
+    "cost_teacher": "Modere (preparation infra)",
     "cost_num": 2,
-    "cost_student": "Modéré",
-    "robustness_ai": "Élevée",
+    "cost_student": "Modere",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "S",
     "sources": "E06 · E14 · E27"
   },
   {
     "id": "M03",
     "name": "Examen oral et soutenance individuelle",
-    "description": "Évaluation orale 1:1 enseignant-étudiant. Vérifie la compréhension réelle.",
-    "scenarios": [
-      "S1",
-      "S2",
-      "S3"
-    ],
+    "description": "Evaluation orale 1:1 enseignant-etudiant. Verifie la comprehension reelle.",
+    "detail": "Convergence forte dans le corpus terrain : montee des oraux post-IA comme seul moyen de verifier la comprehension authentique. L'etudiant ne peut pas deleguer son raisonnement a l'IA pendant l'echange. Cout eleve mais signal de validite maximal.",
+    "scenarios": ["S1", "S2", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil D"],
     "cursus": "S2-S6",
     "cyberlearn": "Non applicable",
-    "cost_teacher": "Très élevé (15-30 min par étudiant)",
+    "cost_teacher": "Tres eleve (15-30 min par etudiant)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "S",
     "sources": "E04 · E03 · E05 · E13 · E39 · Ipeirotis voice AI"
   },
   {
     "id": "M04",
     "name": "Soutenance de projet en groupe",
-    "description": "Défense orale collective. Évalue collaboration et maîtrise architecturale.",
-    "scenarios": [
-      "S1",
-      "S3"
-    ],
+    "description": "Defense orale collective. Evalue collaboration et maitrise architecturale.",
+    "detail": "",
+    "scenarios": ["S1", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil D"],
     "cursus": "S3-S6",
     "cyberlearn": "Non applicable",
-    "cost_teacher": "Modéré",
+    "cost_teacher": "Modere",
     "cost_num": 2,
-    "cost_student": "Modéré",
-    "robustness_ai": "Modérée",
+    "cost_student": "Modere",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "S",
     "sources": "E04 · E13"
   },
   {
     "id": "M05",
     "name": "Peer review",
-    "description": "Lecture et commentaire critique du code d'un autre étudiant. Développe les compétences d'évaluation.",
-    "scenarios": [
-      "S2",
-      "S3"
-    ],
+    "description": "Lecture et commentaire critique du code d'un autre etudiant. Developpe les competences d'evaluation.",
+    "detail": "Methode standard du code review professionnel transposee en contexte pedagogique. Developpe le jugement Bloom Evaluate en forcant l'etudiant a argumenter ses critiques face a un pair. Reference UNIGE (E35) et Chi & Wylie 2014. Module disponible sur Cyberlearn.",
+    "scenarios": ["S2", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil A",
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil A", "Fil D"],
     "cursus": "S2-S6",
     "cyberlearn": "Module disponible",
     "cost_teacher": "Faible (cadrage)",
     "cost_num": 1,
-    "cost_student": "Modéré",
-    "robustness_ai": "Élevée",
+    "cost_student": "Modere",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "FS",
     "sources": "E35 (UNIGE) · Chi & Wylie 2014"
   },
   {
     "id": "M06",
     "name": "Pair programming",
-    "description": "Deux étudiants travaillent sur le même code, alternant rôles driver/navigator.",
-    "scenarios": [
-      "S2",
-      "S3"
-    ],
+    "description": "Deux etudiants travaillent sur le meme code, alternant roles driver/navigator.",
+    "detail": "",
+    "scenarios": ["S2", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S6",
     "cyberlearn": "Non applicable",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "F",
     "sources": "Brennan & Resnick 2012"
   },
   {
     "id": "M07",
-    "name": "Worked examples (exemples travaillés)",
-    "description": "Présentation d'exemples résolus complets avant problèmes ouverts. Réduit la charge cognitive extrinsèque.",
-    "scenarios": [
-      "S2",
-      "S3"
-    ],
+    "name": "Worked examples (exemples travailles)",
+    "description": "Presentation d'exemples resolus complets avant problemes ouverts. Reduit la charge cognitive extrinseque.",
+    "detail": "Fonde sur les travaux de Sweller (1988) sur la Cognitive Load Theory : montrer un exemple resolu complet avant tout probleme ouvert reduit la charge cognitive extrinseque et accelere la construction de schemas. Reference de la classe inversee (E35). Particulierement efficace en S1-S2 ou la surcharge cognitive est maximale.",
+    "scenarios": ["S2", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S2",
-    "cyberlearn": "Sous forme de capsules vidéo",
-    "cost_teacher": "Élevé (création)",
+    "cyberlearn": "Sous forme de capsules video",
+    "cost_teacher": "Eleve (creation)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
-    "sources": "Atkinson et al. 2000 · Sweller 1988 · E35 (classe inversée)"
+    "sources": "Atkinson et al. 2000 · Sweller 1988 · E35 (classe inversee)"
   },
   {
     "id": "M08",
     "name": "Code reading tasks (Lister 2004)",
-    "description": "QCM ou questions ouvertes sur la lecture et le traçage de code existant, sans demande de production.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "QCM ou questions ouvertes sur la lecture et le tracage de code existant, sans demande de production.",
+    "detail": "Reference canonique de la litterature CS Education : methode utilisee par Lister et al. 2004 sur N=941 etudiants dans 12 institutions de 7 pays pour mesurer les competences precurseurs de tracage. Aucun outil concurrent n'atteint ce niveau de validation empirique sur C2.2. Co-reference avec CodeHelp (I02) : M08 pour le diagnostic ponctuel, I02 pour la pratique scalable.",
+    "scenarios": ["S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil C",
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil C", "Fil D"],
     "cursus": "S1-S2",
-    "cyberlearn": "Quiz Moodle adapté",
-    "cost_teacher": "Modéré (création QCM)",
+    "cyberlearn": "Quiz Moodle adapte",
+    "cost_teacher": "Modere (creation QCM)",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "FS",
     "sources": "Lister et al. 2004 · Perkins & Martin 1986"
   },
   {
     "id": "M09",
     "name": "Think-aloud avec doodles",
-    "description": "L'étudiant verbalise son raisonnement à voix haute pendant la résolution, avec papier-crayon.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "L'etudiant verbalise son raisonnement a voix haute pendant la resolution, avec papier-crayon.",
+    "detail": "Protocole utilise par Lister et al. 2004 sur 37 entretiens individuels pour reveler les processus cognitifs silencieux que ni le code produit ni un QCM ne peuvent detecter. Outil diagnostique de precision, non scalable : a reserver aux etudiants en difficulte identifiee pour comprendre la nature exacte du blocage.",
+    "scenarios": ["S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S6",
     "cyberlearn": "Non applicable",
-    "cost_teacher": "Très élevé (entretien individuel)",
+    "cost_teacher": "Tres eleve (entretien individuel)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "F",
     "sources": "Lister et al. 2004 (37 entretiens) · Davies 1996"
   },
   {
     "id": "M10",
     "name": "Algorithmique pure papier (avant code)",
-    "description": "Module préalable où les étudiants conçoivent des algorithmes sur papier avant tout codage.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Module prealable ou les etudiants concoivent des algorithmes sur papier avant tout codage.",
+    "detail": "Refonte type Issom adoptee a HEG Geneve (E27) : 2 mois d'algorithmique sur papier avant toute exposition a un environnement de codage. Ancree dans Wing 2006 (computational thinking) et les travaux de Lister sur les competences precurseurs. Robustesse IA maximale par construction : le support papier exclut toute assistance generative.",
+    "scenarios": ["S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil C"
-    ],
-    "cursus": "Pré-S1 ou S1",
-    "cyberlearn": "Capsules vidéo possibles",
-    "cost_teacher": "Modéré (création supports)",
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil C"],
+    "cursus": "Pre-S1 ou S1",
+    "cyberlearn": "Capsules video possibles",
+    "cost_teacher": "Modere (creation supports)",
     "cost_num": 2,
-    "cost_student": "Modéré",
-    "robustness_ai": "Très élevée",
+    "cost_student": "Modere",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "F",
     "sources": "E27 (refonte HEG-GE) · E33 · Lister 2004 · Wing 2006"
   },
   {
     "id": "M11",
-    "name": "Évaluation 360° entre pairs",
-    "description": "Évaluation mutuelle systématique des étudiants entre eux sur des critères structurés.",
-    "scenarios": [
-      "S1",
-      "S3"
-    ],
+    "name": "Evaluation 360 entre pairs",
+    "description": "Evaluation mutuelle systematique des etudiants entre eux sur des criteres structures.",
+    "detail": "",
+    "scenarios": ["S1", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil D"],
     "cursus": "S2-S6",
-    "cyberlearn": "Module spécifique requis",
-    "cost_teacher": "Modéré (cadrage)",
+    "cyberlearn": "Module specifique requis",
+    "cost_teacher": "Modere (cadrage)",
     "cost_num": 2,
-    "cost_student": "Élevé",
-    "robustness_ai": "Élevée",
+    "cost_student": "Eleve",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "S",
     "sources": "E09 (Digital Team Academy)"
   },
   {
     "id": "M12",
-    "name": "Évaluation par portfolio",
-    "description": "Collection longitudinale de productions étudiantes documentées (projets, réflexions, traces).",
-    "scenarios": [
-      "S1",
-      "S3"
-    ],
+    "name": "Evaluation par portfolio",
+    "description": "Collection longitudinale de productions etudiantes documentees (projets, reflexions, traces).",
+    "detail": "",
+    "scenarios": ["S1", "S3"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil D"],
     "cursus": "S4-S6",
     "cyberlearn": "Portflow disponible HES-SO",
-    "cost_teacher": "Élevé (évaluation qualitative)",
+    "cost_teacher": "Eleve (evaluation qualitative)",
     "cost_num": 3,
-    "cost_student": "Modéré",
-    "robustness_ai": "Modérée",
+    "cost_student": "Modere",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "S",
     "sources": "E09 (DTA)"
   },
   {
     "id": "M13",
-    "name": "Contrôle continu (TPs notés)",
-    "description": "Notation continue de TPs tout au long du semestre. Expose au vibe coding si non encadré.",
-    "scenarios": [
-      "S1",
-      "S2"
-    ],
+    "name": "Controle continu (TPs notes)",
+    "description": "Notation continue de TPs tout au long du semestre. Expose au vibe coding si non encadre.",
+    "detail": "",
+    "scenarios": ["S1", "S2"],
     "family": "FM1",
-    "family_label": "Méthodes pédagogiques traditionnelles",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Methodes pedagogiques traditionnelles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S1-S6",
     "cyberlearn": "Standard",
-    "cost_teacher": "Élevé (correction itérative)",
+    "cost_teacher": "Eleve (correction iterative)",
     "cost_num": 3,
-    "cost_student": "Modéré",
+    "cost_student": "Modere",
     "robustness_ai": "Faible si pas d'encadrement",
+    "robustness_num": 1,
     "function": "FS",
     "sources": "E01 (30 %)"
   },
   {
     "id": "T01",
-    "name": "Git monitoring (commits, fréquence)",
-    "description": "Suivi de l'activité Git : nombre de commits, intervalle, qualité des messages. Indicateur de processus non intrusif.",
-    "scenarios": [
-      "S2"
-    ],
+    "name": "Git monitoring (commits, frequence)",
+    "description": "Suivi de l'activite Git : nombre de commits, intervalle, qualite des messages. Indicateur de processus non intrusif.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
     "cyberlearn": "Via Gitea/GitHub",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "FS",
     "sources": "E06 · E28 · Lau & Guo 2023"
   },
   {
     "id": "T02",
     "name": "Dashboard regex-based Fritscher",
-    "description": "Tableau de bord visualisant l'activité Git des étudiants via regex, sans IA.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Tableau de bord visualisant l'activite Git des etudiants via regex, sans IA.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
-    "cyberlearn": "Possiblement intégrable",
-    "cost_teacher": "Très faible (consultation)",
+    "cyberlearn": "Possiblement integrable",
+    "cost_teacher": "Tres faible (consultation)",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "FS",
     "sources": "Directeur TB"
   },
   {
     "id": "T03",
-    "name": "JPlag (détection plagiat code)",
-    "description": "Outil de détection de plagiat source-code language-agnostic.",
-    "scenarios": [
-      "S2"
-    ],
+    "name": "JPlag (detection plagiat code)",
+    "description": "Outil de detection de plagiat source-code language-agnostic.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
-    "cyberlearn": "Intégration possible",
+    "cyberlearn": "Integration possible",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Faible (ne détecte pas code IA)",
+    "robustness_ai": "Faible (ne detecte pas code IA)",
+    "robustness_num": 1,
     "function": "S",
-    "sources": "Sağlam & Schmid 2025"
+    "sources": "Saglam & Schmid 2025"
   },
   {
     "id": "T04",
     "name": "Dolos (UGent)",
-    "description": "Outil open source détection plagiat language-agnostic. Utilisé UNIGE Scala 500 étudiants.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Outil open source detection plagiat language-agnostic. Utilise UNIGE Scala 500 etudiants.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S1-S6",
-    "cyberlearn": "Intégration en ligne",
+    "cyberlearn": "Integration en ligne",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Faible (plagiat inter-étudiants)",
+    "robustness_ai": "Faible (plagiat inter-etudiants)",
+    "robustness_num": 1,
     "function": "S",
     "sources": "E35 · Maertens et al. 2022"
   },
@@ -371,626 +326,561 @@
     "id": "T05",
     "name": "GitHub Classroom",
     "description": "Plateforme GitHub d'enseignement : distribution exercices, suivi Git, automatisation tests.",
-    "scenarios": [
-      "S2"
-    ],
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
-    "cyberlearn": "Externe à Cyberlearn",
-    "cost_teacher": "Modéré (setup)",
+    "cyberlearn": "Externe a Cyberlearn",
+    "cost_teacher": "Modere (setup)",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "FS",
-    "sources": "E06 (HEIG-VD) · E28 (envisagé)"
+    "sources": "E06 (HEIG-VD) · E28 (envisage)"
   },
   {
     "id": "T06",
     "name": "Plateforme Electron HEIG-VD",
-    "description": "Application Electron pour évaluation contrôlée. Surveillance écran, contrôle IP. ~1100 étudiants.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Application Electron pour evaluation controlee. Surveillance ecran, controle IP. ~1100 etudiants.",
+    "detail": "Deployee a la HEIG-VD sur ~1100 etudiants (co-developpee par E06). Surveillance ecran et controle IP permettent d'exclure tout acces a l'IA pendant l'evaluation. Reference institutionnelle suisse romande pour l'examen sur machine securise.",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
-    "cyberlearn": "Externe (déploiement HEIG-VD)",
-    "cost_teacher": "Modéré",
+    "cyberlearn": "Externe (deploiement HEIG-VD)",
+    "cost_teacher": "Modere",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "S",
-    "sources": "E06 (co-développeur)"
+    "sources": "E06 (co-developpeur)"
   },
   {
     "id": "T07",
     "name": "Nexus HEPIA",
-    "description": "Plateforme d'examen sur machine virtuelle isolée d'internet. Alternative à l'examen papier.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Plateforme d'examen sur machine virtuelle isolee d'internet. Alternative a l'examen papier.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
     "cyberlearn": "Externe (HEPIA)",
-    "cost_teacher": "Modéré",
+    "cost_teacher": "Modere",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "S",
     "sources": "E14"
   },
   {
     "id": "T08",
     "name": "Compilatio",
-    "description": "Outil de détection de plagiat textuel intégré Cyberlearn. Ne détecte pas le code IA-généré.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Outil de detection de plagiat textuel integre Cyberlearn. Ne detecte pas le code IA-genere.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "Transversal",
-    "cyberlearn": "Intégré nativement",
-    "cost_teacher": "Très faible",
+    "cyberlearn": "Integre nativement",
+    "cost_teacher": "Tres faible",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Très faible / Nulle (code IA)",
+    "robustness_ai": "Tres faible / Nulle (code IA)",
+    "robustness_num": 0,
     "function": "S",
     "sources": "HES-SO Guide 2024"
   },
   {
     "id": "T09",
     "name": "Editrail (Zhang et al. 2026)",
-    "description": "Visualisation de l'interaction étudiant-IA dans un IDE, capturant éditions et chronologie.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Visualisation de l'interaction etudiant-IA dans un IDE, capturant editions et chronologie.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "S2-S6",
     "cyberlearn": "Externe",
-    "cost_teacher": "Modéré",
+    "cost_teacher": "Modere",
     "cost_num": 2,
     "cost_student": "Faible (transparent)",
-    "robustness_ai": "Élevée (patterns IA)",
+    "robustness_ai": "Elevee (patterns IA)",
+    "robustness_num": 3,
     "function": "FS",
     "sources": "Zhang et al. 2026"
   },
   {
     "id": "T10",
     "name": "Fingerprinting commits",
-    "description": "Travaux récents sur identification de patterns stylistiques dans commits pour distinguer humain vs IA.",
-    "scenarios": [
-      "S2"
-    ],
+    "description": "Travaux recents sur identification de patterns stylistiques dans commits pour distinguer humain vs IA.",
+    "detail": "",
+    "scenarios": ["S2"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil B"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil B"],
     "cursus": "Recherche",
     "cyberlearn": "Externe",
-    "cost_teacher": "Élevé (déploiement)",
+    "cost_teacher": "Eleve (deploiement)",
     "cost_num": 3,
     "cost_student": "Faible (transparent)",
-    "robustness_ai": "Modérée (évolution)",
+    "robustness_ai": "Moderee (evolution)",
+    "robustness_num": 2,
     "function": "S",
     "sources": "Whodunit · Bisztray · Gurioli · Tian"
   },
   {
     "id": "T11",
     "name": "NVivo 14 (analyse qualitative)",
-    "description": "Logiciel de référence pour l'analyse qualitative outillée. Pertinent pour le TB lui-même.",
-    "scenarios": [
-      "Méthodologie TB"
-    ],
+    "description": "Logiciel de reference pour l'analyse qualitative outillee. Pertinent pour le TB lui-meme.",
+    "detail": "Outil de recherche methodologique utilise pour l'analyse qualitative des 22 entretiens enseignants du TB (methodologie Point & Baudet 2022). Hors scope pedagogique direct : presente dans la cartographie pour tracer les outils mobilises dans la demarche DSR du TB.",
+    "scenarios": ["Methodologie TB"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Recherche"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Recherche"],
     "cursus": "Master/Recherche",
     "cyberlearn": "Non applicable",
-    "cost_teacher": "Élevé (licence + formation)",
+    "cost_teacher": "Eleve (licence + formation)",
     "cost_num": 3,
     "cost_student": "Non applicable",
-    "robustness_ai": "Non concerné",
+    "robustness_ai": "Non concerne",
+    "robustness_num": null,
     "function": "R",
     "sources": "E15 · Point & E15 2022"
   },
   {
     "id": "T12",
-    "name": "Argos (HE-Arc Ingénierie)",
-    "description": "Plateforme d'apprentissage de la programmation développée par E05. Cité par 3 entretiens.",
-    "scenarios": [
-      "S3"
-    ],
+    "name": "Argos (HE-Arc Ingenierie)",
+    "description": "Plateforme d'apprentissage de la programmation developpee par E05. Cite par 3 entretiens.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM2",
-    "family_label": "Dispositifs traditionnels outillés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Dispositifs traditionnels outilles",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S4",
     "cyberlearn": "Externe (HE-Arc)",
     "cost_teacher": "Faible (utilisation)",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "F",
     "sources": "E05 (auteur) · E11 · E26"
   },
   {
     "id": "I01",
     "name": "CodeAid (Kazemitabaar 2024)",
-    "description": "Tuteur IA à 4 templates contraints : Help Write, Help Fix, Question from Idea, Explain Code.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Tuteur IA a 4 templates contraints : Help Write, Help Fix, Question from Idea, Explain Code.",
+    "detail": "RCT publie a CHI 2024 (Kazemitabaar). Les 4 templates contraints empechent la generation directe de code complet : l'etudiant doit specifier ce qu'il comprend avant d'obtenir de l'aide. Robustesse IA tres elevee par design du scaffolding. Reference pour l'integration LTI dans un LMS.",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A",
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A", "Fil D"],
     "cursus": "S1-S4",
     "cyberlearn": "Possible (LTI)",
-    "cost_teacher": "Modéré (configuration)",
+    "cost_teacher": "Modere (configuration)",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée (templates)",
+    "robustness_ai": "Tres elevee (templates)",
+    "robustness_num": 4,
     "function": "F",
     "sources": "Kazemitabaar et al. 2024 (CHI)"
   },
   {
     "id": "I02",
     "name": "CodeHelp / Gen-Ed (Liffiton 2024)",
-    "description": "Web app open source AGPL-3.0 bâtie sur Gen-Ed. Garde-fous explicites. Base candidate PoC TB.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Web app open source AGPL-3.0 batie sur Gen-Ed. Garde-fous explicites. Base candidate PoC TB.",
+    "detail": "Co-reference avec M08 sur C2.2 Tracage de code (Liffiton et al. 2024, Koli Calling). Les garde-fous empechent la resolution directe par le LLM : l'etudiant obtient des indices, pas des solutions. Pratique formative scalable la ou M08 assure le diagnostic ponctuel. Candidate principale pour integration LTI HES-SO. Licence AGPL-3.0.",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A",
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A", "Fil D"],
     "cursus": "S1-S4",
-    "cyberlearn": "Intégration LTI possible",
-    "cost_teacher": "Élevé (déploiement custom)",
+    "cyberlearn": "Integration LTI possible",
+    "cost_teacher": "Eleve (deploiement custom)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
     "sources": "Liffiton et al. 2024 (Koli Calling) · Sheese et al. 2024"
   },
   {
     "id": "I03",
     "name": "Iris / Artemis (Bassner 2024, TUM)",
-    "description": "Tuteur IA chat-based intégré nativement à Artemis (TUM). 2000+ étudiants. GPT-3.5 + Chain-of-Thought.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Tuteur IA chat-based integre nativement a Artemis (TUM). 2000+ etudiants. GPT-3.5 + Chain-of-Thought.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S4",
     "cyberlearn": "Externe (TUM Artemis)",
-    "cost_teacher": "Élevé (intégration LMS)",
+    "cost_teacher": "Eleve (integration LMS)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
     "sources": "Bassner Frankford Krusche 2024"
   },
   {
     "id": "I04",
     "name": "CS50 Duck (Harvard, Liu 2024)",
-    "description": "Tuteur IA pour CS50 Harvard. Garde-fous explicites. Déploiement à très grande échelle.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Tuteur IA pour CS50 Harvard. Garde-fous explicites. Deploiement a tres grande echelle.",
+    "detail": "Deploye par Harvard dans CS50, l'un des MOOC les plus suivis au monde. Garde-fous explicites valides empiriquement par Liu et al. 2024 : le tuteur guide sans livrer la solution. Reference internationale pour l'usage encadre d'un tuteur IA en S1-S3, avec preuve de scalabilite.",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S3",
     "cyberlearn": "Externe (edX)",
-    "cost_teacher": "Très élevé (Harvard scale)",
+    "cost_teacher": "Tres eleve (Harvard scale)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
     "sources": "Liu et al. 2024"
   },
   {
     "id": "I05",
     "name": "GenAI-Ped (Nathaniel 2025-2026)",
-    "description": "Framework pédagogique articulant ZPD, Bloom, SRL et UDL en 6 phases progressives.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Framework pedagogique articulant ZPD, Bloom, SRL et UDL en 6 phases progressives.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A",
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A", "Fil D"],
     "cursus": "S2-S4",
     "cyberlearn": "Non applicable (framework)",
-    "cost_teacher": "Modéré (adoption framework)",
+    "cost_teacher": "Modere (adoption framework)",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
     "sources": "Nathaniel et al. 2025-2026"
   },
   {
     "id": "I06",
     "name": "LearnLM / Eedi (Google 2025)",
-    "description": "Modèle Google fine-tuné pour la pédagogie. RCT 5 écoles UK, 76,4 % messages approuvés tuteurs experts.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Modele Google fine-tune pour la pedagogie. RCT 5 ecoles UK, 76,4 % messages approuves tuteurs experts.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "S1-S6",
     "cyberlearn": "Externe",
-    "cost_teacher": "Élevé (API Google)",
+    "cost_teacher": "Eleve (API Google)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée (modèle pédago)",
+    "robustness_ai": "Tres elevee (modele pedago)",
+    "robustness_num": 4,
     "function": "F",
     "sources": "LearnLM team 2025"
   },
   {
     "id": "I07",
-    "name": "NotebookLM (Google, RAG curé)",
-    "description": "IA conversationnelle ancrée sur documents uploadés. Corpus curé limite les dérapages.",
-    "scenarios": [
-      "S3"
-    ],
+    "name": "NotebookLM (Google, RAG cure)",
+    "description": "IA conversationnelle ancree sur documents uploades. Corpus cure limite les derapages.",
+    "detail": "Reference sur C3.7 Documentation et ADR : l'enseignant uploade un corpus cure (modeles ADR, RFC, guides architecturaux) et l'IA reste ancree dessus par RAG. Le risque d'hallucination hors corpus est minimise par construction. Cout enseignant faible (niveau 1) : configuration initiale puis usage autonome par les etudiants.",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A",
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A", "Fil D"],
     "cursus": "S1-S6",
     "cyberlearn": "Externe (Google)",
     "cost_teacher": "Faible (configuration)",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée (corpus curé)",
+    "robustness_ai": "Elevee (corpus cure)",
+    "robustness_num": 3,
     "function": "F",
     "sources": "E04 · E33"
   },
   {
     "id": "I08",
     "name": "ChatGPT Study Mode (OpenAI 2025)",
-    "description": "Mode pédagogique natif de ChatGPT lancé en 2025. Ne livre pas la solution directe.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Mode pedagogique natif de ChatGPT lance en 2025. Ne livre pas la solution directe.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "Transversal",
     "cyberlearn": "Externe (OpenAI)",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible (ChatGPT Plus)",
-    "robustness_ai": "Modérée (contournable)",
+    "robustness_ai": "Moderee (contournable)",
+    "robustness_num": 2,
     "function": "F",
     "sources": "E32 · E29"
   },
   {
     "id": "I09",
     "name": "Tutor CoPilot (Stanford 2024)",
-    "description": "Premier RCT Human-AI en tutorat live. 900 tuteurs, 1800 élèves. Augmente les tuteurs, pas les étudiants.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Premier RCT Human-AI en tutorat live. 900 tuteurs, 1800 eleves. Augmente les tuteurs, pas les etudiants.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "Adaptation S1-S6",
     "cyberlearn": "Externe (Stanford)",
-    "cost_teacher": "Très élevé (système complet)",
+    "cost_teacher": "Tres eleve (systeme complet)",
     "cost_num": 3,
     "cost_student": "Non applicable",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "F",
     "sources": "Stanford et al. 2024"
   },
   {
     "id": "I10",
     "name": "AI-Lab (Purdue, Dickey 2024)",
-    "description": "Framework Purdue documentant le « Junior-Year Wall ». Intégration curriculum-level.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Framework Purdue documentant le Junior-Year Wall. Integration curriculum-level.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil C",
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil C", "Fil D"],
     "cursus": "Curriculum S1-S6",
     "cyberlearn": "Non applicable (curriculum)",
-    "cost_teacher": "Très élevé (refonte cursus)",
+    "cost_teacher": "Tres eleve (refonte cursus)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée",
+    "robustness_ai": "Tres elevee",
+    "robustness_num": 4,
     "function": "F",
     "sources": "Dickey et al. 2024"
   },
   {
     "id": "I11",
     "name": "Maieutic Prompting (Jung 2022)",
-    "description": "Méthode de prompt engineering formalisée mobilisant la maïeutique socratique. +20 % vs CoT.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Methode de prompt engineering formalisee mobilisant la maieutique socratique. +20 % vs CoT.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
-    "cursus": "Méthode technique",
-    "cyberlearn": "Méthode (intégrable)",
-    "cost_teacher": "Modéré (conception prompt)",
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
+    "cursus": "Methode technique",
+    "cyberlearn": "Methode (integrable)",
+    "cost_teacher": "Modere (conception prompt)",
     "cost_num": 2,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "F",
     "sources": "Jung et al. 2022 (EMNLP)"
   },
   {
     "id": "I12",
     "name": "Farah/Ingram (HEFR + EPFL)",
-    "description": "Architecture de chatbots éducationnels LLM (configuration objects). Étude N=26 EPFL, GPT-3.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Architecture de chatbots educationnels LLM (configuration objects). Etude N=26 EPFL, GPT-3.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
-    "cursus": "Génie logiciel master",
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
+    "cursus": "Genie logiciel master",
     "cyberlearn": "Architecture transposable",
-    "cost_teacher": "Élevé (développement)",
+    "cost_teacher": "Eleve (developpement)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "F",
     "sources": "Farah Ingram et al. 2023 (ICWL)"
   },
   {
     "id": "I13",
     "name": "EduAide",
-    "description": "Plateforme commerciale pour enseignants : génération contenus pédagogiques, évaluations, feedbacks.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Plateforme commerciale pour enseignants : generation contenus pedagogiques, evaluations, feedbacks.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil D"
-    ],
-    "cursus": "Côté enseignant",
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil D"],
+    "cursus": "Cote enseignant",
     "cyberlearn": "Externe",
-    "cost_teacher": "Modéré (abonnement)",
+    "cost_teacher": "Modere (abonnement)",
     "cost_num": 2,
     "cost_student": "Non applicable",
-    "robustness_ai": "Modérée",
+    "robustness_ai": "Moderee",
+    "robustness_num": 2,
     "function": "F",
     "sources": "E32 (test)"
   },
   {
     "id": "I14",
     "name": "HES-GPT / EASYBEASY (HE-Arc)",
-    "description": "Projets de recherche HES-SO autour de LLM locaux, alignés sur la souveraineté des données.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Projets de recherche HES-SO autour de LLM locaux, alignes sur la souverainete des donnees.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil A"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil A"],
     "cursus": "Recherche HES-SO",
-    "cyberlearn": "Intégration HES-SO possible",
-    "cost_teacher": "Très élevé (infra locale)",
+    "cyberlearn": "Integration HES-SO possible",
+    "cost_teacher": "Tres eleve (infra locale)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Très élevée (souveraineté)",
+    "robustness_ai": "Tres elevee (souverainete)",
+    "robustness_num": 4,
     "function": "F",
     "sources": "E11"
   },
   {
     "id": "I15",
-    "name": "Wiki GenAI HE-Arc Ingénierie",
-    "description": "Wiki interne maintenu par E26 (HE-Arc Ingénierie) pour former les étudiants à l'usage de GenAI.",
-    "scenarios": [
-      "S1",
-      "S3"
-    ],
+    "name": "Wiki GenAI HE-Arc Ingenierie",
+    "description": "Wiki interne maintenu par E26 (HE-Arc Ingenierie) pour former les etudiants a l'usage de GenAI.",
+    "detail": "",
+    "scenarios": ["S1", "S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil D"],
     "cursus": "S1-S6",
     "cyberlearn": "Externe (GitLab HE-Arc)",
     "cost_teacher": "Faible (consultation)",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée (cadrage explicite)",
+    "robustness_ai": "Elevee (cadrage explicite)",
+    "robustness_num": 3,
     "function": "F",
     "sources": "E26 (auteur)"
   },
   {
     "id": "I16",
     "name": "Student Learning Compass (HES-SO)",
-    "description": "Cartographie compétences étudiantes co-conçue par E32 avec Cyberlearn. Refondation IA envisagée.",
-    "scenarios": [
-      "S3"
-    ],
+    "description": "Cartographie competences etudiantes co-concue par E32 avec Cyberlearn. Refondation IA envisagee.",
+    "detail": "",
+    "scenarios": ["S3"],
     "family": "FM3",
-    "family_label": "Tuteurs IA et dispositifs scaffoldés",
-    "fils_rouges": [
-      "Fil D"
-    ],
+    "family_label": "Tuteurs IA et dispositifs scaffoldes",
+    "fils_rouges": ["Fil D"],
     "cursus": "Transversal HES-SO",
-    "cyberlearn": "Intégré Cyberlearn",
-    "cost_teacher": "Élevé (gouvernance compétences)",
+    "cyberlearn": "Integre Cyberlearn",
+    "cost_teacher": "Eleve (gouvernance competences)",
     "cost_num": 3,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée",
+    "robustness_ai": "Elevee",
+    "robustness_num": 3,
     "function": "FS",
     "sources": "E32 (auteure)"
   },
   {
     "id": "A01",
     "name": "Cursor",
-    "description": "Éditeur de code fork de VS Code avec IA agentique intégrée. Standard de facto chez les développeurs.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Editeur de code fork de VS Code avec IA agentique integree. Standard de facto chez les developpeurs.",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
-    "fils_rouges": [
-      "Fil C"
-    ],
+    "family_label": "Outils agentiques et IA generaliste",
+    "fils_rouges": ["Fil C"],
     "cursus": "S3-S6",
     "cyberlearn": "Externe",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible (gratuit/Pro)",
-    "robustness_ai": "Nulle (productivité)",
+    "robustness_ai": "Nulle (productivite)",
+    "robustness_num": 0,
     "function": "F",
     "sources": "E02 · E05 · Karpathy 2026"
   },
   {
     "id": "A02",
     "name": "Codeium Windsurf",
-    "description": "Assistant IA agentique intégré IDE. Utilisé quotidiennement en activité professionnelle.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Assistant IA agentique integre IDE. Utilise quotidiennement en activite professionnelle.",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
-    "fils_rouges": [
-      "Fil C"
-    ],
+    "family_label": "Outils agentiques et IA generaliste",
+    "fils_rouges": ["Fil C"],
     "cursus": "S3-S6",
     "cyberlearn": "Externe",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
     "sources": "E39"
   },
   {
     "id": "A03",
     "name": "Anthropic Claude Code",
-    "description": "Agent CLI Anthropic en évolution rapide. Recommandé pour exploration architecture PoC.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Agent CLI Anthropic en evolution rapide. Recommande pour exploration architecture PoC.",
+    "detail": "Reference pour le prototypage en S5-S6 apres acquisition du jugement architectural. Score matriciel limite a deux etoiles sur C3.1 Conception modulaire : risque de vibe coding eleve en annees precoces car l'etudiant peut generer des choix architecturaux sans en comprendre la justification. Cout API modere. Ne pas utiliser avant S4.",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
-    "fils_rouges": [
-      "Fil C"
-    ],
+    "family_label": "Outils agentiques et IA generaliste",
+    "fils_rouges": ["Fil C"],
     "cursus": "S5-S6",
     "cyberlearn": "Externe",
-    "cost_teacher": "Modéré (API)",
+    "cost_teacher": "Modere (API)",
     "cost_num": 2,
-    "cost_student": "Modéré",
-    "robustness_ai": "Nulle (productivité)",
+    "cost_student": "Modere",
+    "robustness_ai": "Nulle (productivite)",
+    "robustness_num": 0,
     "function": "F",
     "sources": "E01 · E05 · E15 · E11 · Anthropic 2026"
   },
   {
     "id": "A04",
     "name": "OpenAI Codex CLI",
-    "description": "Agent de codage OpenAI relancé fin 2025. Alternative à Claude Code.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Agent de codage OpenAI relance fin 2025. Alternative a Claude Code.",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
-    "fils_rouges": [
-      "Fil C"
-    ],
+    "family_label": "Outils agentiques et IA generaliste",
+    "fils_rouges": ["Fil C"],
     "cursus": "S5-S6",
     "cyberlearn": "Externe",
-    "cost_teacher": "Modéré (API)",
+    "cost_teacher": "Modere (API)",
     "cost_num": 2,
-    "cost_student": "Modéré",
+    "cost_student": "Modere",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
     "sources": "E05"
   },
   {
     "id": "A05",
     "name": "GitHub Copilot",
-    "description": "Autocomplete IA intégré IDE, le plus largement déployé. Standard professionnel.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Autocomplete IA integre IDE, le plus largement deploye. Standard professionnel.",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
-    "fils_rouges": [
-      "Fil C"
-    ],
+    "family_label": "Outils agentiques et IA generaliste",
+    "fils_rouges": ["Fil C"],
     "cursus": "S3-S6",
     "cyberlearn": "Externe (GitHub)",
     "cost_teacher": "Faible",
     "cost_num": 1,
-    "cost_student": "Faible (gratuit étudiants)",
+    "cost_student": "Faible (gratuit etudiants)",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
-    "sources": "Enquête HES-SO/UniFR 2025"
+    "sources": "Enquete HES-SO/UniFR 2025"
   },
   {
     "id": "A06",
     "name": "ChatGPT (consumer)",
-    "description": "Modèle généraliste OpenAI grand public. Outil le plus utilisé par les étudiants HES-SO.",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Modele generaliste OpenAI grand public. Outil le plus utilise par les etudiants HES-SO.",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
+    "family_label": "Outils agentiques et IA generaliste",
     "fils_rouges": [],
     "cursus": "Transversal",
     "cyberlearn": "Externe",
@@ -998,18 +888,18 @@
     "cost_num": 1,
     "cost_student": "Faible (gratuit/Plus)",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
     "sources": "Tous (mention quasi unanime) · Anthropic 2025a"
   },
   {
     "id": "A07",
     "name": "Google Gemini",
-    "description": "Modèle généraliste Google. Second outil le plus utilisé après ChatGPT (HES-SO/UniFR 2025).",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Modele generaliste Google. Second outil le plus utilise apres ChatGPT (HES-SO/UniFR 2025).",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
+    "family_label": "Outils agentiques et IA generaliste",
     "fils_rouges": [],
     "cursus": "Transversal",
     "cyberlearn": "Externe",
@@ -1017,25 +907,26 @@
     "cost_num": 1,
     "cost_student": "Faible",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
-    "sources": "Enquête HES-SO/UniFR 2025"
+    "sources": "Enquete HES-SO/UniFR 2025"
   },
   {
     "id": "A08",
     "name": "Microsoft Copilot",
-    "description": "Intégration IA dans Office 365. Présent dans Cyberlearn (catalogue SI-Enseignement HES-SO).",
-    "scenarios": [
-      "S1"
-    ],
+    "description": "Integration IA dans Office 365. Present dans Cyberlearn (catalogue SI-Enseignement HES-SO).",
+    "detail": "",
+    "scenarios": ["S1"],
     "family": "FM4",
-    "family_label": "Outils agentiques et IA généraliste",
+    "family_label": "Outils agentiques et IA generaliste",
     "fils_rouges": [],
     "cursus": "Transversal",
-    "cyberlearn": "Intégré (catalogue SI-Enseignement)",
+    "cyberlearn": "Integre (catalogue SI-Enseignement)",
     "cost_teacher": "Faible",
     "cost_num": 1,
     "cost_student": "Faible (licence HES-SO)",
     "robustness_ai": "Nulle",
+    "robustness_num": 0,
     "function": "F",
     "sources": "HES-SO catalogue SI-Enseignement"
   }
