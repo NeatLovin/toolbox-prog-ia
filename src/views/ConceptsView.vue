@@ -2,7 +2,12 @@
   <div class="concepts">
     <div class="page-header">
       <h1>Concepts pedagogiques</h1>
-      <p>{{ concepts.length }} sous-concepts en {{ families.length }} familles, avec outils de reference issus de la matrice.</p>
+      <p>
+        La cartographie du TB decompose l'enseignement de la programmation en
+        {{ concepts.length }} sous-concepts regroupes en {{ families.length }} familles macroscopiques.
+        Chaque concept est annote selon la taxonomie de Bloom, la dimension Fuller et le niveau de risque
+        induit par l'IA generative. Les outils de reference sont extraits de la matrice de pertinence.
+      </p>
     </div>
 
     <div class="filters">
@@ -32,6 +37,138 @@
       <button v-if="hasFilters" class="reset-btn" @click="resetFilters">Reinitialiser</button>
     </div>
 
+    <!-- Legende explicative -->
+    <details class="legend">
+      <summary class="legend-toggle">
+        Comprendre les indicateurs : Bloom, Risque IA, Fuller
+      </summary>
+
+      <div class="legend-body">
+
+        <div class="legend-section">
+          <h3>Taxonomie de Bloom en programmation</h3>
+          <p class="legend-intro">
+            Grille institutionnelle HES-SO (Guide IA 2024). Chaque sous-concept est annote par le ou
+            les niveaux Bloom qu'il mobilise principalement. L'IA generative perturbe differemment
+            chaque niveau : elle excelle sur Remember-Apply (production syntaxique), performe moins
+            bien sur Analyze-Evaluate et ne remplace pas le jugement requis par Create.
+          </p>
+          <div class="bloom-grid">
+            <div class="bloom-entry bloom-entry--remember">
+              <span class="be-tag">Remember</span>
+              <div>
+                <strong>Memoriser, reconnaitre</strong>
+                <p>Citer la syntaxe, reconnaitre un patron, reproduire un exemple vu en cours. Base des S1-S2. Zone ou le risque de fragile knowledge est maximal : l'etudiant peut reciter sans comprendre.</p>
+              </div>
+            </div>
+            <div class="bloom-entry bloom-entry--understand">
+              <span class="be-tag">Understand</span>
+              <div>
+                <strong>Expliquer, predire</strong>
+                <p>Expliquer ce que fait un programme, predire la sortie d'une boucle, tracer l'execution. Competence precurseur identifiee par Lister et al. 2004 sur N=941 etudiants comme discriminante pour la reussite en programmation.</p>
+              </div>
+            </div>
+            <div class="bloom-entry bloom-entry--apply">
+              <span class="be-tag">Apply</span>
+              <div>
+                <strong>Executer, implementer</strong>
+                <p>Ecrire du code fonctionnel pour un probleme donne, utiliser des constructions connues dans un nouveau contexte. Niveau le plus frequent dans les TP de S1-S3. L'IA generative excelle ici, d'ou le risque de vibe coding.</p>
+              </div>
+            </div>
+            <div class="bloom-entry bloom-entry--analyze">
+              <span class="be-tag">Analyze</span>
+              <div>
+                <strong>Decomposer, differencier</strong>
+                <p>Identifier des bugs, comparer des algorithmes, decomposer un probleme en sous-problemes. Le debugging (C2.3) est un exemple typique d'Analyze : l'etudiant doit formuler une hypothese et la tester.</p>
+              </div>
+            </div>
+            <div class="bloom-entry bloom-entry--evaluate">
+              <span class="be-tag">Evaluate</span>
+              <div>
+                <strong>Juger, critiquer</strong>
+                <p>Argumenter des choix de conception, critiquer le code d'un pair (peer review), evaluer la pertinence d'une solution. Bloom Evaluate se developpe principalement par la pratique du jugement inter-pairs.</p>
+              </div>
+            </div>
+            <div class="bloom-entry bloom-entry--create">
+              <span class="be-tag">Create</span>
+              <div>
+                <strong>Concevoir, produire</strong>
+                <p>Imaginer et concevoir une architecture ou un systeme de zero. Niveau S5-S6. L'IA assiste mais ne remplace pas le jugement architectural : l'etudiant doit evaluer la pertinence des propositions generees.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-section">
+          <h3>Risque IA par famille de concepts</h3>
+          <p class="legend-intro">
+            Niveau de risque que l'etudiant delegue a l'IA sans construire de comprehension reelle.
+            Derive de la litterature (Bastani 2025 PNAS, Lister 2004, Fuller 2007) et des 22
+            entretiens enseignants du TB. Ce n'est pas un jugement sur l'outil IA mais sur le
+            sequençage de son introduction dans le cursus.
+          </p>
+          <div class="risk-grid">
+            <div class="risk-entry risk-entry--max">
+              <span class="re-badge risk--max">Risque Maximal</span>
+              <div>
+                <strong>Famille Syntaxe (F1)</strong>
+                <p>L'IA generative produit de la syntaxe correcte de maniere quasi systematique. Un etudiant peut generer et soumettre du code valide sans en comprendre un seul element. C'est la zone du vibe coding et du fragile knowledge, ou la detection est la plus difficile. Les outils d'evaluation doivent etre robustes par construction (examen papier, oral, tracage).</p>
+              </div>
+            </div>
+            <div class="risk-entry risk-entry--high">
+              <span class="re-badge risk--high">Risque Eleve</span>
+              <div>
+                <strong>Famille Logique (F2)</strong>
+                <p>L'IA peut aider sur le raisonnement algorithmique mais risque de resoudre le probleme a la place de l'etudiant, notamment sur le debugging et les tests. Le risque de delegation sans comprehension est eleve, en particulier hors classe ou l'usage est non supervise.</p>
+              </div>
+            </div>
+            <div class="risk-entry risk-entry--mod">
+              <span class="re-badge risk--mod">Risque Modere</span>
+              <div>
+                <strong>Famille Architecture (F3)</strong>
+                <p>L'IA assiste sur la conception et la documentation mais ne remplace pas le jugement architectural : les choix de design sont non-triviaux et l'etudiant doit evaluer la pertinence des suggestions generees. Le risque reste present (vibe coding architectural en S3-S4) mais l'ecart entre sortie IA et attente pedagogique est plus facilement detectable.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-section">
+          <h3>Dimension Fuller (Fuller et al. 2007)</h3>
+          <p class="legend-intro">
+            Extension CS-specifique de la taxonomie de Bloom publiee par Fuller et al. dans un rapport
+            ITiCSE Working Group international de 2007. Elle croise les niveaux Bloom avec deux
+            dimensions disciplinaires qui sont au coeur du diagnostic du TB sur l'IA generative.
+          </p>
+          <div class="fuller-grid">
+            <div class="fuller-entry">
+              <span class="fe-tag">Produce</span>
+              <div>
+                <strong>Produire du code, un algorithme, une solution</strong>
+                <p>La dimension que l'IA generative supplante le plus facilement : generer du code fonctionnel a partir d'un enonce. Un etudiant qui s'appuie sur l'IA pour la production sans pratiquer lui-meme ne developpe pas cette competence.</p>
+              </div>
+            </div>
+            <div class="fuller-entry">
+              <span class="fe-tag">Interpret</span>
+              <div>
+                <strong>Lire, tracer, expliquer du code existant</strong>
+                <p>La dimension que l'IA maitrise moins bien et que l'etudiant peut moins facilement deleguer. Les tuteurs IA scaffoldes (CodeHelp I02, CS50 Duck I04) misent precisement sur Interpret pour verifier la comprehension reelle. Lister et al. 2004 montrent que la maitrise d'Interpret est le meilleur predicteur de reussite en programmation.</p>
+              </div>
+            </div>
+          </div>
+          <div class="matrix-legend">
+            <span class="ml-title">Scores de la matrice de pertinence :</span>
+            <span class="ml-item ml--ideal">Ideal (3)</span>
+            <span class="ml-sep">reference litterature ou terrain</span>
+            <span class="ml-item ml--utile">Utile (2)</span>
+            <span class="ml-sep">complement efficace</span>
+            <span class="ml-item ml--ctx">Contextuel (1)</span>
+            <span class="ml-sep">pertinent selon les cas</span>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
     <template v-for="fam in visibleFamilies" :key="fam.id">
       <section class="family-section" :class="'family-section--' + fam.id.toLowerCase()">
         <div class="family-header">
@@ -60,12 +197,19 @@
             <p class="concept-desc">{{ concept.description }}</p>
 
             <div class="concept-bloom">
-              <span v-for="b in concept.bloom" :key="b" class="bloom-tag" :class="bloomClass(b)">{{ b }}</span>
+              <span
+                v-for="b in concept.bloom"
+                :key="b"
+                class="bloom-tag"
+                :class="bloomClass(b)"
+                :title="bloomDesc[b]"
+              >{{ b }}</span>
             </div>
 
             <div class="concept-fuller">
               <span class="fuller-label">Fuller :</span>
               <span class="fuller-value">{{ concept.fuller }}</span>
+              <span class="fuller-hint" :title="fullerHint(concept.fuller)">&#9432;</span>
             </div>
 
             <div v-if="topTools(concept.id).length" class="concept-tools">
@@ -108,6 +252,24 @@ const selectedBloom = ref('')
 const selectedRisk = ref('')
 
 const bloomLevels = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
+
+const bloomDesc = {
+  Remember: 'Memoriser, reconnaitre la syntaxe et les regles. Zone de risque IA maximal.',
+  Understand: 'Expliquer, predire le comportement d\'un programme, tracer son execution.',
+  Apply: 'Ecrire du code fonctionnel pour un probleme donne. Cible privilegiee du vibe coding.',
+  Analyze: 'Decomposer, identifier des bugs, comparer des solutions et des algorithmes.',
+  Evaluate: 'Juger la qualite d\'un code, argumenter des choix de conception, faire un code review.',
+  Create: 'Concevoir une architecture ou un systeme original. Bloom maximal, S5-S6.'
+}
+
+function fullerHint(fuller) {
+  if (fuller?.includes('Produce') && fuller?.includes('Interpret')) {
+    return 'Produce (ecrire du code) et Interpret (lire/tracer du code) sont tous les deux mobilises.'
+  }
+  if (fuller?.includes('Produce')) return 'Principalement Produce : l\'etudiant doit produire du code ou un algorithme.'
+  if (fuller?.includes('Interpret')) return 'Principalement Interpret : l\'etudiant doit lire, tracer et expliquer du code existant.'
+  return fuller || ''
+}
 
 const hasFilters = computed(() =>
   selectedFamily.value !== '' || selectedBloom.value !== '' || selectedRisk.value !== ''
@@ -469,5 +631,244 @@ function bloomClass(b) {
   background: #ffffff;
   border: 1px dashed #e2e8f0;
   border-radius: 10px;
+}
+
+.fuller-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  cursor: help;
+  margin-left: 0.15rem;
+}
+
+/* Legende */
+.legend {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.legend-toggle {
+  padding: 0.9rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.legend-toggle::-webkit-details-marker { display: none; }
+
+.legend-toggle::before {
+  content: '▶';
+  font-size: 0.65rem;
+  color: #94a3b8;
+  transition: transform 0.2s;
+}
+
+details[open] .legend-toggle::before {
+  transform: rotate(90deg);
+}
+
+.legend-body {
+  border-top: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.legend-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.legend-section h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.legend-intro {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.65;
+}
+
+/* Bloom grid */
+.bloom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.bloom-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.bloom-entry--remember  { background: #eff6ff; border-color: #bfdbfe; }
+.bloom-entry--understand { background: #f5f3ff; border-color: #ddd6fe; }
+.bloom-entry--apply     { background: #f0fdf4; border-color: #bbf7d0; }
+.bloom-entry--analyze   { background: #fffbeb; border-color: #fde68a; }
+.bloom-entry--evaluate  { background: #fff7ed; border-color: #fed7aa; }
+.bloom-entry--create    { background: #fdf2f8; border-color: #f9a8d4; }
+
+.be-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.bloom-entry--remember  .be-tag { background: #dbeafe; color: #1e40af; }
+.bloom-entry--understand .be-tag { background: #ede9fe; color: #5b21b6; }
+.bloom-entry--apply     .be-tag { background: #d1fae5; color: #065f46; }
+.bloom-entry--analyze   .be-tag { background: #fef3c7; color: #92400e; }
+.bloom-entry--evaluate  .be-tag { background: #ffedd5; color: #9a3412; }
+.bloom-entry--create    .be-tag { background: #fce7f3; color: #9d174d; }
+
+.bloom-entry strong {
+  display: block;
+  font-size: 0.82rem;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+}
+
+.bloom-entry p {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* Risk grid */
+.risk-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.risk-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.risk-entry--max { background: #fef2f2; border-color: #fecaca; }
+.risk-entry--high { background: #fff7ed; border-color: #fed7aa; }
+.risk-entry--mod { background: #f0fdf4; border-color: #bbf7d0; }
+
+.re-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.risk-entry strong {
+  display: block;
+  font-size: 0.82rem;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+}
+
+.risk-entry p {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* Fuller grid */
+.fuller-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.fuller-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.fe-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: #1e293b;
+  color: #f8fafc;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.fuller-entry strong {
+  display: block;
+  font-size: 0.82rem;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+}
+
+.fuller-entry p {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* Matrix legend */
+.matrix-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.75rem;
+  background: #f8fafc;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.ml-title {
+  font-weight: 700;
+  color: #475569;
+}
+
+.ml-item {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.ml--ideal { background: #1e293b; color: #f8fafc; }
+.ml--utile { background: #e2e8f0; color: #475569; }
+.ml--ctx   { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
+
+.ml-sep {
+  color: #94a3b8;
 }
 </style>
