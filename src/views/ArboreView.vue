@@ -51,7 +51,32 @@
           <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
         </div>
 
-        <PatronBlock v-if="patronForResult" :patron="patronForResult" class="result-patron" />
+        <template v-if="patronForResult && patronForResult.all.length">
+          <!-- Patron correspondant au contexte choisi -->
+          <template v-if="patronForResult.hasExact">
+            <div class="patron-match-banner patron-match-banner--exact">
+              Patron pour "{{ answers.context }}"
+            </div>
+            <PatronBlock
+              v-for="p in patronForResult.exact"
+              :key="p.id"
+              :patron="p"
+              class="result-patron"
+            />
+          </template>
+          <!-- Aucun patron exact : afficher les variantes disponibles -->
+          <template v-else>
+            <div class="patron-match-banner patron-match-banner--fallback">
+              Pas de patron pour "{{ answers.context }}" - variantes disponibles :
+            </div>
+            <PatronBlock
+              v-for="p in patronForResult.all"
+              :key="p.id"
+              :patron="p"
+              class="result-patron"
+            />
+          </template>
+        </template>
 
         <div class="result-actions">
           <button class="btn-primary" @click="restart">Nouvelle recherche</button>
@@ -69,7 +94,7 @@ import { useData } from '../composables/useData.js'
 import ToolCard from '../components/ToolCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 
-const { getPatronByConcept } = useData()
+const { getPatronsByConceptAndContext } = useData()
 
 const questions = [
   {
@@ -170,12 +195,14 @@ function restart() {
   result.value = null
 }
 
-// Extrait l'ID de concept depuis combo.concept_example (ex. "C2.3 Debugging") et cherche le patron
+// Extrait l'ID de concept depuis combo.concept_example (ex. "C2.3 Debugging")
+// et filtre les patrons par le contexte choisi dans l'arbre
 const patronForResult = computed(() => {
   if (!result.value || result.value.source !== 'combo') return null
   const raw = result.value.combo?.concept_example || ''
   const match = raw.match(/^(C\d+\.\d+)/)
-  return match ? getPatronByConcept(match[1]) : null
+  if (!match) return null
+  return getPatronsByConceptAndContext(match[1], answers.value.context)
 })
 </script>
 
@@ -396,7 +423,26 @@ const patronForResult = computed(() => {
 }
 
 .result-patron {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #fde68a;
   padding-top: 0.25rem;
+}
+
+.patron-match-banner {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 5px;
+}
+
+.patron-match-banner--exact {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.patron-match-banner--fallback {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
 }
 </style>

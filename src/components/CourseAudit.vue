@@ -109,10 +109,23 @@
         </div>
 
         <template v-for="cid in (validatedBySection[rec.section_index]?.concept_ids || [])" :key="cid">
-          <PatronBlock
-            v-if="getPatronByConcept(cid)"
-            :patron="getPatronByConcept(cid)"
-          />
+          <template v-if="patronsForSectionConcept(rec.section_index, cid).hasExact">
+            <PatronBlock
+              v-for="p in patronsForSectionConcept(rec.section_index, cid).exact"
+              :key="p.id"
+              :patron="p"
+            />
+          </template>
+          <template v-else-if="patronsForSectionConcept(rec.section_index, cid).all.length">
+            <p class="patron-ctx-note">
+              Variantes (contexte infere : {{ validatedBySection[rec.section_index]?.context || 'non precise' }}) :
+            </p>
+            <PatronBlock
+              v-for="p in patronsForSectionConcept(rec.section_index, cid).all"
+              :key="p.id"
+              :patron="p"
+            />
+          </template>
         </template>
       </div>
 
@@ -128,7 +141,7 @@ import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import PatronBlock from './PatronBlock.vue'
 
-const { getPatronByConcept } = useData()
+const { getPatronsByConceptAndContext } = useData()
 
 const props = defineProps({
   swot: { type: Object, required: true },
@@ -157,6 +170,11 @@ function familyClass(fam) {
 
 function functionLabel(fn) {
   return { F: 'Formative', S: 'Sommative', FS: 'F+S', R: 'Recherche' }[fn] || fn
+}
+
+function patronsForSectionConcept(sectionIndex, conceptId) {
+  const ctx = validatedBySection.value[sectionIndex]?.context
+  return getPatronsByConceptAndContext(conceptId, ctx)
 }
 </script>
 
@@ -436,6 +454,15 @@ function functionLabel(fn) {
   font-size: 0.75rem;
   color: #475569;
   line-height: 1.45;
+}
+
+.patron-ctx-note {
+  font-size: 0.75rem;
+  color: #9a3412;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
 }
 
 .empty-state {

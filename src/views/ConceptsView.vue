@@ -231,12 +231,24 @@
               {{ concept.references }}
             </div>
 
-            <details v-if="getPatronByConcept(concept.id)" class="patron-details">
+            <details v-if="getPatronsByConcept(concept.id).length" class="patron-details">
               <summary class="patron-summary">
-                Patron pedagogique
-                <span class="patron-summary-titre">{{ getPatronByConcept(concept.id).titre }}</span>
+                Patron{{ getPatronsByConcept(concept.id).length > 1 ? 's' : '' }} pedagogique{{ getPatronsByConcept(concept.id).length > 1 ? 's' : '' }}
+                <span class="patron-summary-count" v-if="getPatronsByConcept(concept.id).length > 1">
+                  {{ getPatronsByConcept(concept.id).length }} contextes
+                </span>
+                <span class="patron-summary-titre" v-else>
+                  {{ getPatronsByConcept(concept.id)[0].titre }}
+                </span>
               </summary>
-              <PatronBlock :patron="getPatronByConcept(concept.id)" class="patron-in-card" />
+              <div class="patrons-stack">
+                <PatronBlock
+                  v-for="patron in getPatronsByConcept(concept.id)"
+                  :key="patron.id"
+                  :patron="patron"
+                  class="patron-in-card"
+                />
+              </div>
             </details>
           </article>
         </div>
@@ -254,7 +266,7 @@ import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import PatronBlock from '../components/PatronBlock.vue'
 
-const { concepts, tools, matrix, getPatronByConcept } = useData()
+const { concepts, tools, matrix, getPatronsByConcept } = useData()
 
 const selectedFamily = ref('')
 const selectedBloom = ref('')
@@ -675,6 +687,23 @@ details[open] .patron-summary::before {
 
 .patron-in-card {
   margin-top: 0.5rem;
+}
+
+.patrons-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.patron-summary-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: #fde68a;
+  color: #78350f;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  margin-left: 0.25rem;
 }
 
 .empty-state {

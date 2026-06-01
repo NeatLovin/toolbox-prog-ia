@@ -2,6 +2,9 @@
   <div class="patron-block">
     <div class="patron-header">
       <span class="patron-badge">Patron pedagogique</span>
+      <span v-if="patron.contexte" class="contexte-tag" :class="contexteClass(patron.contexte)">
+        {{ patron.contexte }}
+      </span>
       <span v-for="ph in patron.phase_couverte" :key="ph" class="phase-tag" :class="phaseClass(ph)">
         {{ ph }}
       </span>
@@ -77,6 +80,15 @@ function phaseClass(ph) {
     'phase--evaluer': ph === 'évaluer'
   }
 }
+
+function contexteClass(ctx) {
+  return {
+    'ctx--presentiel': ctx === 'Présentiel encadré',
+    'ctx--autonomie':  ctx === 'Autonomie supervisée',
+    'ctx--projet':     ctx === 'Projet long',
+    'ctx--diagnostic': ctx === 'Diagnostic'
+  }
+}
 </script>
 
 <style scoped>
@@ -108,6 +120,18 @@ function phaseClass(ph) {
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
 }
+
+.contexte-tag {
+  font-size: 0.67rem;
+  font-weight: 700;
+  padding: 0.12rem 0.45rem;
+  border-radius: 3px;
+}
+
+.ctx--presentiel  { background: #dbeafe; color: #1e40af; }
+.ctx--autonomie   { background: #d1fae5; color: #065f46; }
+.ctx--projet      { background: #ede9fe; color: #5b21b6; }
+.ctx--diagnostic  { background: #ffedd5; color: #9a3412; }
 
 .phase-tag {
   font-size: 0.67rem;
