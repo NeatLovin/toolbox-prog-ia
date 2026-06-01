@@ -1,70 +1,95 @@
 # CLAUDE.md — PoC Toolbox
 
-Application web démonstrative développée dans le cadre d'un Travail de Bachelor. Instructions pour le développement, à lire au début de chaque session.
+Application web demonstrative developpee dans le cadre d'un Travail de Bachelor. Instructions pour le developpement, a lire au debut de chaque session.
 
-## Contexte (condensé)
+## Contexte (condense)
 
-Le TB « Apprendre à programmer à l'ère de l'IA générative » (HEG Arc, HES-SO) évalue l'intégration de l'IA générative dans l'apprentissage de la programmation. La Toolbox en est le proof of concept : un catalogue d'outils pédagogiques et un arbre de décision qui aide un enseignant à choisir le ou les bons outils selon son contexte. C'est un artefact démonstratif, pas un produit. Il sera présenté en soutenance, pas déployé en production. Les arbitrages privilégient donc la simplicité, la robustesse en démonstration et la traçabilité, jamais la scalabilité.
+Le TB "Apprendre a programmer a l'ere de l'IA generative" (HEG Arc, HES-SO) evalue l'integration de l'IA generative dans l'apprentissage de la programmation. La Toolbox en est le proof of concept : un catalogue d'outils pedagogiques, un arbre de decision et une extension d'audit de cours. C'est un artefact demonstratif, pas un produit. Les arbitrages privilegient la simplicite, la robustesse en demonstration et la tracabilite, jamais la scalabilite.
 
-Le détail des choix techniques et leur justification complète sont dans le fichier à la racine du dépôt : @Choix_stack_technique_PoC_Toolbox.md
+Le detail des choix techniques est dans @Choix_stack_technique_PoC_Toolbox.md
 
 ## Stack
 
 - Vue 3, Composition API.
-- Données : fichiers JSON statiques chargés au démarrage. Pas de backend, pas de base de données.
-- Styling : CSS scoped Vue comme socle. Tailwind acceptable en option si besoin de rapidité, pas au démarrage.
+- Donnees : fichiers JSON statiques dans src/data/. Pas de backend, pas de base de donnees.
+- Styling : CSS scoped Vue.
 - Build : Vite.
-- Hébergement : GitHub Pages, dépôt `NeatLovin/toolbox-prog-ia`. Mettre `base: '/toolbox-prog-ia/'` dans `vite.config.js`.
-- Ne pas réintroduire React, Svelte, ni framework UI lourd (Vuetify, PrimeVue).
+- Hebergement : GitHub Pages, depot NeatLovin/toolbox-prog-ia. base: '/toolbox-prog-ia/' dans vite.config.js.
+- Ne pas reintroduire React, Svelte, ni framework UI lourd.
 
-## Modèle de données
+## Deux modes d'execution
 
-Quatre fichiers JSON dans `src/data/`, dérivés de la cartographie du TB :
+**Mode statique (GitHub Pages)** : catalogue + concepts + arbre de decision + methodologie. Aucun appel reseau. Le lien "Audit PDF" est invisible (detection localhost au runtime).
 
-- `tools.json` : 49 outils. Chaque outil porte ses attributs pédagogiques (concept couvert, niveau Bloom, fonction, contexte, score de pertinence, coût enseignant).
-- `concepts.json` : 21 sous-concepts de programmation, regroupés par familles.
-- `matrix.json` : matrice de pertinence outil × concept, enrichie de deux dimensions, le coût enseignant (1/2/3) et la fonction pédagogique (F formative, S sommative, FS les deux).
-- `combos.json` : 16 combinatoires préconfigurées, chacune reliant une configuration de paramètres à une recommandation d'outils.
+**Mode local (dev)** : toutes les vues, y compris Audit PDF. Lancer avec `npm run dev:full` (Vite + proxy Anthropic en parallele via concurrently).
 
-Règle stricte : les données JSON sont la source de vérité. Ne jamais inventer un outil, un concept ou un score qui n'y figure pas. Toute donnée affichée doit être traçable jusqu'à ces fichiers.
+## Modele de donnees
 
-## Fonctionnalités centrales
+Quatre fichiers JSON dans src/data/, derives de la cartographie du TB. Source de verite absolue. Ne jamais inventer un outil, un concept ou un score absent de ces fichiers.
 
-Deux vues portent la valeur du PoC.
+- tools.json : 49 outils. Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources.
+- concepts.json : 21 sous-concepts en 3 familles. Champs : id, family, family_id, family_description, risk_ai, name, description, bloom[], fuller, year, references.
+- matrix.json : matrice de pertinence outil x concept. { scale, cells: [{tool, concept, score}] }. Scores 1/2/3.
+- combos.json : 16 combinatoires. Champs : id, year, concept_family, bloom, function, context, recommended_tools[], justification.
+- meta.json : definitions des fils_rouges (Fil A/B/C/D) et scenarios (S1/S2/S3).
+- fixtures/cours-exemple.json : classification pre-calculee d'un cours S1 pour la demo sans reseau.
 
-1. Catalogue interactif : liste filtrable des 49 outils, les filtres réagissent instantanément aux sélections (réactivité Vue).
-2. Arbre de décision : l'utilisateur répond à 5 questions et reçoit une recommandation de 2 à 4 outils. Les 5 paramètres sont Année de cursus, Famille de concepts, Niveau Bloom, Fonction pédagogique, Contexte d'usage.
+## Moteur de recommandation
 
-## Logique de recommandation
+src/lib/recommendation.js : module factorise avec exports :
+- getRecommendation({ year, concept_family, bloom, function, context }) : moteur principal (combos + fallback matriciel).
+- getToolsForConcept(conceptId, minScore) : outils de la matrice pour un concept.
+- getMatchingCombos({ year, families, bloom, fn, context }) : combinatoires correspondantes.
+- bloomCovers, familyCovers, yearCovers : predicats de matching.
 
-Socle obligatoire, déterministe : croiser les réponses de l'utilisateur avec les 16 combinatoires et la matrice de pertinence pour sélectionner et classer les outils. Comportement entièrement prévisible et reproductible, sans dépendance externe. C'est le mode par défaut, et il doit fonctionner de bout en bout sans IA.
+src/composables/useRecommendation.js : re-exporte getRecommendation pour l'arbre de decision.
 
-Extension optionnelle, à ne développer qu'après stabilisation du socle : un appel à un modèle de langage qui reformule en langage naturel la recommandation déjà calculée. Le modèle ne choisit aucun outil, il habille une décision déjà prise. En cas d'échec de l'appel (réseau, API), repli automatique sur la formulation déterministe, sans planter.
+## Fonctionnalites
 
-## Architecture
+1. **Catalogue** (/catalogue) : liste filtrable des 49 outils. Filtres : famille, fonction, cout, robustesse, fil rouge. Clic sur une carte ouvre ToolDetailModal.
+2. **Concepts** (/concepts) : 21 sous-concepts groupes par famille avec risque IA, niveaux Bloom, outils de reference de la matrice.
+3. **Arbre de decision** (/arbre) : wizard 5 questions (annee, famille, Bloom, fonction, contexte) → recommandation deterministe 2-4 outils.
+4. **Methodologie** (/methodologie) : contexte TB, modele de donnees, familles d'outils.
+5. **Audit PDF** (/audit, LOCAL UNIQUEMENT) : voir section ci-dessous.
+
+## Audit PDF (mode local)
+
+Extension exploratoire. Pipeline en 6 etapes :
+
+1. **Extraction** : depot PDF par l'enseignant, extraction texte avec pdf.js (import dynamique) dans le navigateur.
+2. **Segmentation** : detection des titres par hauteur de police (pdf.js text items) + repli regex.
+3. **Classification** : appel API Anthropic via proxy local (localhost:3001) pour chaque section. Sortie JSON stricte : { concept_ids[], bloom, context, confidence }. Les IDs sont valides uniquement parmi les 21 de concepts.json.
+4. **Validation humaine** (SectionReview.vue) : l'enseignant corrige les classifications avant de continuer. Etape obligatoire et visible.
+5. **SWOT deterministe** : croiser les concepts valides avec matrix.json et combos.json. Aucun texte libre du modele. Forces/Faiblesses/Risques/Opportunites tous traceables jusqu'aux donnees.
+6. **Restitution** (CourseAudit.vue) : SWOT 2x2 + recommandations par section issues du moteur factorise.
+
+**Fixture demo** : src/data/fixtures/cours-exemple.json. Charger depuis PdfDropzone pour rejouer sans reseau ni API.
+
+**Proxy local** : proxy/server.js (Express, port 3001). Lit ANTHROPIC_API_KEY depuis .env (gitignore). Ne jamais exposer la cle dans le front.
+
+## Architecture src/
 
 ```
-toolbox-prog-ia/
-├── README.md
-├── Choix_stack_technique_PoC_Toolbox.md   ← document de référence des choix techno
-├── CLAUDE.md                              ← document de référence du contexte
-├── index.html
-├── package.json
-├── vite.config.js                         ← base: '/toolbox-prog-ia/'
-└── src/
-    ├── data/         concepts.json, tools.json, matrix.json, combos.json
-    ├── components/   catalogue, fiche outil, arbre de décision, recommandation
-    ├── views/        accueil, catalogue, arbre, méthodologie
-    └── App.vue
+src/
+  data/           tools.json, concepts.json, matrix.json, combos.json, meta.json
+                  fixtures/cours-exemple.json
+  lib/            recommendation.js (moteur factorise)
+  composables/    useData.js, useRecommendation.js, useAudit.js
+  views/          HomeView, CatalogueView, ConceptsView, ArboreView, MethodologieView, AuditView
+  components/     ToolCard, ToolDetailModal, PdfDropzone, SectionReview, CourseAudit
+  router/         index.js
+  App.vue, main.js
+proxy/
+  server.js       (Express, Node >= 18, non bundle par Vite)
 ```
-
-Ordre de développement suggéré : 1) données JSON, 2) catalogue interactif (valide le chargement et les filtres), 3) arbre de décision avec logique déterministe (cœur fonctionnel), 4) vues accueil et méthodologie, 5) couche générative optionnelle. Le PoC est fonctionnel de bout en bout dès l'arbre de décision terminé.
 
 ## Commandes
 
-- `npm install` puis `npm run dev` pour le développement.
-- `npm run build` génère le bundle statique pour GitHub Pages.
+- `npm install` pour installer les dependances.
+- `npm run dev` pour le dev sans audit (mode statique).
+- `npm run dev:full` pour le dev avec audit (Vite + proxy en parallele).
+- `npm run build` genere le bundle statique pour GitHub Pages.
 
-## Convention de rédaction
+## Convention de redaction
 
-Pour tout texte affiché dans l'interface ou tout contenu rédigé : pas de longs tirets (em-dash), ponctuation naturelle.
+Pour tout texte affiche dans l'interface ou tout contenu redige : pas de longs tirets (em-dash), ponctuation naturelle.

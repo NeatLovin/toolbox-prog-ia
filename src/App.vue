@@ -1,3 +1,7 @@
+<script setup>
+const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+</script>
+
 <template>
   <div id="app-layout">
     <header class="site-header">
@@ -8,6 +12,7 @@
           <li><router-link to="/concepts">Concepts</router-link></li>
           <li><router-link to="/arbre">Arbre de decision</router-link></li>
           <li><router-link to="/methodologie">Methodologie</router-link></li>
+          <li v-if="isLocal"><router-link to="/audit" class="nav-audit">Audit PDF</router-link></li>
         </ul>
       </nav>
     </header>
@@ -93,6 +98,15 @@ a {
 .nav-links a.router-link-active {
   color: #f8fafc;
   background: #334155;
+}
+
+.nav-audit {
+  color: #fcd34d !important;
+}
+
+.nav-audit:hover,
+.nav-audit.router-link-active {
+  background: #422006 !important;
 }
 
 .main-content {

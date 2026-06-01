@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "title": "Introduction a la programmation imperative",
+    "institution": "HEG Arc - Semestre 1",
+    "year_target": "S1",
+    "generated_at": "2026-06-01",
+    "demo": true,
+    "note": "Fixture precalculee pour la demonstration en soutenance. Rejoue le pipeline sans appel reseau."
+  },
+  "sections": [
+    {
+      "index": 0,
+      "title": "1. Organisation du cours et objectifs",
+      "page_start": 1,
+      "text_excerpt": "Ce cours de 60 heures semestre introduit les fondamentaux de la programmation imperative en Python. Objectifs : comprendre les mecanismes de base du langage, produire des programmes courts et corrects, developper les reflexes de lecture et de tracage de code. Evaluation : examen ecrit en semaine 16, controle intermediaire semaine 8. Supports sur Cyberlearn."
+    },
+    {
+      "index": 1,
+      "title": "2. Variables, types et declarations",
+      "page_start": 5,
+      "text_excerpt": "Une variable est un conteneur nomme qui stocke une valeur en memoire. En Python, le type est infere dynamiquement : x = 42 cree une variable entiere. Types primitifs couverts : int, float, str, bool. La portee (scope) determine ou une variable est accessible : locale dans une fonction, globale au module. La conversion explicite (casting) permet de passer d'un type a un autre : int('42') retourne 42. Exercices : declarer des variables, predire leur valeur apres plusieurs affectations successives."
+    },
+    {
+      "index": 2,
+      "title": "3. Structures de controle",
+      "page_start": 12,
+      "text_excerpt": "Les structures de controle dirigent le flux d'execution. Conditions : if / elif / else avec expressions booleennes (and, or, not). Boucles : while (condition) et for (iteration sur sequence). Controle de boucle : break interrompt, continue passe a l'iteration suivante. Exercice type : predire le resultat de trois boucles imbriquees sans executer le code. Lecture et tracage de code obligatoires avant toute production."
+    },
+    {
+      "index": 3,
+      "title": "4. Fonctions et parametrisation",
+      "page_start": 22,
+      "text_excerpt": "Une fonction est un bloc de code reutilisable. Syntaxe : def nom(param1, param2): ... return valeur. Parametres par valeur (int, str) versus par reference (listes). Portee locale et retour de valeurs. Recursivite : fonction qui s'appelle elle-meme avec un cas de base. Travaux pratiques hors classe : implémenter 5 fonctions de complexite croissante, auto-evaluer avec les tests fournis sur Cyberlearn."
+    },
+    {
+      "index": 4,
+      "title": "5. Algorithmique sur papier avant le code",
+      "page_start": 33,
+      "text_excerpt": "Avant d'ecrire une seule ligne de code, l'etudiant decompose le probleme sur papier. Methode : identifier les entrees, les sorties, les sous-problemes, les invariants. Diagramme de flux, pseudo-code. Exercice : resoudre trois problemes de tri et de recherche en pseudo-code uniquement, sans acces a Python. Cette approche oblige a construire le raisonnement algorithmique avant de deleguer la syntaxe a un outil. Seance en presentiel entierement sur papier."
+    },
+    {
+      "index": 5,
+      "title": "6. Tracage de code et lecture",
+      "page_start": 42,
+      "text_excerpt": "Lire et executer mentalement un programme est une competence distincte de l'ecriture. QCM sur tables de tracage : predire la valeur de chaque variable a chaque etape d'execution. Exercices Lister : 20 programmes courts, repondre par ecrit avant de lancer. Methode think-aloud : verbaliser le raisonnement a voix haute. Le tracage est evalue separement de la production lors du controle intermediaire."
+    },
+    {
+      "index": 6,
+      "title": "7. Debugging et strategie de diagnostic",
+      "page_start": 51,
+      "text_excerpt": "Un bug est un ecart entre le comportement observe et le comportement attendu. Strategie : formuler une hypothese sur la cause, concevoir un test minimal, corriger, valider. Types d'erreurs : syntaxe (detectee a la compilation), logique (execution incorrecte), semantique (mauvaise interpretation). Outils : print de debug, assert, lecture du traceback. Exercice : diagnostiquer 5 programmes bugges sans les executer, puis valider en console."
+    }
+  ],
+  "classifications": [
+    {
+      "section_index": 0,
+      "concept_ids": [],
+      "bloom": null,
+      "context": "Presentiel encadre",
+      "confidence": 0.1,
+      "note": "Section introductive et organisationnelle, pas de concept pedagogique de programmation identifiable."
+    },
+    {
+      "section_index": 1,
+      "concept_ids": ["C1.1"],
+      "bloom": "Remember",
+      "context": "Presentiel encadre",
+      "confidence": 0.95
+    },
+    {
+      "section_index": 2,
+      "concept_ids": ["C1.2"],
+      "bloom": "Apply",
+      "context": "Presentiel encadre",
+      "confidence": 0.92
+    },
+    {
+      "section_index": 3,
+      "concept_ids": ["C1.3"],
+      "bloom": "Apply",
+      "context": "Autonomie supervisee",
+      "confidence": 0.88
+    },
+    {
+      "section_index": 4,
+      "concept_ids": ["C2.1"],
+      "bloom": "Analyze",
+      "context": "Presentiel encadre",
+      "confidence": 0.91
+    },
+    {
+      "section_index": 5,
+      "concept_ids": ["C2.2"],
+      "bloom": "Understand",
+      "context": "Presentiel encadre",
+      "confidence": 0.94
+    },
+    {
+      "section_index": 6,
+      "concept_ids": ["C2.3"],
+      "bloom": "Analyze",
+      "context": "Autonomie supervisee",
+      "confidence": 0.87
+    }
+  ]
+}
