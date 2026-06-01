@@ -5,6 +5,7 @@
         <router-link to="/" class="site-title">Toolbox Prog IA</router-link>
         <ul class="nav-links">
           <li><router-link to="/catalogue">Catalogue</router-link></li>
+          <li><router-link to="/concepts">Concepts</router-link></li>
           <li><router-link to="/arbre">Arbre de decision</router-link></li>
           <li><router-link to="/methodologie">Methodologie</router-link></li>
         </ul>
