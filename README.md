@@ -4,56 +4,70 @@ Proof of concept du Travail de Bachelor *Apprendre a programmer a l'ere de l'IA 
 
 ## Presentation
 
-La Toolbox est un catalogue interactif de 49 outils pedagogiques accompagne d'un arbre de decision a 5 parametres. Elle aide les enseignants a choisir les outils adaptes a leur contexte pour enseigner la programmation dans un environnement ou l'IA generative est omnipresente.
+La Toolbox aide les enseignants a choisir les bons outils pedagogiques pour enseigner la programmation en presence d'IA generative. Elle croise une cartographie de 49 outils, 21 sous-concepts et 32 patrons d'activite issus du TB.
 
 ## Fonctionnalites
 
-- **Catalogue** : liste filtrable des 49 outils (famille, fonction pedagogique, cout enseignant, recherche libre).
-- **Arbre de decision** : 5 questions (annee de cursus, famille de concepts, niveau Bloom, fonction pedagogique, contexte) produisent une recommandation deterministe de 2 a 4 outils.
-- **Methodologie** : description du modele de donnees et du contexte scientifique.
+- **Catalogue** : 49 outils filtrables par famille, fonction, cout enseignant, robustesse IA et fil rouge. Clic sur une fiche pour voir tous les attributs.
+- **Concepts** : 21 sous-concepts en 3 familles (Syntaxe, Logique, Architecture), avec niveaux Bloom, risque IA, outils de reference issus de la matrice et patrons pedagogiques associes.
+- **Arbre de decision** : 5 questions (annee, famille de concepts, niveau Bloom, fonction, contexte) produisent une recommandation deterministe 2-4 outils + le patron d'activite correspondant au contexte choisi.
+- **Methodologie** : contexte DSR du TB, modele de donnees, familles d'outils, taxonomies Bloom et Fuller.
+- **Audit PDF** *(local uniquement)* : deposer un PDF de cours pour obtenir une analyse SWOT section par section avec recommandations d'outils et patrons, sans aucune generation de texte libre.
 
 ## Donnees
 
-Quatre fichiers JSON dans `src/data/`, derives de la cartographie du TB :
+Six fichiers JSON dans `src/data/`, source de verite absolue. Toute donnee affichee est tracable jusqu'a eux.
 
 | Fichier | Contenu |
 |---|---|
-| `tools.json` | 49 outils avec attributs pedagogiques |
-| `concepts.json` | 21 sous-concepts (3 familles : Syntaxe, Logique, Architecture) |
-| `matrix.json` | Matrice de pertinence outil x concept (scores 1-3) |
-| `combos.json` | 16 combinatoires preconfigures avec justification |
+| `tools.json` | 49 outils, 4 familles (FM1-FM4), attributs : robustesse IA, cout, cyberlearn, fils rouges |
+| `concepts.json` | 21 sous-concepts, 3 familles, avec risque IA et dimension Fuller |
+| `matrix.json` | Matrice de pertinence outil x concept (840 cellules, scores 1-3) |
+| `combos.json` | 16 combinatoires preconfigures avec justification pedagogique |
+| `meta.json` | Definitions des fils rouges (Fil A-D) et scenarios (S1-S3) |
+| `patrons.json` | 32 patrons d'activite (1-2 par concept), alignement constructif Biggs 1996, filtres par contexte |
 
-Les fichiers JSON sont la source de verite. Toute donnee affichee est tracable jusqu'a eux.
+## Deux modes d'execution
+
+**Mode statique** (`npm run dev` ou GitHub Pages) : catalogue, concepts, arbre, methodologie.
+
+**Mode local avec audit** (`npm run dev:full`) : ajoute la vue Audit PDF. Necessite un fichier `.env` avec `ANTHROPIC_API_KEY` a la racine (voir `.env.example`). Le proxy Express tourne en parallele sur le port 3001.
 
 ## Stack technique
 
-- Vue 3, Composition API
-- Vite
-- Vue Router (hash history)
-- CSS scoped natif, pas de framework UI
-- Hebergement : GitHub Pages
+- Vue 3, Composition API, CSS scoped natif
+- Vite, Vue Router (hash history)
+- pdfjs-dist (import dynamique, uniquement en mode audit)
+- Hebergement : GitHub Pages (`base: '/toolbox-prog-ia/'`)
 
-## Developpement
+## Commandes
 
 ```bash
 npm install
-npm run dev      # serveur de developpement
-npm run build    # bundle statique dans dist/
+npm run dev         # dev sans audit (mode statique)
+npm run dev:full    # dev avec audit PDF (Vite + proxy Anthropic)
+npm run build       # bundle statique pour GitHub Pages
 ```
 
 ## Structure
 
 ```
 src/
-  data/           tools.json, concepts.json, matrix.json, combos.json
-  composables/    useData.js, useRecommendation.js
-  views/          HomeView, CatalogueView, ArboreView, MethodologieView
-  components/     ToolCard.vue
+  data/           tools.json, concepts.json, matrix.json, combos.json, meta.json
+                  patrons.json
+                  fixtures/cours-exemple.json
+  lib/            recommendation.js  (moteur deterministe factorise)
+  composables/    useData.js, useRecommendation.js, useAudit.js
+  views/          HomeView, CatalogueView, ConceptsView, ArboreView,
+                  MethodologieView, AuditView
+  components/     ToolCard, ToolDetailModal, PatronBlock,
+                  PdfDropzone, SectionReview, CourseAudit
   router/         index.js
-  App.vue
-  main.js
+  App.vue, main.js
+proxy/
+  server.js       proxy Express Node >= 18 (non deploye sur GitHub Pages)
 ```
 
 ## Choix techniques
 
-Voir [Choix_stack_technique_PoC_Toolbox.md](Choix_stack_technique_PoC_Toolbox.md) pour la justification detaillee de chaque arbitrage.
+Voir [Choix_stack_technique_PoC_Toolbox.md](Choix_stack_technique_PoC_Toolbox.md) pour la justification argumentee de chaque arbitrage.
