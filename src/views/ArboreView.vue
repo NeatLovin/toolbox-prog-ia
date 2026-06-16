@@ -45,27 +45,30 @@
           <span v-else class="source-badge source-badge--matrix">Score matriciel</span>
         </div>
 
-        <p v-if="result.justification" class="result-justification">{{ result.justification }}</p>
-
         <div class="result-tools">
           <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
         </div>
 
-        <template v-if="patronForResult && patronForResult.all.length">
-          <!-- Patron correspondant au contexte choisi -->
-          <template v-if="patronForResult.hasExact">
-            <div class="patron-match-banner patron-match-banner--exact">
-              Patron pour "{{ answers.context }}"
-            </div>
+        <details v-if="result.justification" class="result-detail">
+          <summary class="detail-summary">Justification</summary>
+          <p class="result-justification">{{ result.justification }}</p>
+        </details>
+
+        <details v-if="patronForResult && patronForResult.all.length" class="result-detail">
+          <summary class="detail-summary">
+            Patron pedagogique
+            <span v-if="patronForResult.hasExact" class="patron-ctx-tag patron-ctx-tag--exact">Pour "{{ answers.context }}"</span>
+            <span v-else class="patron-ctx-tag patron-ctx-tag--fallback">Variantes disponibles</span>
+          </summary>
+          <div v-if="patronForResult.hasExact">
             <PatronBlock
               v-for="p in patronForResult.exact"
               :key="p.id"
               :patron="p"
               class="result-patron"
             />
-          </template>
-          <!-- Aucun patron exact : afficher les variantes disponibles -->
-          <template v-else>
+          </div>
+          <div v-else>
             <div class="patron-match-banner patron-match-banner--fallback">
               Pas de patron pour "{{ answers.context }}" - variantes disponibles :
             </div>
@@ -75,8 +78,8 @@
               :patron="p"
               class="result-patron"
             />
-          </template>
-        </template>
+          </div>
+        </details>
 
         <div class="result-actions">
           <button class="btn-primary" @click="restart">Nouvelle recherche</button>
@@ -401,13 +404,45 @@ const patronForResult = computed(() => {
 .source-badge--exact { background: #dcfce7; color: #14532d; }
 .source-badge--matrix { background: #fef3c7; color: #78350f; }
 
+.result-detail {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.detail-summary {
+  padding: 0.65rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  user-select: none;
+}
+
+.detail-summary::-webkit-details-marker { display: none; }
+
+.detail-summary::before {
+  content: '▶';
+  font-size: 0.6rem;
+  color: #94a3b8;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+details[open] .detail-summary::before { transform: rotate(90deg); }
+
 .result-justification {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #475569;
   background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
   border-left: 3px solid #2563eb;
-  padding: 0.75rem 1rem;
-  border-radius: 0 6px 6px 0;
+  padding: 0.85rem 1rem;
 }
 
 .result-tools {
@@ -423,9 +458,19 @@ const patronForResult = computed(() => {
 }
 
 .result-patron {
-  border-top: 1px solid #fde68a;
-  padding-top: 0.25rem;
+  margin-top: 0.5rem;
 }
+
+.patron-ctx-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+.patron-ctx-tag--exact { background: #dcfce7; color: #14532d; }
+.patron-ctx-tag--fallback { background: #ffedd5; color: #9a3412; }
 
 .patron-match-banner {
   font-size: 0.75rem;
