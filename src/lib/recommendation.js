@@ -92,6 +92,44 @@ export function getToolsForConcept(conceptId, minScore = 2) {
     .sort((a, b) => b.matrix_score - a.matrix_score)
 }
 
+export const GENERIC_RECOMMENDATION = `Cette analyse croise les concepts detectes dans votre cours avec la matrice de pertinence (840 cellules, scores 1 a 3) et les 32 patrons d'activite du TB. Chaque recommandation est tracable jusqu'aux donnees sources. La Toolbox aide a identifier des leviers pertinents selon la configuration pedagogique detectee ; les choix restent ceux de l'enseignant.`
+
+// Calcule une recommandation globale deterministe pour l'ensemble du cours.
+// Retourne : { dominantFamily, risk, dominantBloom, levers, conceptCount, sectionCount }
+export function computeCourseGlobalRec(validatedClassifs) {
+  const allConceptIds = [...new Set(validatedClassifs.flatMap(s => s.concept_ids))]
+
+  const familyCounts = {}
+  allConceptIds.forEach(id => {
+    const c = conceptsData.find(c => c.id === id)
+    if (c) familyCounts[c.family] = (familyCounts[c.family] || 0) + 1
+  })
+  const dominantFamily = Object.entries(familyCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || null
+
+  const riskMap = { Syntaxe: 'Maximal', Logique: 'Eleve', Architecture: 'Modere' }
+  const risk = dominantFamily ? (riskMap[dominantFamily] || null) : null
+
+  const bloomCounts = {}
+  validatedClassifs.forEach(s => { if (s.bloom) bloomCounts[s.bloom] = (bloomCounts[s.bloom] || 0) + 1 })
+  const dominantBloom = Object.entries(bloomCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || null
+
+  const familyConceptIds = dominantFamily
+    ? allConceptIds.filter(id => conceptsData.find(c => c.id === id)?.family === dominantFamily)
+    : allConceptIds
+
+  const toolScores = {}
+  matrixData.cells
+    .filter(cell => familyConceptIds.includes(cell.concept))
+    .forEach(cell => { toolScores[cell.tool] = (toolScores[cell.tool] || 0) + cell.score })
+
+  const levers = toolsData
+    .filter(t => (t.robustness_num ?? 0) >= 3 && toolScores[t.id])
+    .sort((a, b) => (toolScores[b.id] || 0) - (toolScores[a.id] || 0))
+    .slice(0, 3)
+
+  return { dominantFamily, risk, dominantBloom, levers, conceptCount: allConceptIds.length, sectionCount: validatedClassifs.length }
+}
+
 // Retourne les combos correspondant aux parametres donnes (tous facultatifs sauf families qui est un tableau).
 export function getMatchingCombos({ year, families, bloom, fn, context } = {}) {
   return combosData
