@@ -190,7 +190,7 @@
           >
             <div class="concept-header">
               <span class="concept-id">{{ concept.id }}</span>
-              <span class="concept-year">{{ concept.year }}</span>
+              <span class="concept-level">{{ concept.level }}</span>
             </div>
 
             <h3 class="concept-name">{{ concept.name }}</h3>
@@ -545,7 +545,7 @@ function bloomClass(b) {
   font-family: monospace;
 }
 
-.concept-year {
+.concept-level {
   font-size: 0.72rem;
   font-weight: 600;
   color: #64748b;
