@@ -111,7 +111,7 @@ function detectYear(classifs) {
   const counts = {}
   ids.forEach(id => {
     const c = conceptsData.find(c => c.id === id)
-    const prefix = c?.year?.startsWith('S') ? c.year.split('-')[0] : 'S1'
+    const prefix = c?.level?.startsWith('S') ? c.level.split('-')[0] : 'S1'
     counts[prefix] = (counts[prefix] || 0) + 1
   })
   return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'S1'
@@ -148,11 +148,11 @@ function computeSwot(classifs, allSections) {
     .filter(Boolean)
 
   // Concepts attendus en S1 mais absents du cours
-  const expectedForYear = conceptsData.filter(c => c.year === 'S1' || c.year === 'S1-S2')
+  const expectedForYear = conceptsData.filter(c => c.level === 'Novice')
   const missingExpected = expectedForYear
     .filter(c => !allConceptIds.includes(c.id))
     .slice(0, 3)
-    .map(concept => ({ concept, reason: `Concept attendu en ${concept.year} non detecte dans le cours.` }))
+    .map(concept => ({ concept, reason: `Concept de niveau ${concept.level} non detecte dans le cours.` }))
 
   const faiblesses = [...poorlyCovered, ...missingExpected]
 
@@ -182,7 +182,7 @@ function computeRecommendations(classifs) {
     .map(s => {
       const concept = conceptsData.find(c => c.id === s.concept_ids[0])
       const rec = getRecommendation({
-        year: (() => { const y = concept?.year; return y?.startsWith('S') ? y.split('-')[0] : 'S1' })(),
+        year: (() => { const y = concept?.level; return y?.startsWith('S') ? y.split('-')[0] : 'S1' })(),
         concept_family: concept?.family || 'Syntaxe',
         bloom: s.bloom,
         function: 'Formative',
