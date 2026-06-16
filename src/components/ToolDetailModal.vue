@@ -71,6 +71,13 @@
           <h3 class="section-title">Sources</h3>
           <p class="sources-text">{{ tool.sources }}</p>
         </div>
+
+        <div v-if="tool.link" class="section">
+          <a :href="tool.link" target="_blank" rel="noopener noreferrer" class="tool-link-btn">
+            Voir la ressource
+            <span class="tool-link-domain">{{ linkDomain }}</span>
+          </a>
+        </div>
       </div>
     </div>
   </Teleport>
@@ -127,6 +134,10 @@ const functionClass = computed(() => ({
   'badge--sommative': props.tool?.function === 'S',
   'badge--both': props.tool?.function === 'FS'
 }))
+
+const linkDomain = computed(() => {
+  try { return new URL(props.tool?.link || '').hostname.replace('www.', '') } catch { return '' }
+})
 
 const robustnessClass = computed(() => {
   const n = props.tool?.robustness_num
@@ -352,5 +363,27 @@ const robustnessClass = computed(() => {
   font-size: 0.82rem;
   color: #64748b;
   font-style: italic;
+}
+
+.tool-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #1e293b;
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+
+.tool-link-btn:hover { background: #334155; }
+
+.tool-link-domain {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 400;
 }
 </style>
