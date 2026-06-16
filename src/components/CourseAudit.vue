@@ -13,6 +13,45 @@
       <button class="btn-reset" @click="$emit('reset')">Nouvelle analyse</button>
     </div>
 
+    <!-- Banniere methodologique -->
+    <div class="generic-rec-banner">
+      <span class="grb-label">Methodologie</span>
+      <p class="grb-text">{{ GENERIC_RECOMMENDATION }}</p>
+    </div>
+
+    <!-- Recommandation globale -->
+    <section v-if="globalRec.dominantFamily" class="global-rec">
+      <h2 class="gr-title">Recommandation globale du cours</h2>
+      <div class="gr-stats">
+        <div class="gr-stat">
+          <span class="gr-stat-label">Famille dominante</span>
+          <span class="gr-stat-value">{{ globalRec.dominantFamily }}</span>
+        </div>
+        <div class="gr-stat">
+          <span class="gr-stat-label">Risque IA global</span>
+          <span class="gr-risk-badge" :class="riskClass(globalRec.risk)">{{ globalRec.risk }}</span>
+        </div>
+        <div v-if="globalRec.dominantBloom" class="gr-stat">
+          <span class="gr-stat-label">Bloom dominant</span>
+          <span class="gr-stat-value">{{ globalRec.dominantBloom }}</span>
+        </div>
+        <div class="gr-stat">
+          <span class="gr-stat-label">Concepts detectes</span>
+          <span class="gr-stat-value">{{ globalRec.conceptCount }}</span>
+        </div>
+      </div>
+      <div v-if="globalRec.levers.length" class="gr-levers">
+        <span class="gr-levers-label">Leviers prioritaires (robustesse elevee, score matriciel fort)</span>
+        <div class="gr-levers-list">
+          <div v-for="t in globalRec.levers" :key="t.id" class="gr-lever">
+            <span class="gr-lever-id">{{ t.id }}</span>
+            <span class="gr-lever-name">{{ t.name }}</span>
+            <span class="gr-lever-rob">Robustesse {{ t.robustness_ai }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SWOT -->
     <section class="swot-grid">
       <!-- Forces -->
@@ -140,6 +179,7 @@
 import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import PatronBlock from './PatronBlock.vue'
+import { GENERIC_RECOMMENDATION, computeCourseGlobalRec } from '../lib/recommendation.js'
 
 const { getPatronsByConceptAndContext } = useData()
 
@@ -154,6 +194,13 @@ defineEmits(['reset'])
 
 const validatedCount = computed(() => props.validated.length)
 const allConceptIds = computed(() => [...new Set(props.validated.flatMap(s => s.concept_ids))])
+const globalRec = computed(() => computeCourseGlobalRec(props.validated))
+
+function riskClass(risk) {
+  if (risk === 'Maximal') return 'risk--max'
+  if (risk === 'Eleve') return 'risk--high'
+  return 'risk--mod'
+}
 
 // Index section_index -> validated entry pour acces O(1) dans le template
 const validatedBySection = computed(() =>
@@ -473,5 +520,147 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   border: 1px dashed #e2e8f0;
   border-radius: 10px;
   font-size: 0.875rem;
+}
+
+/* Banniere methodologique */
+.generic-rec-banner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.grb-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  white-space: nowrap;
+  padding-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.grb-text {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Recommandation globale */
+.global-rec {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.gr-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #78350f;
+}
+
+.gr-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gr-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  min-width: 120px;
+}
+
+.gr-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #92400e;
+}
+
+.gr-stat-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.gr-risk-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.risk--max { background: #fee2e2; color: #b91c1c; }
+.risk--high { background: #ffedd5; color: #c2410c; }
+.risk--mod { background: #dcfce7; color: #15803d; }
+
+.gr-levers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gr-levers-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.gr-levers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gr-lever {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid #fde68a;
+  border-radius: 5px;
+  padding: 0.4rem 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gr-lever-id {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: #475569;
+}
+
+.gr-lever-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+}
+
+.gr-lever-rob {
+  font-size: 0.7rem;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 600;
 }
 </style>
