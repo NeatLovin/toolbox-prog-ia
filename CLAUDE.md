@@ -62,8 +62,8 @@ references     : sources academiques
 
 Quatre fichiers JSON dans src/data/, derives de la cartographie du TB. Source de verite absolue. Ne jamais inventer un outil, un concept ou un score absent de ces fichiers.
 
-- tools.json : 49 outils. Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources.
-- concepts.json : 21 sous-concepts en 3 familles. Champs : id, family, family_id, family_description, risk_ai, name, description, bloom[], fuller, year, references.
+- tools.json : 48 outils (NVivo supprime, Argos=T11). Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources, link (optionnel, URL externe pour ~9 outils).
+- concepts.json : 21 sous-concepts en 3 familles. Champs : id, family, family_id, family_description, risk_ai, name, description, bloom[], fuller, level, references. (Champ "level" = niveau etudiant : Novice / Intermediaire / Avance / Transversal. Ancien champ "year" supprime.)
 - matrix.json : matrice de pertinence outil x concept. { scale, cells: [{tool, concept, score}] }. Scores 1/2/3.
 - combos.json : 16 combinatoires. Champs : id, year, concept_family, bloom, function, context, recommended_tools[], justification.
 - meta.json : definitions des fils_rouges (Fil A/B/C/D) et scenarios (S1/S2/S3).
@@ -76,6 +76,8 @@ src/lib/recommendation.js : module factorise avec exports :
 - getToolsForConcept(conceptId, minScore) : outils de la matrice pour un concept.
 - getMatchingCombos({ year, families, bloom, fn, context }) : combinatoires correspondantes.
 - bloomCovers, familyCovers, yearCovers : predicats de matching.
+- GENERIC_RECOMMENDATION : constante texte explicatif de la methodologie.
+- computeCourseGlobalRec(validatedClassifs) : recommandation globale deterministe (famille dominante, risque, bloom, leviers).
 
 src/composables/useRecommendation.js : re-exporte getRecommendation pour l'arbre de decision.
 
