@@ -7,10 +7,14 @@
     "risk_ai": "Maximal",
     "name": "Variables, types et declarations",
     "description": "Notion de variable, typage statique vs dynamique, scope, duree de vie, conversion de types.",
-    "bloom": ["Remember", "Understand", "Apply"],
+    "bloom": [
+      "Remember",
+      "Understand",
+      "Apply"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S1",
-    "references": "Brennan & Resnick 2012 · Fuller et al. 2007"
+    "references": "Brennan & Resnick 2012 Â· Fuller et al. 2007",
+    "level": "S1"
   },
   {
     "id": "C1.2",
@@ -20,10 +24,12 @@
     "risk_ai": "Maximal",
     "name": "Structures de controle",
     "description": "if/else, switch, while, for, do-while, break/continue, expressions booleennes.",
-    "bloom": ["Apply"],
+    "bloom": [
+      "Apply"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S1",
-    "references": "Lister et al. 2004 (Q1-Q12)"
+    "references": "Lister et al. 2004 (Q1-Q12)",
+    "level": "S1"
   },
   {
     "id": "C1.3",
@@ -33,10 +39,13 @@
     "risk_ai": "Maximal",
     "name": "Fonctions et parametrisation",
     "description": "Definition, appel, parametres par valeur/reference, retour, recursivite, scope.",
-    "bloom": ["Apply", "Analyze"],
+    "bloom": [
+      "Apply",
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S1-S2",
-    "references": "McCracken et al. 2001"
+    "references": "McCracken et al. 2001",
+    "level": "S1-S2"
   },
   {
     "id": "C1.4",
@@ -46,10 +55,13 @@
     "risk_ai": "Maximal",
     "name": "Structures de donnees primitives",
     "description": "Tableaux, listes, dictionnaires/maps, ensembles, chaines de caracteres.",
-    "bloom": ["Apply", "Analyze"],
+    "bloom": [
+      "Apply",
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S1-S2",
-    "references": "Lister et al. 2004 · Fuller et al. 2007"
+    "references": "Lister et al. 2004 Â· Fuller et al. 2007",
+    "level": "S1-S2"
   },
   {
     "id": "C1.5",
@@ -59,10 +71,13 @@
     "risk_ai": "Maximal",
     "name": "Syntaxe orientee objet",
     "description": "Classes, instances, attributs, methodes, heritage, polymorphisme, encapsulation.",
-    "bloom": ["Apply", "Analyze"],
+    "bloom": [
+      "Apply",
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S2",
-    "references": "Anderson & Krathwohl 2001"
+    "references": "Anderson & Krathwohl 2001",
+    "level": "S2"
   },
   {
     "id": "C1.6",
@@ -72,10 +87,12 @@
     "risk_ai": "Maximal",
     "name": "Gestion des erreurs",
     "description": "try/catch/finally, throw, types d'exceptions, gestion defensive, contrats.",
-    "bloom": ["Apply"],
+    "bloom": [
+      "Apply"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S2",
-    "references": "Anthropic 2025a"
+    "references": "Anthropic 2025a",
+    "level": "S2"
   },
   {
     "id": "C1.7",
@@ -85,10 +102,13 @@
     "risk_ai": "Maximal",
     "name": "Conventions de style et lisibilite",
     "description": "Nommage, indentation, commentaires, conventions de langage, linting, formattage.",
-    "bloom": ["Understand", "Evaluate"],
+    "bloom": [
+      "Understand",
+      "Evaluate"
+    ],
     "fuller": "Interpret (principalement)",
-    "year": "Transversal",
-    "references": "Brooks 1983 (beacons) · Wiedenbeck 1986"
+    "references": "Brooks 1983 (beacons) Â· Wiedenbeck 1986",
+    "level": "Transversal"
   },
   {
     "id": "C2.1",
@@ -98,10 +118,12 @@
     "risk_ai": "Eleve",
     "name": "Decomposition algorithmique",
     "description": "Decomposer un probleme en sous-problemes resolubles, identifier les invariants.",
-    "bloom": ["Analyze"],
+    "bloom": [
+      "Analyze"
+    ],
     "fuller": "Produce",
-    "year": "Transversal",
-    "references": "McCracken et al. 2001 · Wing 2006"
+    "references": "McCracken et al. 2001 Â· Wing 2006",
+    "level": "Transversal"
   },
   {
     "id": "C2.2",
@@ -111,10 +133,13 @@
     "risk_ai": "Eleve",
     "name": "Tracage de code (reading skills)",
     "description": "Executer mentalement un programme, suivre l'etat des variables, predire la sortie.",
-    "bloom": ["Understand", "Apply"],
+    "bloom": [
+      "Understand",
+      "Apply"
+    ],
     "fuller": "Interpret",
-    "year": "S1-S2",
-    "references": "Lister et al. 2004 · Perkins & Martin 1986"
+    "references": "Lister et al. 2004 Â· Perkins & Martin 1986",
+    "level": "S1-S2"
   },
   {
     "id": "C2.3",
@@ -124,10 +149,12 @@
     "risk_ai": "Eleve",
     "name": "Debugging et diagnostic",
     "description": "Identifier la nature d'un bug, localiser sa source, formuler une hypothese, tester.",
-    "bloom": ["Analyze"],
+    "bloom": [
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "Transversal",
-    "references": "Perkins et al. 1989 · Soloway 1986"
+    "references": "Perkins et al. 1989 Â· Soloway 1986",
+    "level": "Transversal"
   },
   {
     "id": "C2.4",
@@ -137,10 +164,13 @@
     "risk_ai": "Eleve",
     "name": "Ecriture de tests et validation",
     "description": "Tests unitaires, integration, TDD, couverture, assertions, contrats.",
-    "bloom": ["Apply", "Evaluate"],
+    "bloom": [
+      "Apply",
+      "Evaluate"
+    ],
     "fuller": "Produce",
-    "year": "S3-S5",
-    "references": "Biggs 1996"
+    "references": "Biggs 1996",
+    "level": "S3-S5"
   },
   {
     "id": "C2.5",
@@ -150,10 +180,13 @@
     "risk_ai": "Eleve",
     "name": "Raisonnement sur la complexite",
     "description": "Notation O() asymptotique, analyse cout memoire, comparaison d'algorithmes.",
-    "bloom": ["Analyze", "Evaluate"],
+    "bloom": [
+      "Analyze",
+      "Evaluate"
+    ],
     "fuller": "Interpret",
-    "year": "S3-S4",
-    "references": "Fuller et al. 2007"
+    "references": "Fuller et al. 2007",
+    "level": "S3-S4"
   },
   {
     "id": "C2.6",
@@ -163,10 +196,12 @@
     "risk_ai": "Eleve",
     "name": "Invariants et preservation d'etat",
     "description": "Identifier les invariants d'une boucle, conditions de bord, preconditions/postconditions.",
-    "bloom": ["Analyze"],
+    "bloom": [
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S3-S4",
-    "references": "Lister et al. 2004 (Q8)"
+    "references": "Lister et al. 2004 (Q8)",
+    "level": "S3-S4"
   },
   {
     "id": "C2.7",
@@ -176,10 +211,13 @@
     "risk_ai": "Eleve",
     "name": "Patterns de resolution de problemes",
     "description": "Reconnaitre des patterns algorithmiques et les transposer dans de nouveaux contextes.",
-    "bloom": ["Analyze", "Create"],
+    "bloom": [
+      "Analyze",
+      "Create"
+    ],
     "fuller": "Produce",
-    "year": "Transversal",
-    "references": "Soloway & Ehrlich 1984 · Clancy & Linn 1999"
+    "references": "Soloway & Ehrlich 1984 Â· Clancy & Linn 1999",
+    "level": "Transversal"
   },
   {
     "id": "C3.1",
@@ -189,10 +227,13 @@
     "risk_ai": "Modere",
     "name": "Conception modulaire",
     "description": "Decoupage en modules coherents et faiblement couples. Single Responsibility, interfaces, abstractions.",
-    "bloom": ["Analyze", "Create"],
+    "bloom": [
+      "Analyze",
+      "Create"
+    ],
     "fuller": "Produce",
-    "year": "S3-S5",
-    "references": "Brennan & Resnick 2012 · Anthropic 2025a"
+    "references": "Brennan & Resnick 2012 Â· Anthropic 2025a",
+    "level": "S3-S5"
   },
   {
     "id": "C3.2",
@@ -202,10 +243,13 @@
     "risk_ai": "Modere",
     "name": "Design patterns",
     "description": "Patterns du Gang of Four (Singleton, Factory, Observer, MVC, etc.), reconnaissance et application.",
-    "bloom": ["Apply", "Analyze"],
+    "bloom": [
+      "Apply",
+      "Analyze"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S3-S5",
-    "references": "Soloway & Ehrlich 1984"
+    "references": "Soloway & Ehrlich 1984",
+    "level": "S3-S5"
   },
   {
     "id": "C3.3",
@@ -215,10 +259,12 @@
     "risk_ai": "Modere",
     "name": "Architecture multi-tiers",
     "description": "Architectures n-tiers, API REST, separation presentation/metier/donnees, microservices.",
-    "bloom": ["Analyze"],
+    "bloom": [
+      "Analyze"
+    ],
     "fuller": "Produce",
-    "year": "S3-S5",
-    "references": "Anthropic 2025a"
+    "references": "Anthropic 2025a",
+    "level": "S3-S5"
   },
   {
     "id": "C3.4",
@@ -228,10 +274,13 @@
     "risk_ai": "Modere",
     "name": "Performance et optimisation",
     "description": "Profilage, identification de goulots, optimisations algorithmiques et systemes.",
-    "bloom": ["Analyze", "Evaluate"],
+    "bloom": [
+      "Analyze",
+      "Evaluate"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S5-S6",
-    "references": "Wiedenbeck 1985"
+    "references": "Wiedenbeck 1985",
+    "level": "S5-S6"
   },
   {
     "id": "C3.5",
@@ -241,10 +290,13 @@
     "risk_ai": "Modere",
     "name": "Securite et validation d'entrees",
     "description": "Input validation, authentification, autorisation, OWASP Top 10, gestion des secrets.",
-    "bloom": ["Apply", "Evaluate"],
+    "bloom": [
+      "Apply",
+      "Evaluate"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S4-S6",
-    "references": "HES-SO Guide 2024"
+    "references": "HES-SO Guide 2024",
+    "level": "S4-S6"
   },
   {
     "id": "C3.6",
@@ -254,10 +306,13 @@
     "risk_ai": "Modere",
     "name": "Maintenabilite et evolutivite",
     "description": "Dette technique, refactoring, conception orientee evolution, tests de regression.",
-    "bloom": ["Evaluate", "Create"],
+    "bloom": [
+      "Evaluate",
+      "Create"
+    ],
     "fuller": "Produce + Interpret",
-    "year": "S5-S6",
-    "references": "E15 (entretien)"
+    "references": "E15 (entretien)",
+    "level": "S5-S6"
   },
   {
     "id": "C3.7",
@@ -267,9 +322,11 @@
     "risk_ai": "Modere",
     "name": "Documentation et ADR",
     "description": "Documentation technique (README, ADR, UML), justification des choix architecturaux.",
-    "bloom": ["Create"],
+    "bloom": [
+      "Create"
+    ],
     "fuller": "Produce",
-    "year": "S5-S6",
-    "references": "Biggs 1996"
+    "references": "Biggs 1996",
+    "level": "S5-S6"
   }
 ]

@@ -1,6 +1,6 @@
 {
   "scale": {
-    "3": "Idéal (référence de la littérature)",
+    "3": "IdÃ©al (rÃ©fÃ©rence de la littÃ©rature)",
     "2": "Utile",
     "1": "Contextuel"
   },
@@ -2101,107 +2101,107 @@
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.1",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.2",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.3",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.4",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.5",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.6",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C1.7",
       "score": 3
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.1",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.2",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.3",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.4",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.5",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.6",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C2.7",
       "score": 2
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.1",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.2",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.3",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.4",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.5",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.6",
       "score": 1
     },
     {
-      "tool": "T12",
+      "tool": "T11",
       "concept": "C3.7",
       "score": 1
     },
