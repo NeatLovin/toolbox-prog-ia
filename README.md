@@ -4,15 +4,15 @@ Proof of concept du Travail de Bachelor *Apprendre a programmer a l'ere de l'IA 
 
 ## Presentation
 
-La Toolbox aide les enseignants a choisir les bons outils pedagogiques pour enseigner la programmation en presence d'IA generative. Elle croise une cartographie de 49 outils, 21 sous-concepts et 32 patrons d'activite issus du TB.
+La Toolbox aide les enseignants a choisir les bons outils pedagogiques pour enseigner la programmation en presence d'IA generative. Elle croise une cartographie de 48 outils, 21 sous-concepts et 32 patrons d'activite issus du TB.
 
 ## Fonctionnalites
 
-- **Catalogue** : 49 outils filtrables par famille, fonction, cout enseignant, robustesse IA et fil rouge. Clic sur une fiche pour voir tous les attributs.
+- **Catalogue** : 48 outils filtrables par famille, fonction, cout enseignant, robustesse IA et fil rouge. Clic sur une fiche pour voir tous les attributs, avec lien vers la ressource pour les outils en ligne.
 - **Concepts** : 21 sous-concepts en 3 familles (Syntaxe, Logique, Architecture), avec niveaux Bloom, risque IA, outils de reference issus de la matrice et patrons pedagogiques associes.
-- **Arbre de decision** : 5 questions (annee, famille de concepts, niveau Bloom, fonction, contexte) produisent une recommandation deterministe 2-4 outils + le patron d'activite correspondant au contexte choisi.
+- **Arbre de decision** : 5 questions (annee, famille de concepts, niveau Bloom, fonction, contexte) produisent une recommandation deterministe 2-4 outils + le patron d'activite correspondant au contexte, dans un affichage hierarchise (outils visibles en premier, justification et patron repliables).
 - **Methodologie** : contexte DSR du TB, modele de donnees, familles d'outils, taxonomies Bloom et Fuller.
-- **Audit PDF** *(local uniquement)* : deposer un PDF de cours pour obtenir une analyse SWOT section par section avec recommandations d'outils et patrons, sans aucune generation de texte libre.
+- **Audit PDF** *(local uniquement)* : deposer un PDF de cours pour obtenir une recommandation globale deterministe (famille dominante, risque IA agrege, leviers prioritaires) puis une analyse SWOT et des recommandations par section, sans generation de texte libre.
 
 ## Donnees
 
@@ -20,8 +20,8 @@ Six fichiers JSON dans `src/data/`, source de verite absolue. Toute donnee affic
 
 | Fichier | Contenu |
 |---|---|
-| `tools.json` | 49 outils, 4 familles (FM1-FM4), attributs : robustesse IA, cout, cyberlearn, fils rouges |
-| `concepts.json` | 21 sous-concepts, 3 familles, avec risque IA et dimension Fuller |
+| `tools.json` | 48 outils, 4 familles (FM1-FM4), attributs : robustesse IA (0-4), cout, cyberlearn, fils rouges, lien externe |
+| `concepts.json` | 21 sous-concepts, 3 familles, avec risque IA, dimension Fuller et niveau etudiant (Novice / Intermediaire / Avance / Transversal) |
 | `matrix.json` | Matrice de pertinence outil x concept (840 cellules, scores 1-3) |
 | `combos.json` | 16 combinatoires preconfigures avec justification pedagogique |
 | `meta.json` | Definitions des fils rouges (Fil A-D) et scenarios (S1-S3) |
