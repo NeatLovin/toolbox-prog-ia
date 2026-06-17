@@ -5,6 +5,12 @@ import combosData from '../data/combos.json'
 
 export const BLOOM_ORDER = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
 
+export const ZONE_PRINCIPLES = {
+  Syntaxe: "L'IA generative est tres performante sur la syntaxe. Laissez les etudiants s'en servir, mais evaluez la comprehension reelle autrement que par le code produit : oral, reformulation, lecture de code, papier.",
+  Logique: "Zone critique de l'apprentissage. Privilegiez un tuteur IA scaffolde qui guide par questions sans livrer la solution, et faites tracer, decomposer et raisonner a la main avant tout recours a l'IA.",
+  Architecture: "L'IA assiste la production mais le jugement de conception reste humain. Exigez une justification explicite des choix d'architecture : defense orale, revue par les pairs, comparaison d'alternatives."
+}
+
 export function bloomCovers(comboBloom, userBloom) {
   if (comboBloom === 'Multi-niveaux') return true
   const parts = comboBloom.split('-')
@@ -37,22 +43,41 @@ export function yearCovers(comboYear, userYear) {
 }
 
 export function getRecommendation({ year, concept_family, bloom, function: fn, context }) {
-  const match = combosData.find(combo =>
+  function makeComboResult(source, combo) {
+    return {
+      source,
+      combo,
+      tools: combo.recommended_tools.map(id => toolsData.find(t => t.id === id)).filter(Boolean),
+      justification: combo.justification
+    }
+  }
+
+  // Passe 1 : exact (family + bloom + function + context)
+  const match1 = combosData.find(combo =>
     yearCovers(combo.year, year) &&
     familyCovers(combo.concept_family, concept_family) &&
     bloomCovers(combo.bloom, bloom) &&
     combo.function === fn &&
     combo.context === context
   )
+  if (match1) return makeComboResult('combo', match1)
 
-  if (match) {
-    return {
-      source: 'combo',
-      combo: match,
-      tools: match.recommended_tools.map(id => toolsData.find(t => t.id === id)).filter(Boolean),
-      justification: match.justification
-    }
-  }
+  // Passe 2 : relache function (family + bloom + context)
+  const match2 = combosData.find(combo =>
+    yearCovers(combo.year, year) &&
+    familyCovers(combo.concept_family, concept_family) &&
+    bloomCovers(combo.bloom, bloom) &&
+    combo.context === context
+  )
+  if (match2) return makeComboResult('combo-approche', match2)
+
+  // Passe 3 : relache bloom + function (family + context)
+  const match3 = combosData.find(combo =>
+    yearCovers(combo.year, year) &&
+    familyCovers(combo.concept_family, concept_family) &&
+    combo.context === context
+  )
+  if (match3) return makeComboResult('combo-approche', match3)
 
   const fnCodeMap = { Formative: 'F', Sommative: 'S' }
   const fnCode = fnCodeMap[fn]

@@ -47,7 +47,7 @@ references     : sources academiques
 
 **Points d'affichage et logique de filtrage :**
 - `ConceptsView` : `<details>` collapsible, affiche tous les patrons en pile avec badge contexte sur chacun. Si plusieurs patrons : summary indique le nombre de contextes.
-- `ArboreView` : quand source === 'combo', extrait l'ID concept via regex `C\d+\.\d+` depuis `combo.concept_example`, puis filtre par `answers.context`. Si patron exact : banniere verte "Patron pour ce contexte". Si pas de match exact : banniere orange "Pas de patron pour ce contexte, variantes disponibles" et affiche tout.
+- `ArboreView` : le concept est selectionne directement par l'utilisateur (pas de regex sur combo.concept_example). Appelle `getPatronsByConceptAndContext(selectedConcept.id, selectedContext)`. Si patron exact : banniere verte. Si pas de match exact : banniere orange et affiche toutes les variantes. Si "toute la zone" selectionne (selectedConcept === null) : pas de PatronBlock, invite a choisir un concept precis.
 - `CourseAudit` : par section, appelle `getPatronsByConceptAndContext(cid, section.context)`. Si exact, affiche uniquement les patrons matchants. Sinon, affiche tous avec note "Variantes".
 
 **Composant partage :** `PatronBlock.vue` - prend `:patron` en prop, affiche badge contexte en tete, gere son propre `ToolDetailModal` en interne. Les outils du patron sont cliquables.
@@ -72,20 +72,21 @@ Quatre fichiers JSON dans src/data/, derives de la cartographie du TB. Source de
 ## Moteur de recommandation
 
 src/lib/recommendation.js : module factorise avec exports :
-- getRecommendation({ year, concept_family, bloom, function, context }) : moteur principal (combos + fallback matriciel).
+- getRecommendation({ year, concept_family, bloom, function, context }) : moteur principal. 3 passes : (1) exact family+bloom+function+context -> source 'combo', (2) relache function -> source 'combo-approche', (3) relache bloom+function -> source 'combo-approche', repli matriciel -> source 'matrix'. year ignore si undefined (yearCovers retourne true).
 - getToolsForConcept(conceptId, minScore) : outils de la matrice pour un concept.
 - getMatchingCombos({ year, families, bloom, fn, context }) : combinatoires correspondantes.
-- bloomCovers, familyCovers, yearCovers : predicats de matching.
+- bloomCovers, familyCovers, yearCovers : predicats de matching. yearCovers retourne true si userYear est falsy.
 - GENERIC_RECOMMENDATION : constante texte explicatif de la methodologie.
+- ZONE_PRINCIPLES : objet { Syntaxe, Logique, Architecture } avec le principe IA de chaque zone, affiche en banniere dans ArboreView.
 - computeCourseGlobalRec(validatedClassifs) : recommandation globale deterministe (famille dominante, risque, bloom, leviers).
 
-src/composables/useRecommendation.js : re-exporte getRecommendation pour l'arbre de decision.
+src/composables/useRecommendation.js : re-exporte getRecommendation pour compatibilite.
 
 ## Fonctionnalites
 
 1. **Catalogue** (/catalogue) : liste filtrable des 49 outils. Filtres : famille, fonction, cout, robustesse, fil rouge. Clic sur une carte ouvre ToolDetailModal.
 2. **Concepts** (/concepts) : 21 sous-concepts groupes par famille avec risque IA, niveaux Bloom, outils de reference de la matrice.
-3. **Arbre de decision** (/arbre) : wizard 5 questions (annee, famille, Bloom, fonction, contexte) → recommandation deterministe 2-4 outils.
+3. **Arbre de decision** (/arbre) : wizard zone → concept → contexte → objectif cognitif (facultatif). Pas de question semestre ni de question fonction (Formative par defaut). Resultat : banniere principe IA de la zone (ZONE_PRINCIPLES) + 2-4 outils + patron pedagogique PatronBlock (repliable). Mode "toute la zone" disponible : montre les outils de la famille sans patron, invite a selectionner un concept.
 4. **Methodologie** (/methodologie) : contexte TB, modele de donnees, familles d'outils.
 5. **Audit PDF** (/audit, LOCAL UNIQUEMENT) : voir section ci-dessous.
 

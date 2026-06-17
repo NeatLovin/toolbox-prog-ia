@@ -127,8 +127,8 @@
       <div v-for="rec in recommendations" :key="rec.section_index" class="rec-block">
         <div class="rec-header">
           <span class="rec-section-title">{{ sectionTitle(rec.section_index) }}</span>
-          <span class="rec-source" :class="rec.source === 'combo' ? 'src--combo' : 'src--matrix'">
-            {{ rec.source === 'combo' ? 'Combinatoire exacte' : 'Score matriciel' }}
+          <span class="rec-source" :class="sourceBadgeClass(rec.source)">
+            {{ sourceLabel(rec.source) }}
           </span>
         </div>
 
@@ -216,6 +216,18 @@ function familyClass(fam) {
 
 function functionLabel(fn) {
   return { F: 'Formative', S: 'Sommative', FS: 'F+S', R: 'Recherche' }[fn] || fn
+}
+
+function sourceLabel(src) {
+  if (src === 'combo') return 'Combinatoire exacte'
+  if (src === 'combo-approche') return 'Combinatoire approchee'
+  return 'Score matriciel'
+}
+
+function sourceBadgeClass(src) {
+  if (src === 'combo') return 'src--combo'
+  if (src === 'combo-approche') return 'src--approche'
+  return 'src--matrix'
 }
 
 function patronsForSectionConcept(sectionIndex, conceptId) {
@@ -430,8 +442,9 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   border-radius: 4px;
 }
 
-.src--combo { background: #dcfce7; color: #14532d; }
-.src--matrix { background: #fef3c7; color: #78350f; }
+.src--combo    { background: #dcfce7; color: #14532d; }
+.src--approche { background: #fef9c3; color: #854d0e; }
+.src--matrix   { background: #fef3c7; color: #78350f; }
 
 .rec-justification {
   font-size: 0.82rem;
