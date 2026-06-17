@@ -28,7 +28,7 @@
       <summary>Filtres avances (Fonction, Cout, Robustesse IA, Fil rouge)</summary>
       <div class="ui-collapsible-body advanced-body">
         <div class="ui-filter-group">
-          <label>Fonction</label>
+          <label>Fonction <InfoTooltip :content="GLOSSARY.fonction.short" /></label>
           <select v-model="selectedFunction" class="ui-filter-select">
             <option value="">Toutes</option>
             <option value="F">Formative</option>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="ui-filter-group">
-          <label>Cout enseignant</label>
+          <label>Cout enseignant <InfoTooltip :content="GLOSSARY.cout.short" /></label>
           <select v-model="selectedCost" class="ui-filter-select">
             <option value="">Tous</option>
             <option value="1">Faible (1/3)</option>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="ui-filter-group">
-          <label>Robustesse IA</label>
+          <label>Robustesse IA <InfoTooltip :content="GLOSSARY.robustesse_ia.short" /></label>
           <select v-model="selectedRobustness" class="ui-filter-select">
             <option value="">Toutes</option>
             <option value="0">Nulle</option>
@@ -60,7 +60,7 @@
         </div>
 
         <div class="ui-filter-group">
-          <label>Fil rouge</label>
+          <label>Fil rouge <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></label>
           <select v-model="selectedFil" class="ui-filter-select">
             <option value="">Tous</option>
             <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.id }} — {{ f.label }}</option>
@@ -92,6 +92,8 @@ import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import ToolCard from '../components/ToolCard.vue'
 import ToolDetailModal from '../components/ToolDetailModal.vue'
+import InfoTooltip from '../components/InfoTooltip.vue'
+import { GLOSSARY } from '../lib/glossary.js'
 
 const { tools, meta } = useData()
 

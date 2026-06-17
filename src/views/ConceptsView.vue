@@ -450,12 +450,12 @@ function bloomClass(b) {
   border-radius: var(--radius-lg);
   border: 1px solid transparent;
 }
-.bloom-entry--remember  { background: #eff6ff; border-color: #bfdbfe; }
-.bloom-entry--understand{ background: #f5f3ff; border-color: #ddd6fe; }
-.bloom-entry--apply     { background: #f0fdf4; border-color: #bbf7d0; }
-.bloom-entry--analyze   { background: #fffbeb; border-color: #fde68a; }
-.bloom-entry--evaluate  { background: #fff7ed; border-color: #fed7aa; }
-.bloom-entry--create    { background: #fdf2f8; border-color: #f9a8d4; }
+.bloom-entry--remember  { background: var(--bloom-remember-bg);  border-color: rgba(0,0,0,0.08); }
+.bloom-entry--understand { background: var(--bloom-understand-bg); border-color: rgba(0,0,0,0.08); }
+.bloom-entry--apply     { background: var(--bloom-apply-bg);      border-color: rgba(0,0,0,0.08); }
+.bloom-entry--analyze   { background: var(--bloom-analyze-bg);    border-color: rgba(0,0,0,0.08); }
+.bloom-entry--evaluate  { background: var(--bloom-evaluate-bg);   border-color: rgba(0,0,0,0.08); }
+.bloom-entry--create    { background: var(--bloom-create-bg);     border-color: rgba(0,0,0,0.08); }
 
 .bloom-entry strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.2rem; }
 .bloom-entry p      { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5; }
@@ -498,7 +498,7 @@ function bloomClass(b) {
   padding: 0.2rem var(--space-2);
   border-radius: var(--radius-sm);
   background: var(--color-accent);
-  color: #f8fafc;
+  color: var(--color-bg);
   flex-shrink: 0;
   margin-top: 2px;
 }

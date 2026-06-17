@@ -67,7 +67,7 @@
 
     <!-- Etape 3 : Contexte -->
     <section v-else-if="step === 'context'" class="step-section">
-      <h2 class="step-title">Dans quel contexte d'usage ?</h2>
+      <h2 class="step-title">Dans quel contexte d'usage ? <InfoTooltip :content="GLOSSARY.contexte.short" /></h2>
       <div class="context-grid">
         <button
           v-for="ctx in CONTEXTS"
@@ -85,6 +85,7 @@
     <section v-else-if="step === 'bloom'" class="step-section">
       <h2 class="step-title">
         Quel est l'objectif cognitif vise ?
+        <InfoTooltip :content="GLOSSARY.bloom.short" />
         <span class="optional-tag">Facultatif</span>
       </h2>
       <p class="step-hint">
@@ -119,6 +120,7 @@
       <div class="result-header">
         <h2 class="result-title">Outils recommandes</h2>
         <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
+        <InfoTooltip :content="GLOSSARY.combinatoire.short" />
       </div>
       <div class="result-tools">
         <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
@@ -178,6 +180,8 @@ import { getRecommendation, ZONE_PRINCIPLES } from '../lib/recommendation.js'
 import { useData } from '../composables/useData.js'
 import ToolCard from '../components/ToolCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
+import InfoTooltip from '../components/InfoTooltip.vue'
+import { GLOSSARY } from '../lib/glossary.js'
 
 const { concepts, getPatronsByConceptAndContext } = useData()
 

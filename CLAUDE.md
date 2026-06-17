@@ -136,7 +136,15 @@ proxy/
 
 **Repliables** : `<details class="ui-collapsible">` + `<div class="ui-collapsible-body">`. Variante compacte : ajouter `ui-collapsible--compact`.
 
-**Regles de migration** : aucune couleur hex (#rrggbb) dans les fichiers `.vue` hors tokens.css et base.css. Seule exception admise : `rgba(255,255,255,0.7)` pour des superpositions translucides sans equivalent en token.
+**Regles de migration** : aucune couleur hex (#rrggbb) dans les fichiers `.vue` hors tokens.css et base.css. Seule exception admise : `rgba(255,255,255,0.7)` et `rgba(0,0,0,0.08)` pour des superpositions translucides sans equivalent en token.
+
+## Composant InfoTooltip
+
+`src/components/InfoTooltip.vue` : infobulle declenchee au survol (desktop) ET au tap (tablette). Prop unique : `content` (String, texte de la definition). Le declencheur est un bouton `?` accessible (aria-label, aria-expanded).
+
+**Glossaire centralise** : `src/lib/glossary.js` exporte un objet `GLOSSARY` avec 11 entrees. Chaque entree a `term` (intitule) et `short` (definition courte passee au composant). Termes couverts : robustesse IA, fil rouge, scenario, fonction pedagogique, famille d'outils, combinatoire, patron pedagogique, Bloom, contexte d'usage, alignement constructif, cout enseignant.
+
+**Points d'integration** : labels des filtres avances de CatalogueView (Fonction, Cout, Robustesse IA, Fil rouge), etape contexte et etape Bloom de ArboreView, badge source du resultat de l'arbre.
 
 ## Commandes
 
