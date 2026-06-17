@@ -6,8 +6,7 @@
         <h2>Analyse du cours</h2>
         <p class="audit-meta">
           {{ validatedCount }} section{{ validatedCount > 1 ? 's' : '' }} analysee{{ validatedCount > 1 ? 's' : '' }} &middot;
-          {{ allConceptIds.length }} concept{{ allConceptIds.length > 1 ? 's' : '' }} detecte{{ allConceptIds.length > 1 ? 's' : '' }} &middot;
-          Annee cible detectee : <strong>{{ swot.meta.year }}</strong>
+          {{ allConceptIds.length }} concept{{ allConceptIds.length > 1 ? 's' : '' }} detecte{{ allConceptIds.length > 1 ? 's' : '' }}
         </p>
       </div>
       <button class="btn-reset" @click="$emit('reset')">Nouvelle analyse</button>

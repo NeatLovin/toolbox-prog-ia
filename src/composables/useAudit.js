@@ -106,17 +106,6 @@ function segmentSections(pages) {
   }))
 }
 
-function detectYear(classifs) {
-  const ids = classifs.flatMap(s => s.concept_ids)
-  const counts = {}
-  ids.forEach(id => {
-    const c = conceptsData.find(c => c.id === id)
-    const prefix = c?.level?.startsWith('S') ? c.level.split('-')[0] : 'S1'
-    counts[prefix] = (counts[prefix] || 0) + 1
-  })
-  return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'S1'
-}
-
 function detectBloom(classifs) {
   const counts = {}
   classifs.forEach(s => { if (s.bloom) counts[s.bloom] = (counts[s.bloom] || 0) + 1 })
@@ -125,7 +114,6 @@ function detectBloom(classifs) {
 
 function computeSwot(classifs, allSections) {
   const allConceptIds = [...new Set(classifs.flatMap(s => s.concept_ids))]
-  const year = detectYear(classifs)
   const bloom = detectBloom(classifs)
   const families = [...new Set(allConceptIds.map(id => conceptsData.find(c => c.id === id)?.family).filter(Boolean))]
 
@@ -171,9 +159,9 @@ function computeSwot(classifs, allSections) {
     .filter(Boolean)
 
   // Opportunites : combinatoires correspondant aux parametres detectes
-  const opportunites = getMatchingCombos({ year, families, bloom }).slice(0, 4)
+  const opportunites = getMatchingCombos({ families, bloom }).slice(0, 4)
 
-  return { forces, faiblesses, risques, opportunites, meta: { year, bloom, families } }
+  return { forces, faiblesses, risques, opportunites, meta: { bloom, families } }
 }
 
 function computeRecommendations(classifs) {
@@ -182,7 +170,7 @@ function computeRecommendations(classifs) {
     .map(s => {
       const concept = conceptsData.find(c => c.id === s.concept_ids[0])
       const rec = getRecommendation({
-        year: (() => { const y = concept?.level; return y?.startsWith('S') ? y.split('-')[0] : 'S1' })(),
+        year: undefined,
         concept_family: concept?.family || 'Syntaxe',
         bloom: s.bloom,
         function: 'Formative',

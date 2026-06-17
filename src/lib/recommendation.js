@@ -23,6 +23,7 @@ export function familyCovers(comboFamily, userFamily) {
 }
 
 export function yearCovers(comboYear, userYear) {
+  if (!userYear) return true
   if (comboYear === 'Transversal') return true
   if (comboYear.includes('-')) {
     const parts = comboYear.split('-')
