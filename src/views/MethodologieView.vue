@@ -1,6 +1,6 @@
 <template>
   <div class="methodologie">
-    <div class="page-header">
+    <div class="ui-page-header">
       <h1>Methodologie</h1>
       <p>Contexte scientifique et description du modele de donnees de la Toolbox.</p>
     </div>
@@ -29,25 +29,25 @@
       </p>
 
       <div class="data-cards">
-        <div class="data-card">
+        <div class="ui-card data-card">
           <div class="data-icon">&#128295;</div>
           <h3>tools.json</h3>
           <p>{{ toolCount }} outils. Attributs pedagogiques : concept couvert, niveau Bloom, fonction, contexte, score de pertinence, cout enseignant.</p>
         </div>
-        <div class="data-card">
+        <div class="ui-card data-card">
           <div class="data-icon">&#128218;</div>
           <h3>concepts.json</h3>
           <p>{{ conceptCount }} sous-concepts de programmation regroupes en 3 familles : Syntaxe, Logique, Architecture.</p>
         </div>
-        <div class="data-card">
+        <div class="ui-card data-card">
           <div class="data-icon">&#128202;</div>
           <h3>matrix.json</h3>
           <p>Matrice de pertinence outil x concept. Scores sur 3 niveaux : Ideal (3), Utile (2), Contextuel (1).</p>
         </div>
-        <div class="data-card">
+        <div class="ui-card data-card">
           <div class="data-icon">&#128269;</div>
           <h3>combos.json</h3>
-          <p>{{ comboCount }} combinatoires preconfigures. Chacune relie une configuration de 5 parametres a une recommandation d'outils avec justification.</p>
+          <p>{{ comboCount }} combinatoires preconfigures. Chacune relie une configuration de parametres a une recommandation d'outils avec justification.</p>
         </div>
       </div>
     </section>
@@ -55,9 +55,9 @@
     <section class="section">
       <h2>Logique de recommandation</h2>
       <p>
-        La recommandation est entierement deterministe. Les 5 parametres saisis
-        (annee, famille de concepts, niveau Bloom, fonction pedagogique, contexte) sont
-        croises avec les {{ comboCount }} combinatoires preconfigures.
+        La recommandation est entierement deterministe. Les parametres saisis
+        (famille de concepts, niveau Bloom, contexte) sont croises avec les
+        {{ comboCount }} combinatoires preconfigures.
       </p>
       <p>
         Si une correspondance exacte est trouvee, les outils de cette combinatoire
@@ -74,31 +74,31 @@
       <h2>Familles d'outils</h2>
       <div class="families-list">
         <div class="family-item">
-          <span class="fam-badge fam--m">FM1</span>
+          <span class="ui-badge ui-badge--family-m">FM1</span>
           <div>
             <strong>Methodes pedagogiques traditionnelles</strong>
             <p>Examens, soutenances, pair programming, worked examples, code reading.</p>
           </div>
         </div>
         <div class="family-item">
-          <span class="fam-badge fam--t">FM2</span>
+          <span class="ui-badge ui-badge--family-t">FM2</span>
           <div>
             <strong>Dispositifs traditionnels outilles</strong>
             <p>Git monitoring, detection de plagiat, plateformes d'examen securise.</p>
           </div>
         </div>
         <div class="family-item">
-          <span class="fam-badge fam--i">FM3</span>
+          <span class="ui-badge ui-badge--family-i">FM3</span>
           <div>
             <strong>Tuteurs IA et dispositifs scaffoldes</strong>
-            <p>CodeAid, CodeHelp, CS50 Duck, NotebookLM - garde-fous pedagogiques explicites.</p>
+            <p>CodeAid, CodeHelp, CS50 Duck, NotebookLM &mdash; garde-fous pedagogiques explicites.</p>
           </div>
         </div>
         <div class="family-item">
-          <span class="fam-badge fam--a">FM4</span>
+          <span class="ui-badge ui-badge--family-a">FM4</span>
           <div>
             <strong>Outils agentiques et IA generaliste</strong>
-            <p>Cursor, Claude Code, GitHub Copilot, ChatGPT - usage encadre en S3-S6.</p>
+            <p>Cursor, Claude Code, GitHub Copilot, ChatGPT &mdash; usage encadre en S3-S6.</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@
         <li><strong>Donnees :</strong> JSON statiques charges au demarrage (pas de backend)</li>
         <li><strong>Build :</strong> Vite</li>
         <li><strong>Hebergement :</strong> GitHub Pages (depot NeatLovin/toolbox-prog-ia)</li>
-        <li><strong>Styling :</strong> CSS scoped Vue (pas de framework UI)</li>
+        <li><strong>Styling :</strong> CSS tokens + primitives partagees (pas de framework UI)</li>
       </ul>
     </section>
   </div>
@@ -121,142 +121,94 @@
 import { useData } from '../composables/useData.js'
 
 const { tools, concepts, combos } = useData()
-const toolCount = tools.length
+const toolCount    = tools.length
 const conceptCount = concepts.length
-const comboCount = combos.length
+const comboCount   = combos.length
 </script>
 
 <style scoped>
-.methodologie {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.page-header h1 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.4rem;
-}
-
-.page-header p {
-  color: #475569;
-}
+.methodologie { display: flex; flex-direction: column; gap: var(--space-8); }
 
 .section {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .section h2 {
-  font-size: 1.15rem;
+  font-size: var(--text-xl);
   font-weight: 700;
-  color: #1e293b;
-  border-bottom: 1px solid #e2e8f0;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.6rem;
 }
 
 .section p {
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
   line-height: 1.65;
 }
 
 .data-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .data-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.1rem;
+  background: var(--color-bg);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.data-icon {
-  font-size: 1.5rem;
-}
+.data-icon { font-size: 1.5rem; }
 
 .data-card h3 {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-text);
   font-family: monospace;
 }
 
-.data-card p {
-  font-size: 0.8rem;
-  color: #475569;
-}
+.data-card p { font-size: var(--text-sm); color: var(--color-text-muted); }
 
 .info-box {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 8px;
-  padding: 0.9rem 1rem;
-  font-size: 0.875rem;
-  color: #1e40af;
+  background: var(--color-accent-subtle);
+  border: 1px solid var(--color-border-strong);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem var(--space-4);
+  font-size: var(--text-base);
+  color: var(--color-text);
 }
 
-.families-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+.families-list { display: flex; flex-direction: column; gap: var(--space-3); }
 
 .family-item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
-.fam-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.2rem 0.55rem;
-  border-radius: 5px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.fam--m { background: #dbeafe; color: #1e40af; }
-.fam--t { background: #d1fae5; color: #065f46; }
-.fam--i { background: #fef3c7; color: #92400e; }
-.fam--a { background: #fce7f3; color: #9d174d; }
-
-.family-item strong {
-  display: block;
-  font-size: 0.875rem;
-  color: #1e293b;
-}
-
-.family-item p {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin-top: 0.2rem;
-}
+.family-item strong { display: block; font-size: var(--text-base); color: var(--color-text); }
+.family-item p { font-size: var(--text-sm); color: var(--color-text-faint); margin-top: 0.2rem; }
 
 .tech-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #475569;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
 }
+.tech-list strong { color: var(--color-text); }
 
-.tech-list strong {
-  color: #1e293b;
+@media (max-width: 640px) {
+  .data-cards { grid-template-columns: 1fr; }
 }
 </style>

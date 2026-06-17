@@ -1,8 +1,8 @@
 <template>
   <div class="arbre">
-    <div class="page-header">
+    <div class="ui-page-header">
       <h1>Arbre de decision</h1>
-      <p>Deux etapes pour une recommandation d'outils adaptee a votre contexte pedagogique.</p>
+      <p>Trois etapes pour une recommandation d'outils adaptee a votre contexte pedagogique.</p>
     </div>
 
     <!-- Fil d'Ariane (masque a l'etape zone) -->
@@ -37,7 +37,7 @@
         >
           <span class="zone-name">{{ z.family }}</span>
           <span class="zone-sub">{{ z.sub }}</span>
-          <span class="zone-risk">Risque IA : {{ z.risk }}</span>
+          <span class="ui-badge" :class="`ui-badge--zone-${z.key}`">Risque IA : {{ z.risk }}</span>
         </button>
       </div>
     </section>
@@ -118,7 +118,7 @@
       <!-- En-tete et outils -->
       <div class="result-header">
         <h2 class="result-title">Outils recommandes</h2>
-        <span class="source-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
+        <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
       </div>
       <div class="result-tools">
         <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
@@ -130,41 +130,43 @@
       </p>
 
       <!-- Justification (repliable) -->
-      <details v-if="result.justification" class="result-detail">
-        <summary class="detail-summary">Justification de la recommandation</summary>
-        <p class="detail-content">{{ result.justification }}</p>
+      <details v-if="result.justification" class="ui-collapsible">
+        <summary>Justification de la recommandation</summary>
+        <div class="ui-collapsible-body detail-content">{{ result.justification }}</div>
       </details>
 
       <!-- Patron pedagogique (repliable, seulement si concept selectionne) -->
-      <details v-if="selectedConcept && patronForResult?.all.length" class="result-detail">
-        <summary class="detail-summary">
+      <details v-if="selectedConcept && patronForResult?.all.length" class="ui-collapsible">
+        <summary>
           Patron pedagogique
           <span
             v-if="patronForResult.hasExact"
-            class="patron-ctx-tag patron-ctx-tag--exact"
+            class="ui-badge ui-badge--source-exact patron-ctx-tag"
           >Pour "{{ selectedContext }}"</span>
-          <span v-else class="patron-ctx-tag patron-ctx-tag--fallback">Variantes disponibles</span>
+          <span v-else class="ui-badge ui-badge--source-approche patron-ctx-tag">Variantes disponibles</span>
         </summary>
-        <div
-          class="patron-match-banner"
-          :class="patronForResult.hasExact ? 'patron-match-banner--exact' : 'patron-match-banner--fallback'"
-        >
-          {{ patronForResult.hasExact
-            ? `Patron pour le contexte "${selectedContext}"`
-            : `Pas de patron pour "${selectedContext}" - variantes disponibles` }}
+        <div class="ui-collapsible-body">
+          <div
+            class="patron-match-banner"
+            :class="patronForResult.hasExact ? 'patron-match-banner--exact' : 'patron-match-banner--fallback'"
+          >
+            {{ patronForResult.hasExact
+              ? `Patron pour le contexte "${selectedContext}"`
+              : `Pas de patron pour "${selectedContext}" - variantes disponibles` }}
+          </div>
+          <PatronBlock
+            v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
+            :key="p.id"
+            :patron="p"
+            class="result-patron"
+          />
         </div>
-        <PatronBlock
-          v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
-          :key="p.id"
-          :patron="p"
-          class="result-patron"
-        />
       </details>
 
       <!-- Actions -->
       <div class="result-actions">
-        <button class="btn-primary" @click="restart">Nouvelle recherche</button>
-        <router-link to="/catalogue" class="btn-secondary">Voir le catalogue complet</router-link>
+        <button class="ui-btn ui-btn-primary" @click="restart">Nouvelle recherche</button>
+        <router-link to="/catalogue" class="ui-btn ui-btn-secondary">Voir le catalogue complet</router-link>
       </div>
     </section>
   </div>
@@ -181,15 +183,15 @@ const { concepts, getPatronsByConceptAndContext } = useData()
 
 const ZONES = [
   { family: 'Syntaxe',      key: 'syntaxe',      sub: 'Variables, structures, POO, syntaxe formelle',       risk: 'Maximal' },
-  { family: 'Logique',      key: 'logique',      sub: 'Algorithmes, debug, tests, raisonnement',             risk: 'Eleve'   },
-  { family: 'Architecture', key: 'architecture', sub: 'Design patterns, securite, qualite logicielle',       risk: 'Modere'  }
+  { family: 'Logique',      key: 'logique',       sub: 'Algorithmes, debug, tests, raisonnement',             risk: 'Eleve'   },
+  { family: 'Architecture', key: 'architecture',  sub: 'Design patterns, securite, qualite logicielle',       risk: 'Modere'  }
 ]
 
 const CONTEXTS = [
-  { value: 'Présentiel encadré',    label: 'Présentiel encadré',    desc: 'En classe, supervision directe'     },
-  { value: 'Autonomie supervisée',  label: 'Autonomie supervisée',  desc: 'Hors classe, feedback différé'      },
-  { value: 'Projet long',           label: 'Projet long',           desc: 'Semestre ou année'                  },
-  { value: 'Diagnostic',            label: 'Diagnostic',            desc: 'Évaluation initiale du niveau'      }
+  { value: 'Présentiel encadré',   label: 'Présentiel encadré',   desc: 'En classe, supervision directe'  },
+  { value: 'Autonomie supervisée', label: 'Autonomie supervisée', desc: 'Hors classe, feedback différé'   },
+  { value: 'Projet long',          label: 'Projet long',          desc: 'Semestre ou année'               },
+  { value: 'Diagnostic',           label: 'Diagnostic',           desc: 'Evaluation initiale du niveau'   }
 ]
 
 const BLOOM_OBJECTIVES = [
@@ -200,25 +202,14 @@ const BLOOM_OBJECTIVES = [
 
 const step            = ref('zone')
 const selectedZone    = ref('')
-const selectedConcept = ref(null)   // null = toute la zone
+const selectedConcept = ref(null)
 const selectedContext = ref('')
-const selectedBloom   = ref(null)   // null = utilise dominant
+const selectedBloom   = ref(null)
 
-const conceptsInZone = computed(() =>
-  concepts.filter(c => c.family === selectedZone.value)
-)
-
-const dominantBloom = computed(() =>
-  selectedConcept.value?.bloom?.[0] ?? 'Apply'
-)
-
-const effectiveBloom = computed(() =>
-  selectedBloom.value || dominantBloom.value
-)
-
-const zoneKey = computed(() =>
-  selectedZone.value.toLowerCase()
-)
+const conceptsInZone = computed(() => concepts.filter(c => c.family === selectedZone.value))
+const dominantBloom  = computed(() => selectedConcept.value?.bloom?.[0] ?? 'Apply')
+const effectiveBloom = computed(() => selectedBloom.value || dominantBloom.value)
+const zoneKey        = computed(() => selectedZone.value.toLowerCase())
 
 const result = computed(() => {
   if (step.value !== 'result') return null
@@ -238,9 +229,9 @@ const patronForResult = computed(() => {
 
 const sourceBadgeClass = computed(() => {
   const s = result.value?.source
-  if (s === 'combo') return 'source-badge--exact'
-  if (s === 'combo-approche') return 'source-badge--approche'
-  return 'source-badge--matrix'
+  if (s === 'combo') return 'ui-badge--source-exact'
+  if (s === 'combo-approche') return 'ui-badge--source-approche'
+  return 'ui-badge--source-matrix'
 })
 
 const sourceLabel = computed(() => {
@@ -250,53 +241,29 @@ const sourceLabel = computed(() => {
   return 'Score matriciel'
 })
 
-function chooseZone(family) {
-  selectedZone.value = family
-  step.value = 'concept'
-}
-
-function chooseConcept(concept) {
-  selectedConcept.value = concept
-  step.value = 'context'
-}
-
-function chooseContext(ctx) {
-  selectedContext.value = ctx
-  step.value = 'bloom'
-}
-
-function chooseBloom(bloom) {
-  selectedBloom.value = bloom
-  step.value = 'result'
-}
+function chooseZone(family)   { selectedZone.value = family; step.value = 'concept' }
+function chooseConcept(c)     { selectedConcept.value = c; step.value = 'context' }
+function chooseContext(ctx)   { selectedContext.value = ctx; step.value = 'bloom' }
+function chooseBloom(bloom)   { selectedBloom.value = bloom; step.value = 'result' }
 
 function goToStep(target) {
   if (target === 'zone') {
-    selectedZone.value = ''
-    selectedConcept.value = null
-    selectedContext.value = ''
-    selectedBloom.value = null
+    selectedZone.value = ''; selectedConcept.value = null
+    selectedContext.value = ''; selectedBloom.value = null
     step.value = 'zone'
   } else if (target === 'concept') {
-    selectedConcept.value = null
-    selectedContext.value = ''
-    selectedBloom.value = null
-    step.value = 'concept'
+    selectedConcept.value = null; selectedContext.value = ''
+    selectedBloom.value = null; step.value = 'concept'
   } else if (target === 'context') {
-    selectedContext.value = ''
-    selectedBloom.value = null
-    step.value = 'context'
+    selectedContext.value = ''; selectedBloom.value = null; step.value = 'context'
   } else if (target === 'bloom') {
-    selectedBloom.value = null
-    step.value = 'bloom'
+    selectedBloom.value = null; step.value = 'bloom'
   }
 }
 
 function restart() {
-  selectedZone.value = ''
-  selectedConcept.value = null
-  selectedContext.value = ''
-  selectedBloom.value = null
+  selectedZone.value = ''; selectedConcept.value = null
+  selectedContext.value = ''; selectedBloom.value = null
   step.value = 'zone'
 }
 </script>
@@ -305,19 +272,7 @@ function restart() {
 .arbre {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.page-header h1 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.4rem;
-}
-
-.page-header p {
-  color: #475569;
-  font-size: 0.95rem;
+  gap: var(--space-6);
 }
 
 /* Fil d'Ariane */
@@ -326,445 +281,230 @@ function restart() {
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
 }
 
 .bc-link {
   background: none;
   border: none;
   padding: 0.2rem 0.4rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  color: #2563eb;
-  font-size: 0.82rem;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
   font-weight: 600;
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: text-decoration-color 0.1s, background 0.1s;
 }
+.bc-link:hover { text-decoration-color: currentColor; background: var(--color-accent-subtle); }
 
-.bc-link:hover {
-  text-decoration-color: currentColor;
-  background: #eff6ff;
-}
-
-.bc-sep { color: #94a3b8; }
-
-.bc-current {
-  color: #475569;
-  font-size: 0.82rem;
-}
+.bc-sep { color: var(--color-text-placeholder); }
+.bc-current { color: var(--color-text-muted); font-size: var(--text-sm); }
 
 /* Sections */
 .step-section,
-.result-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+.result-section { display: flex; flex-direction: column; gap: var(--space-4); }
 
 .step-title {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-text);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
 .optional-tag {
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: #e2e8f0;
-  color: #64748b;
+  background: var(--color-accent-subtle);
+  color: var(--color-text-faint);
   padding: 0.1rem 0.45rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
-.step-hint {
-  font-size: 0.875rem;
-  color: #64748b;
-}
+.step-hint { font-size: var(--text-base); color: var(--color-text-faint); }
 
 /* Zone cards */
 .zone-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-@media (max-width: 640px) {
-  .zone-grid { grid-template-columns: 1fr; }
+  gap: var(--space-4);
 }
 
 .zone-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.4rem 1.25rem;
-  border-radius: 12px;
+  gap: var(--space-2);
+  padding: 1.4rem var(--space-5);
+  border-radius: var(--radius-2xl);
   border: 2px solid transparent;
   cursor: pointer;
   text-align: left;
   transition: transform 0.1s, box-shadow 0.1s;
 }
+.zone-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
-.zone-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
+.zone-card--syntaxe      { background: var(--zone-syntaxe-bg);      border-color: var(--zone-syntaxe-border); }
+.zone-card--logique      { background: var(--zone-logique-bg);       border-color: var(--zone-logique-border); }
+.zone-card--architecture { background: var(--zone-architecture-bg);  border-color: var(--zone-architecture-border); }
 
-.zone-card--syntaxe      { background: #eff6ff; border-color: #93c5fd; }
-.zone-card--logique      { background: #f0fdf4; border-color: #86efac; }
-.zone-card--architecture { background: #f5f3ff; border-color: #c4b5fd; }
+.zone-name { font-size: 1.15rem; font-weight: 800; }
+.zone-card--syntaxe      .zone-name { color: var(--zone-syntaxe-text); }
+.zone-card--logique      .zone-name { color: var(--zone-logique-text); }
+.zone-card--architecture .zone-name { color: var(--zone-architecture-text); }
 
-.zone-name {
-  font-size: 1.15rem;
-  font-weight: 800;
-}
-
-.zone-card--syntaxe      .zone-name { color: #1d4ed8; }
-.zone-card--logique      .zone-name { color: #15803d; }
-.zone-card--architecture .zone-name { color: #6d28d9; }
-
-.zone-sub {
-  font-size: 0.8rem;
-  color: #64748b;
-  line-height: 1.4;
-}
-
-.zone-risk {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  align-self: flex-start;
-}
-
-.zone-card--syntaxe      .zone-risk { background: #dbeafe; color: #1d4ed8; }
-.zone-card--logique      .zone-risk { background: #dcfce7; color: #15803d; }
-.zone-card--architecture .zone-risk { background: #ede9fe; color: #6d28d9; }
+.zone-sub { font-size: 0.8rem; color: var(--color-text-faint); line-height: 1.4; }
 
 /* Concept list */
-.concept-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
+.concept-list { display: flex; flex-direction: column; gap: 0.4rem; }
 
 .concept-btn {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  padding: 0.65rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #f8fafc;
+  padding: 0.65rem var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
   cursor: pointer;
   text-align: left;
   transition: border-color 0.1s, background 0.1s;
 }
+.concept-btn:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
 
-.concept-btn:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-}
+.concept-btn--all { border-style: dashed; border-color: var(--color-border-strong); background: var(--color-surface); }
+.concept-btn--all:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
 
-.concept-btn--all {
-  border-style: dashed;
-  border-color: #cbd5e1;
-  background: #ffffff;
-}
-
-.concept-btn--all:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-}
-
-.cb-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.cb-id {
-  font-size: 0.72rem;
-  font-weight: 700;
-  font-family: monospace;
-  color: #94a3b8;
-  flex-shrink: 0;
-}
-
-.cb-name {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #1e293b;
-}
-
-.cb-desc {
-  font-size: 0.78rem;
-  color: #64748b;
-  line-height: 1.4;
-}
+.cb-header { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.cb-id { font-size: var(--text-2xs); font-weight: 700; font-family: monospace; color: var(--color-text-placeholder); flex-shrink: 0; }
+.cb-name { font-size: var(--text-base); font-weight: 700; color: var(--color-text); }
+.cb-desc { font-size: 0.78rem; color: var(--color-text-faint); line-height: 1.4; }
 
 /* Context grid */
-.context-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-@media (max-width: 500px) {
-  .context-grid { grid-template-columns: 1fr; }
-}
+.context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 
 .context-btn {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #f8fafc;
+  padding: var(--space-4) 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
   cursor: pointer;
   text-align: left;
   transition: border-color 0.1s, background 0.1s;
 }
+.context-btn:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
 
-.context-btn:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-}
-
-.ctx-name {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #1e293b;
-}
-
-.ctx-desc {
-  font-size: 0.78rem;
-  color: #64748b;
-}
+.ctx-name { font-size: var(--text-base); font-weight: 700; color: var(--color-text); }
+.ctx-desc { font-size: 0.78rem; color: var(--color-text-faint); }
 
 /* Bloom grid */
-.bloom-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-@media (max-width: 500px) {
-  .bloom-grid { grid-template-columns: 1fr; }
-}
+.bloom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 
 .bloom-btn {
-  padding: 0.85rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #f8fafc;
+  padding: 0.85rem var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-base);
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-text);
   text-align: left;
   transition: border-color 0.1s, background 0.1s;
 }
-
-.bloom-btn:hover {
-  border-color: #2563eb;
-  background: #eff6ff;
-}
+.bloom-btn:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
 
 .bloom-btn--skip {
   grid-column: 1 / -1;
   border-style: dashed;
-  color: #64748b;
-  background: #ffffff;
+  color: var(--color-text-faint);
+  background: var(--color-surface);
 }
+.bloom-btn--skip:hover { border-color: var(--color-text-faint); background: var(--color-bg); }
 
-.bloom-btn--skip:hover {
-  border-color: #64748b;
-  background: #f8fafc;
-}
-
-.skip-note {
-  font-weight: 400;
-  color: #94a3b8;
-}
+.skip-note { font-weight: 400; color: var(--color-text-placeholder); }
 
 /* Zone principle */
 .zone-principle {
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
-
-.zone-principle--syntaxe      { background: #eff6ff; border: 1px solid #93c5fd; }
-.zone-principle--logique      { background: #f0fdf4; border: 1px solid #86efac; }
-.zone-principle--architecture { background: #f5f3ff; border: 1px solid #c4b5fd; }
+.zone-principle--syntaxe      { background: var(--zone-syntaxe-bg);     border: 1px solid var(--zone-syntaxe-border); }
+.zone-principle--logique      { background: var(--zone-logique-bg);      border: 1px solid var(--zone-logique-border); }
+.zone-principle--architecture { background: var(--zone-architecture-bg); border: 1px solid var(--zone-architecture-border); }
 
 .zp-label {
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+.zone-principle--syntaxe      .zp-label { color: var(--zone-syntaxe-text); }
+.zone-principle--logique      .zp-label { color: var(--zone-logique-text); }
+.zone-principle--architecture .zp-label { color: var(--zone-architecture-text); }
 
-.zone-principle--syntaxe      .zp-label { color: #1d4ed8; }
-.zone-principle--logique      .zp-label { color: #15803d; }
-.zone-principle--architecture .zp-label { color: #6d28d9; }
-
-.zp-text {
-  font-size: 0.875rem;
-  color: #1e293b;
-  line-height: 1.6;
-}
+.zp-text { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
 
 /* Resultat */
-.result-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.result-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #1e293b;
-}
-
-.source-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.source-badge--exact    { background: #dcfce7; color: #14532d; }
-.source-badge--approche { background: #fef9c3; color: #854d0e; }
-.source-badge--matrix   { background: #fef3c7; color: #78350f; }
+.result-header { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+.result-title  { font-size: var(--text-xl); font-weight: 800; color: var(--color-text); }
 
 .result-tools {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .zone-invite {
-  font-size: 0.875rem;
-  color: #64748b;
-  padding: 0.75rem 1rem;
-  background: #f8fafc;
-  border: 1px dashed #cbd5e1;
-  border-radius: 8px;
+  font-size: var(--text-base);
+  color: var(--color-text-faint);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
 }
-
-/* Collapsible */
-.result-detail {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.detail-summary {
-  padding: 0.65rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #475569;
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #f8fafc;
-  user-select: none;
-}
-
-.detail-summary::-webkit-details-marker { display: none; }
-
-.detail-summary::before {
-  content: '▶';
-  font-size: 0.6rem;
-  color: #94a3b8;
-  transition: transform 0.15s;
-  flex-shrink: 0;
-}
-
-details[open] .detail-summary::before { transform: rotate(90deg); }
 
 .detail-content {
-  font-size: 0.875rem;
-  color: #475569;
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  border-left: 3px solid #2563eb;
-  padding: 0.85rem 1rem;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  border-left: 3px solid var(--color-accent);
+  padding-left: var(--space-4);
+  line-height: 1.65;
 }
 
 .patron-match-banner {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   padding: 0.35rem 0.75rem;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-sm);
 }
+.patron-match-banner--exact    { background: var(--color-success-bg); color: var(--color-success-text); }
+.patron-match-banner--fallback { background: var(--color-warning-bg); color: var(--color-warning-text); }
 
-.patron-match-banner--exact {
-  background: #f0fdf4;
-  color: #15803d;
-  border-bottom: 1px solid #bbf7d0;
+.patron-ctx-tag { margin-left: auto; }
+
+.result-patron { margin-top: var(--space-3); }
+.result-patron + .result-patron { margin-top: var(--space-2); }
+
+.result-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .zone-grid    { grid-template-columns: 1fr; }
+  .context-grid { grid-template-columns: 1fr; }
+  .bloom-grid   { grid-template-columns: 1fr; }
+  .bloom-btn--skip { grid-column: auto; }
 }
-
-.patron-match-banner--fallback {
-  background: #fff7ed;
-  color: #9a3412;
-  border-bottom: 1px solid #fed7aa;
-}
-
-.patron-ctx-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  margin-left: auto;
-}
-
-.patron-ctx-tag--exact    { background: #dcfce7; color: #14532d; }
-.patron-ctx-tag--fallback { background: #ffedd5; color: #9a3412; }
-
-.result-patron { margin: 0; }
-
-/* Actions */
-.result-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 0.55rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid transparent;
-  text-decoration: none;
-  display: inline-block;
-  transition: background 0.15s;
-}
-
-.btn-primary { background: #2563eb; color: #ffffff; border-color: #2563eb; }
-.btn-primary:hover { background: #1d4ed8; }
-
-.btn-secondary { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
-.btn-secondary:hover { background: #e2e8f0; }
 </style>

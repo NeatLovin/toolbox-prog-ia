@@ -1,11 +1,11 @@
 <template>
   <div class="patron-block">
     <div class="patron-header">
-      <span class="patron-badge">Patron pedagogique</span>
-      <span v-if="patron.contexte" class="contexte-tag" :class="contexteClass(patron.contexte)">
+      <span class="ui-badge ui-badge--patron">Patron pedagogique</span>
+      <span v-if="patron.contexte" class="ui-badge" :class="contexteClass(patron.contexte)">
         {{ patron.contexte }}
       </span>
-      <span v-for="ph in patron.phase_couverte" :key="ph" class="phase-tag" :class="phaseClass(ph)">
+      <span v-for="ph in patron.phase_couverte" :key="ph" class="ui-badge" :class="phaseClass(ph)">
         {{ ph }}
       </span>
       <span class="patron-id">{{ patron.id }}</span>
@@ -21,7 +21,7 @@
       </div>
       <div class="patron-field patron-field--risk">
         <span class="pf-label pf-label--risk">Risque IA</span>
-        <p class="pf-text">{{ patron.risque_ia }}</p>
+        <p class="pf-text pf-text--risk">{{ patron.risque_ia }}</p>
       </div>
       <div class="patron-field">
         <span class="pf-label">Parade</span>
@@ -75,28 +75,28 @@ const selectedTool = ref(null)
 
 function phaseClass(ph) {
   return {
-    'phase--apprendre': ph === 'apprendre',
-    'phase--exercer': ph === 'exercer',
-    'phase--evaluer': ph === 'évaluer'
+    'ui-badge--phase-apprendre': ph === 'apprendre',
+    'ui-badge--phase-exercer':   ph === 'exercer',
+    'ui-badge--phase-evaluer':   ph === 'évaluer'
   }
 }
 
 function contexteClass(ctx) {
   return {
-    'ctx--presentiel': ctx === 'Présentiel encadré',
-    'ctx--autonomie':  ctx === 'Autonomie supervisée',
-    'ctx--projet':     ctx === 'Projet long',
-    'ctx--diagnostic': ctx === 'Diagnostic'
+    'ui-badge--ctx-presentiel': ctx === 'Présentiel encadré',
+    'ui-badge--ctx-autonomie':  ctx === 'Autonomie supervisée',
+    'ui-badge--ctx-projet':     ctx === 'Projet long',
+    'ui-badge--ctx-diagnostic': ctx === 'Diagnostic'
   }
 }
 </script>
 
 <style scoped>
 .patron-block {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: 8px;
-  padding: 1rem 1.1rem;
+  background: var(--patron-bg);
+  border: 1px solid var(--patron-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) 1.1rem;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -109,142 +109,79 @@ function contexteClass(ctx) {
   flex-wrap: wrap;
 }
 
-.patron-badge {
-  font-size: 0.68rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #92400e;
-  background: #fef3c7;
-  border: 1px solid #fde68a;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.contexte-tag {
-  font-size: 0.67rem;
-  font-weight: 700;
-  padding: 0.12rem 0.45rem;
-  border-radius: 3px;
-}
-
-.ctx--presentiel  { background: #dbeafe; color: #1e40af; }
-.ctx--autonomie   { background: #d1fae5; color: #065f46; }
-.ctx--projet      { background: #ede9fe; color: #5b21b6; }
-.ctx--diagnostic  { background: #ffedd5; color: #9a3412; }
-
-.phase-tag {
-  font-size: 0.67rem;
-  font-weight: 700;
-  padding: 0.12rem 0.4rem;
-  border-radius: 3px;
-}
-
-.phase--apprendre { background: #dbeafe; color: #1e40af; }
-.phase--exercer   { background: #d1fae5; color: #065f46; }
-.phase--evaluer   { background: #fce7f3; color: #9d174d; }
-
 .patron-id {
   margin-left: auto;
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-family: monospace;
-  color: #a78bfa;
+  color: var(--color-text-placeholder);
 }
 
 .patron-titre {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   font-weight: 700;
-  color: #78350f;
+  color: var(--patron-title);
   line-height: 1.3;
 }
 
 .patron-competence {
-  font-size: 0.82rem;
-  color: #92400e;
+  font-size: var(--text-sm);
+  color: var(--patron-text);
   font-style: italic;
   line-height: 1.5;
   padding: 0.4rem 0.6rem;
   background: rgba(254, 243, 199, 0.6);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .patron-fields {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
-.patron-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.patron-field--risk .pf-text {
-  color: #b91c1c;
-}
+.patron-field { display: flex; flex-direction: column; gap: 0.2rem; }
 
 .pf-label {
-  font-size: 0.7rem;
+  font-size: var(--text-2xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #92400e;
+  color: var(--patron-text);
 }
-
-.pf-label--risk {
-  color: #b91c1c;
-}
+.pf-label--risk { color: var(--patron-risk-text); }
 
 .pf-text {
   font-size: 0.8rem;
   color: #44403c;
   line-height: 1.55;
 }
+.pf-text--risk { color: var(--patron-risk-text); }
 
-.patron-outils {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
+.patron-outils { display: flex; flex-direction: column; gap: 0.35rem; }
 
-.patron-outils-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
+.patron-outils-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 
 .patron-tool-btn {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  background: #1e293b;
+  background: var(--color-accent);
   color: #f8fafc;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 0.25rem 0.6rem;
   cursor: pointer;
   transition: background 0.12s;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
+.patron-tool-btn:hover { background: var(--color-accent-hover); }
 
-.patron-tool-btn:hover {
-  background: #334155;
-}
-
-.ptb-id {
-  font-family: monospace;
-  font-weight: 700;
-}
-
-.ptb-name {
-  font-weight: 400;
-  color: #94a3b8;
-}
+.ptb-id { font-family: monospace; font-weight: 700; }
+.ptb-name { font-weight: 400; color: var(--color-text-placeholder); }
 
 .patron-refs {
-  font-size: 0.7rem;
-  color: #a78bfa;
+  font-size: var(--text-2xs);
+  color: var(--color-text-placeholder);
   font-style: italic;
   line-height: 1.4;
 }

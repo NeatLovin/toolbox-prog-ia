@@ -7,11 +7,12 @@
         <div class="modal-header">
           <div class="modal-id-row">
             <span class="tool-id">{{ tool.id }}</span>
-            <span class="tool-family" :class="familyClass">{{ tool.family_label }}</span>
-            <span v-if="tool.robustness_num !== null && tool.robustness_num !== undefined"
-                  class="rob-badge" :class="robustnessClass">
-              {{ tool.robustness_ai }}
-            </span>
+            <span class="ui-badge" :class="familyClass">{{ tool.family_label }}</span>
+            <span
+              v-if="tool.robustness_num !== null && tool.robustness_num !== undefined"
+              class="ui-badge"
+              :class="robustnessClass"
+            >{{ tool.robustness_ai }}</span>
           </div>
           <h2 class="modal-title">{{ tool.name }}</h2>
           <p class="modal-desc">{{ tool.description }}</p>
@@ -24,7 +25,7 @@
         <div class="modal-grid">
           <div class="info-row">
             <span class="info-label">Fonction</span>
-            <span class="meta-badge" :class="functionClass">{{ functionLabel }}</span>
+            <span class="ui-badge" :class="functionClass">{{ functionLabel }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Cursus cible</span>
@@ -48,7 +49,7 @@
           <h3 class="section-title">Fils rouges</h3>
           <div class="fils-list">
             <div v-for="fil in resolvedFils" :key="fil.id" class="fil-item">
-              <span class="fil-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
+              <span class="ui-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
               <div>
                 <strong>{{ fil.label }}</strong>
                 <p>{{ fil.description }}</p>
@@ -73,7 +74,7 @@
         </div>
 
         <div v-if="tool.link" class="section">
-          <a :href="tool.link" target="_blank" rel="noopener noreferrer" class="tool-link-btn">
+          <a :href="tool.link" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary tool-link-btn">
             Voir la ressource
             <span class="tool-link-domain">{{ linkDomain }}</span>
           </a>
@@ -95,33 +96,30 @@ defineEmits(['close'])
 
 const { meta } = useData()
 
-const filMap = Object.fromEntries((meta.fils_rouges || []).map(f => [f.id, f]))
+const filMap  = Object.fromEntries((meta.fils_rouges || []).map(f => [f.id, f]))
 const scenarioMap = Object.fromEntries((meta.scenarios || []).map(s => [s.id, s]))
 
 const resolvedFils = computed(() =>
   (props.tool?.fils_rouges || []).map(id => filMap[id] || { id, label: id, description: '' })
 )
-
 const resolvedScenarios = computed(() =>
-  (props.tool?.scenarios || [])
-    .map(id => scenarioMap[id])
-    .filter(Boolean)
+  (props.tool?.scenarios || []).map(id => scenarioMap[id]).filter(Boolean)
 )
 
 function filClass(fil) {
   return {
-    'fil--a': fil === 'Fil A',
-    'fil--b': fil === 'Fil B',
-    'fil--c': fil === 'Fil C',
-    'fil--d': fil === 'Fil D'
+    'ui-badge--fil-a': fil === 'Fil A',
+    'ui-badge--fil-b': fil === 'Fil B',
+    'ui-badge--fil-c': fil === 'Fil C',
+    'ui-badge--fil-d': fil === 'Fil D'
   }
 }
 
 const familyClass = computed(() => ({
-  'family--m': props.tool?.family === 'FM1',
-  'family--t': props.tool?.family === 'FM2',
-  'family--i': props.tool?.family === 'FM3',
-  'family--a': props.tool?.family === 'FM4'
+  'ui-badge--family-m': props.tool?.family === 'FM1',
+  'ui-badge--family-t': props.tool?.family === 'FM2',
+  'ui-badge--family-i': props.tool?.family === 'FM3',
+  'ui-badge--family-a': props.tool?.family === 'FM4'
 }))
 
 const functionLabel = computed(() => {
@@ -130,9 +128,9 @@ const functionLabel = computed(() => {
 })
 
 const functionClass = computed(() => ({
-  'badge--formative': props.tool?.function === 'F',
-  'badge--sommative': props.tool?.function === 'S',
-  'badge--both': props.tool?.function === 'FS'
+  'ui-badge--fn-f':  props.tool?.function === 'F',
+  'ui-badge--fn-s':  props.tool?.function === 'S',
+  'ui-badge--fn-fs': props.tool?.function === 'FS'
 }))
 
 const linkDomain = computed(() => {
@@ -141,10 +139,10 @@ const linkDomain = computed(() => {
 
 const robustnessClass = computed(() => {
   const n = props.tool?.robustness_num
-  if (n <= 1) return 'rob--low'
-  if (n === 2) return 'rob--mid'
-  if (n === 3) return 'rob--high'
-  return 'rob--max'
+  if (n <= 1) return 'ui-badge--rob-low'
+  if (n === 2) return 'ui-badge--rob-mid'
+  if (n === 3) return 'ui-badge--rob-high'
+  return 'ui-badge--rob-max'
 })
 </script>
 
@@ -157,13 +155,13 @@ const robustnessClass = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--space-4);
 }
 
 .modal {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 2rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
   max-width: 680px;
   width: 100%;
   max-height: 88vh;
@@ -171,219 +169,141 @@ const robustnessClass = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  gap: var(--space-5);
+  box-shadow: var(--shadow-modal);
 }
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: var(--space-4);
+  right: var(--space-4);
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #94a3b8;
+  color: var(--color-text-placeholder);
   cursor: pointer;
   line-height: 1;
   padding: 0.2rem 0.4rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  transition: background 0.12s;
 }
+.modal-close:hover { background: var(--color-accent-subtle); color: var(--color-text-muted); }
 
-.modal-close:hover {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.modal-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.modal-header { display: flex; flex-direction: column; gap: var(--space-2); }
 
 .modal-id-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
 .tool-id {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--color-text-placeholder);
   font-family: monospace;
 }
 
-.tool-family {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-
-.family--m { background: #dbeafe; color: #1e40af; }
-.family--t { background: #d1fae5; color: #065f46; }
-.family--i { background: #fef3c7; color: #92400e; }
-.family--a { background: #fce7f3; color: #9d174d; }
-
-.rob-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid transparent;
-}
-
-.rob--low { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-.rob--mid { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
-.rob--high { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
-.rob--max { background: #dcfce7; color: #14532d; border-color: #86efac; }
-
 .modal-title {
-  font-size: 1.3rem;
+  font-size: var(--text-2xl);
   font-weight: 800;
-  color: #1e293b;
-  padding-right: 2rem;
+  color: var(--color-text);
+  padding-right: var(--space-8);
 }
 
 .modal-desc {
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
   line-height: 1.6;
 }
 
 .detail-block {
-  background: #eff6ff;
-  border-left: 3px solid #2563eb;
-  padding: 0.85rem 1rem;
-  border-radius: 0 6px 6px 0;
-  font-size: 0.875rem;
-  color: #1e3a8a;
+  background: var(--color-accent-subtle);
+  border-left: 3px solid var(--color-accent);
+  padding: 0.85rem var(--space-4);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--text-base);
+  color: var(--color-text);
   line-height: 1.65;
 }
 
 .modal-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1rem;
+  gap: var(--space-2);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
 }
 
 .info-row {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-3);
   align-items: baseline;
-  font-size: 0.875rem;
+  font-size: var(--text-base);
 }
 
 .info-label {
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-muted);
   min-width: 130px;
   flex-shrink: 0;
 }
 
-.info-value {
-  color: #1e293b;
-}
+.info-value { color: var(--color-text); }
 
-.meta-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid transparent;
-}
-
-.badge--formative { background: #ecfdf5; color: #166534; border-color: #bbf7d0; }
-.badge--sommative { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-.badge--both { background: #f0fdf4; color: #14532d; border-color: #86efac; }
-
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
+.section { display: flex; flex-direction: column; gap: 0.6rem; }
 
 .section-title {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.3rem;
 }
 
-.fils-list, .scenarios-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
+.fils-list, .scenarios-list { display: flex; flex-direction: column; gap: 0.6rem; }
 
 .fil-item, .scenario-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  font-size: 0.85rem;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
 }
 
 .fil-item strong, .scenario-item strong {
   display: block;
-  color: #1e293b;
-  font-size: 0.875rem;
+  color: var(--color-text);
+  font-size: var(--text-base);
 }
 
 .fil-item p, .scenario-item p {
-  color: #475569;
+  color: var(--color-text-muted);
   margin-top: 0.15rem;
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
-.fil-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.45rem;
-  border-radius: 3px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.fil--a { background: #dcfce7; color: #15803d; }
-.fil--b { background: #fee2e2; color: #b91c1c; }
-.fil--c { background: #ede9fe; color: #6d28d9; }
-.fil--d { background: #ffedd5; color: #c2410c; }
-
 .sources-text {
-  font-size: 0.82rem;
-  color: #64748b;
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
   font-style: italic;
 }
 
-.tool-link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #1e293b;
-  color: #f8fafc;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.12s;
-}
-
-.tool-link-btn:hover { background: #334155; }
+.tool-link-btn { align-self: flex-start; }
 
 .tool-link-domain {
-  font-size: 0.72rem;
-  color: #94a3b8;
+  font-size: var(--text-2xs);
+  color: var(--color-text-placeholder);
   font-weight: 400;
+}
+
+@media (max-width: 640px) {
+  .modal { padding: var(--space-6); }
+  .info-label { min-width: 100px; }
 }
 </style>

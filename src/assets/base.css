@@ -1,0 +1,320 @@
+/* =============================================
+   BASE & PRIMITIVES — Toolbox Prog IA
+   Reset global + classes partagées préfixées ui-
+   ============================================= */
+
+/* --- Reset global --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-ring);
+  outline-offset: 2px;
+}
+
+/* =============================================
+   CARTE
+   ============================================= */
+.ui-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+/* =============================================
+   BADGE — base + variantes
+   ============================================= */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+/* Famille d'outils */
+.ui-badge--family-m { background: var(--family-m-bg); color: var(--family-m-text); }
+.ui-badge--family-t { background: var(--family-t-bg); color: var(--family-t-text); }
+.ui-badge--family-i { background: var(--family-i-bg); color: var(--family-i-text); }
+.ui-badge--family-a { background: var(--family-a-bg); color: var(--family-a-text); }
+
+/* Fonction pédagogique */
+.ui-badge--fn-f  { background: var(--fn-f-bg);  border-color: var(--fn-f-border);  color: var(--fn-f-text);  }
+.ui-badge--fn-s  { background: var(--fn-s-bg);  border-color: var(--fn-s-border);  color: var(--fn-s-text);  }
+.ui-badge--fn-fs { background: var(--fn-fs-bg); border-color: var(--fn-fs-border); color: var(--fn-fs-text); }
+
+/* Robustesse IA */
+.ui-badge--rob-low  { background: var(--rob-low-bg);  border-color: var(--rob-low-border);  color: var(--rob-low-text);  }
+.ui-badge--rob-mid  { background: var(--rob-mid-bg);  border-color: var(--rob-mid-border);  color: var(--rob-mid-text);  }
+.ui-badge--rob-high { background: var(--rob-high-bg); border-color: var(--rob-high-border); color: var(--rob-high-text); }
+.ui-badge--rob-max  { background: var(--rob-max-bg);  border-color: var(--rob-max-border);  color: var(--rob-max-text);  }
+
+/* Risque IA */
+.ui-badge--risk-max  { background: var(--risk-max-bg);  border-color: var(--risk-max-border);  color: var(--risk-max-text);  }
+.ui-badge--risk-high { background: var(--risk-high-bg); border-color: var(--risk-high-border); color: var(--risk-high-text); }
+.ui-badge--risk-mod  { background: var(--risk-mod-bg);  border-color: var(--risk-mod-border);  color: var(--risk-mod-text);  }
+
+/* Bloom */
+.ui-badge--bloom-remember  { background: var(--bloom-remember-bg);  color: var(--bloom-remember-text);  }
+.ui-badge--bloom-understand { background: var(--bloom-understand-bg); color: var(--bloom-understand-text); }
+.ui-badge--bloom-apply     { background: var(--bloom-apply-bg);     color: var(--bloom-apply-text);     }
+.ui-badge--bloom-analyze   { background: var(--bloom-analyze-bg);   color: var(--bloom-analyze-text);   }
+.ui-badge--bloom-evaluate  { background: var(--bloom-evaluate-bg);  color: var(--bloom-evaluate-text);  }
+.ui-badge--bloom-create    { background: var(--bloom-create-bg);    color: var(--bloom-create-text);    }
+
+/* Fils rouges */
+.ui-badge--fil-a { background: var(--fil-a-bg); color: var(--fil-a-text); }
+.ui-badge--fil-b { background: var(--fil-b-bg); color: var(--fil-b-text); }
+.ui-badge--fil-c { background: var(--fil-c-bg); color: var(--fil-c-text); }
+.ui-badge--fil-d { background: var(--fil-d-bg); color: var(--fil-d-text); }
+
+/* Contexte pédagogique */
+.ui-badge--ctx-presentiel { background: var(--ctx-presentiel-bg); color: var(--ctx-presentiel-text); }
+.ui-badge--ctx-autonomie  { background: var(--ctx-autonomie-bg);  color: var(--ctx-autonomie-text);  }
+.ui-badge--ctx-projet     { background: var(--ctx-projet-bg);     color: var(--ctx-projet-text);     }
+.ui-badge--ctx-diagnostic { background: var(--ctx-diagnostic-bg); color: var(--ctx-diagnostic-text); }
+
+/* Phase pédagogique */
+.ui-badge--phase-apprendre { background: var(--phase-apprendre-bg); color: var(--phase-apprendre-text); }
+.ui-badge--phase-exercer   { background: var(--phase-exercer-bg);   color: var(--phase-exercer-text);   }
+.ui-badge--phase-evaluer   { background: var(--phase-evaluer-bg);   color: var(--phase-evaluer-text);   }
+
+/* Source de recommandation */
+.ui-badge--source-exact    { background: var(--source-exact-bg);    color: var(--source-exact-text);    }
+.ui-badge--source-approche { background: var(--source-approche-bg); color: var(--source-approche-text); }
+.ui-badge--source-matrix   { background: var(--source-matrix-bg);   color: var(--source-matrix-text);   }
+
+/* Scores matrice */
+.ui-badge--score-ideal { background: var(--score-ideal-bg); color: var(--score-ideal-text); }
+.ui-badge--score-utile { background: var(--score-utile-bg); color: var(--score-utile-text); }
+.ui-badge--score-ctx   { background: var(--score-ctx-bg);   color: var(--score-ctx-text);  border-color: var(--color-border); }
+
+/* Patron pédagogique */
+.ui-badge--patron {
+  background: var(--patron-tag-bg);
+  border-color: var(--patron-border);
+  color: var(--patron-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Niveau étudiant */
+.ui-badge--level {
+  background: var(--color-accent-subtle);
+  color: var(--color-text-faint);
+  border-color: var(--color-border);
+}
+
+/* Zone */
+.ui-badge--zone-syntaxe      { background: var(--zone-syntaxe-tag);      color: var(--zone-syntaxe-text);      }
+.ui-badge--zone-logique      { background: var(--zone-logique-tag);       color: var(--zone-logique-text);      }
+.ui-badge--zone-architecture { background: var(--zone-architecture-tag);  color: var(--zone-architecture-text); }
+
+/* Outil (cursus, coût, divers) */
+.ui-badge--neutral {
+  background: var(--color-accent-subtle);
+  color: var(--color-text-faint);
+  border-color: var(--color-border);
+}
+
+/* =============================================
+   BOUTONS
+   ============================================= */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+
+.ui-btn-primary {
+  background: var(--color-accent);
+  color: #f8fafc;
+  border-color: var(--color-accent);
+}
+.ui-btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+
+.ui-btn-secondary {
+  background: var(--color-accent-subtle);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+.ui-btn-secondary:hover { background: var(--color-border); }
+
+.ui-btn-ghost {
+  background: transparent;
+  color: var(--color-text-faint);
+  border-color: var(--color-border);
+}
+.ui-btn-ghost:hover { background: var(--color-accent-subtle); }
+
+/* =============================================
+   BLOC REPLIABLE (details/summary partagé)
+   ============================================= */
+.ui-collapsible {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ui-collapsible > summary {
+  padding: 0.65rem 1rem;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-bg);
+  user-select: none;
+}
+.ui-collapsible > summary::-webkit-details-marker { display: none; }
+.ui-collapsible > summary::before {
+  content: '▶';
+  font-size: 0.6rem;
+  color: var(--color-text-placeholder);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.ui-collapsible[open] > summary::before { transform: rotate(90deg); }
+
+.ui-collapsible-body {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-4);
+}
+
+/* Variante summary compacte pour les cartes concept */
+.ui-collapsible--compact > summary {
+  padding: 0.4rem 0.75rem;
+  font-size: var(--text-2xs);
+  background: transparent;
+}
+
+/* =============================================
+   EN-TÊTE DE PAGE
+   ============================================= */
+.ui-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.ui-page-header h1 {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  color: var(--color-text);
+}
+.ui-page-header p {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+/* =============================================
+   BARRE DE FILTRES
+   ============================================= */
+.ui-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+.ui-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ui-filter-group > label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-filter-input,
+.ui-filter-select {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.65rem;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-width: 170px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ui-filter-input:focus,
+.ui-filter-select:focus {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.ui-reset-btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-faint);
+  background: var(--color-accent-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-end;
+}
+.ui-reset-btn:hover { background: var(--color-border); }
+
+/* =============================================
+   ÉTAT VIDE
+   ============================================= */
+.ui-empty-state {
+  text-align: center;
+  color: var(--color-text-placeholder);
+  padding: var(--space-12);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+/* =============================================
+   RESPONSIVE — breakpoints partagés
+   ============================================= */
+@media (max-width: 640px) {
+  .ui-filter-input,
+  .ui-filter-select { min-width: 130px; }
+}

@@ -5,7 +5,7 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 <template>
   <div id="app-layout">
     <header class="site-header">
-      <nav class="nav-container">
+      <nav class="nav-container" aria-label="Navigation principale">
         <router-link to="/" class="site-title">Toolbox Prog IA</router-link>
         <ul class="nav-links">
           <li><router-link to="/catalogue">Catalogue</router-link></li>
@@ -25,27 +25,6 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   </div>
 </template>
 
-<style>
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #1e293b;
-  background: #f8fafc;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-</style>
-
 <style scoped>
 #app-layout {
   min-height: 100vh;
@@ -54,9 +33,9 @@ a {
 }
 
 .site-header {
-  background: #1e293b;
-  color: #f8fafc;
-  padding: 0 1.5rem;
+  background: var(--color-text);
+  color: var(--color-bg);
+  padding: 0 var(--space-6);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -68,15 +47,18 @@ a {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 2rem;
-  height: 56px;
+  gap: var(--space-8);
+  min-height: 56px;
+  flex-wrap: wrap;
+  padding: 0.4rem 0;
 }
 
 .site-title {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #f8fafc;
+  color: var(--color-bg);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-links {
@@ -84,26 +66,25 @@ a {
   list-style: none;
   gap: 0.25rem;
   margin-left: auto;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
-  color: #94a3b8;
+  color: var(--color-text-placeholder);
   padding: 0.4rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   transition: color 0.15s, background 0.15s;
+  display: block;
 }
 
 .nav-links a:hover,
 .nav-links a.router-link-active {
-  color: #f8fafc;
-  background: #334155;
+  color: var(--color-bg);
+  background: var(--color-accent);
 }
 
-.nav-audit {
-  color: #fcd34d !important;
-}
-
+.nav-audit { color: #fcd34d !important; }
 .nav-audit:hover,
 .nav-audit.router-link-active {
   background: #422006 !important;
@@ -111,17 +92,38 @@ a {
 
 .main-content {
   flex: 1;
-  padding: 2rem 1.5rem;
+  padding: var(--space-8) var(--space-6);
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
 }
 
 .site-footer {
-  background: #1e293b;
-  color: #64748b;
+  background: var(--color-text);
+  color: var(--color-text-faint);
   text-align: center;
-  padding: 1rem 1.5rem;
+  padding: var(--space-4) var(--space-6);
   font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .nav-container {
+    gap: var(--space-4);
+  }
+
+  .nav-links {
+    margin-left: 0;
+    width: 100%;
+    padding-bottom: 0.4rem;
+  }
+
+  .nav-links a {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .main-content {
+    padding: var(--space-6) var(--space-4);
+  }
 }
 </style>
