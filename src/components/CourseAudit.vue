@@ -9,7 +9,7 @@
           {{ allConceptIds.length }} concept{{ allConceptIds.length > 1 ? 's' : '' }} detecte{{ allConceptIds.length > 1 ? 's' : '' }}
         </p>
       </div>
-      <button class="btn-reset" @click="$emit('reset')">Nouvelle analyse</button>
+      <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Nouvelle analyse</button>
     </div>
 
     <!-- Banniere methodologique -->
@@ -28,7 +28,7 @@
         </div>
         <div class="gr-stat">
           <span class="gr-stat-label">Risque IA global</span>
-          <span class="gr-risk-badge" :class="riskClass(globalRec.risk)">{{ globalRec.risk }}</span>
+          <span class="ui-badge" :class="riskClass(globalRec.risk)">{{ globalRec.risk }}</span>
         </div>
         <div v-if="globalRec.dominantBloom" class="gr-stat">
           <span class="gr-stat-label">Bloom dominant</span>
@@ -95,7 +95,7 @@
           <div class="qi-concept">
             <span class="qi-id">{{ item.concept.id }}</span>
             <span class="qi-name">{{ item.concept.name }}</span>
-            <span class="risk-tag">Risque {{ item.concept.risk_ai }}</span>
+            <span class="ui-badge" :class="riskClass(item.concept.risk_ai)">Risque {{ item.concept.risk_ai }}</span>
           </div>
           <p class="qi-trace">{{ item.reason }}</p>
         </div>
@@ -108,7 +108,7 @@
         <div v-if="swot.opportunites.length === 0" class="quad-empty">Aucune combinatoire correspondante trouvee.</div>
         <div v-for="combo in swot.opportunites" :key="combo.id" class="quad-item">
           <p class="qi-combo-label">{{ combo.recommended_label }}</p>
-          <p class="qi-trace qi-trace--blue">{{ combo.justification }}</p>
+          <p class="qi-trace qi-trace--info">{{ combo.justification }}</p>
           <div class="qi-tools">
             <span v-for="t in combo.tools" :key="t.id" class="qi-tool" :title="t.name">{{ t.id }}</span>
           </div>
@@ -127,7 +127,7 @@
       <div v-for="rec in recommendations" :key="rec.section_index" class="rec-block">
         <div class="rec-header">
           <span class="rec-section-title">{{ sectionTitle(rec.section_index) }}</span>
-          <span class="rec-source" :class="sourceBadgeClass(rec.source)">
+          <span class="ui-badge" :class="sourceBadgeClass(rec.source)">
             {{ sourceLabel(rec.source) }}
           </span>
         </div>
@@ -138,7 +138,7 @@
           <div v-for="tool in rec.tools" :key="tool.id" class="rec-tool-card">
             <div class="rtc-header">
               <span class="rtc-id">{{ tool.id }}</span>
-              <span class="rtc-family" :class="familyClass(tool.family)">{{ tool.family }}</span>
+              <span class="ui-badge" :class="familyClass(tool.family)">{{ tool.family }}</span>
               <span class="rtc-function">{{ functionLabel(tool.function) }}</span>
             </div>
             <p class="rtc-name">{{ tool.name }}</p>
@@ -167,7 +167,7 @@
         </template>
       </div>
 
-      <div v-if="recommendations.length === 0" class="empty-state">
+      <div v-if="recommendations.length === 0" class="ui-empty-state">
         Aucune section avec concepts et niveau Bloom identifies.
       </div>
     </section>
@@ -196,12 +196,11 @@ const allConceptIds = computed(() => [...new Set(props.validated.flatMap(s => s.
 const globalRec = computed(() => computeCourseGlobalRec(props.validated))
 
 function riskClass(risk) {
-  if (risk === 'Maximal') return 'risk--max'
-  if (risk === 'Eleve') return 'risk--high'
-  return 'risk--mod'
+  if (risk === 'Maximal') return 'ui-badge--risk-max'
+  if (risk === 'Eleve') return 'ui-badge--risk-high'
+  return 'ui-badge--risk-mod'
 }
 
-// Index section_index -> validated entry pour acces O(1) dans le template
 const validatedBySection = computed(() =>
   Object.fromEntries(props.validated.map(v => [v.section_index, v]))
 )
@@ -211,7 +210,12 @@ function sectionTitle(idx) {
 }
 
 function familyClass(fam) {
-  return { 'family--m': fam === 'FM1', 'family--t': fam === 'FM2', 'family--i': fam === 'FM3', 'family--a': fam === 'FM4' }
+  return {
+    'ui-badge--family-m': fam === 'FM1',
+    'ui-badge--family-t': fam === 'FM2',
+    'ui-badge--family-i': fam === 'FM3',
+    'ui-badge--family-a': fam === 'FM4'
+  }
 }
 
 function functionLabel(fn) {
@@ -225,9 +229,9 @@ function sourceLabel(src) {
 }
 
 function sourceBadgeClass(src) {
-  if (src === 'combo') return 'src--combo'
-  if (src === 'combo-approche') return 'src--approche'
-  return 'src--matrix'
+  if (src === 'combo') return 'ui-badge--source-exact'
+  if (src === 'combo-approche') return 'ui-badge--source-approche'
+  return 'ui-badge--source-matrix'
 }
 
 function patronsForSectionConcept(sectionIndex, conceptId) {
@@ -240,53 +244,40 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .audit {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-8);
 }
 
 .audit-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   flex-wrap: wrap;
 }
 
 .audit-header h2 {
-  font-size: 1.4rem;
+  font-size: var(--text-2xl);
   font-weight: 800;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
 .audit-meta {
-  font-size: 0.875rem;
-  color: #475569;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   margin-top: 0.3rem;
 }
-
-.btn-reset {
-  padding: 0.5rem 1rem;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-reset:hover { background: #e2e8f0; }
 
 /* SWOT grid */
 .swot-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 @media (max-width: 700px) { .swot-grid { grid-template-columns: 1fr; } }
 
 .swot-quadrant {
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -294,31 +285,31 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   border: 1px solid transparent;
 }
 
-.swot-quadrant--forces    { background: #f0fdf4; border-color: #bbf7d0; }
-.swot-quadrant--faiblesses { background: #eff6ff; border-color: #bfdbfe; }
-.swot-quadrant--risques   { background: #fef2f2; border-color: #fecaca; }
-.swot-quadrant--opportunites { background: #fff7ed; border-color: #fed7aa; }
+.swot-quadrant--forces      { background: var(--color-success-bg); border-color: var(--color-success-border); }
+.swot-quadrant--faiblesses  { background: var(--color-warning-bg); border-color: var(--color-warning-border); }
+.swot-quadrant--risques     { background: var(--color-danger-bg);  border-color: var(--color-danger-border);  }
+.swot-quadrant--opportunites { background: var(--color-info-bg);   border-color: var(--color-info-border);    }
 
 .quad-title {
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   font-weight: 800;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
-.swot-quadrant--forces .quad-title    { color: #15803d; }
-.swot-quadrant--faiblesses .quad-title { color: #1d4ed8; }
-.swot-quadrant--risques .quad-title   { color: #b91c1c; }
-.swot-quadrant--opportunites .quad-title { color: #c2410c; }
+.swot-quadrant--forces .quad-title       { color: var(--color-success-text); }
+.swot-quadrant--faiblesses .quad-title   { color: var(--color-warning-text); }
+.swot-quadrant--risques .quad-title      { color: var(--color-danger-text);  }
+.swot-quadrant--opportunites .quad-title { color: var(--color-info-text);    }
 
 .quad-desc {
-  font-size: 0.78rem;
-  color: #64748b;
+  font-size: var(--text-2xs);
+  color: var(--color-text-faint);
   line-height: 1.5;
   border-bottom: 1px solid rgba(0,0,0,0.06);
   padding-bottom: 0.5rem;
 }
 
-.quad-empty { font-size: 0.82rem; color: #94a3b8; font-style: italic; }
+.quad-empty { font-size: var(--text-sm); color: var(--color-text-placeholder); font-style: italic; }
 
 .quad-item {
   display: flex;
@@ -326,7 +317,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   gap: 0.3rem;
   padding: 0.6rem 0.75rem;
   background: rgba(255,255,255,0.7);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
 }
 
 .qi-concept {
@@ -337,25 +328,16 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .qi-id {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   font-family: monospace;
-  color: #475569;
+  color: var(--color-text-muted);
 }
 
 .qi-name {
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: #1e293b;
-}
-
-.risk-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  background: #fee2e2;
-  color: #b91c1c;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
+  color: var(--color-text);
 }
 
 .qi-tools {
@@ -368,54 +350,54 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0.1rem 0.35rem;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-family: monospace;
-  background: #e2e8f0;
-  color: #475569;
+  background: var(--color-border);
+  color: var(--color-text-muted);
 }
 
 .qi-tool--strong {
-  background: #1e293b;
-  color: #f8fafc;
+  background: var(--color-accent);
+  color: var(--color-bg);
 }
 
 .qi-trace {
   font-size: 0.72rem;
-  color: #64748b;
+  color: var(--color-text-faint);
   font-style: italic;
   line-height: 1.4;
 }
 
-.qi-trace--blue { color: #1e40af; }
+.qi-trace--info { color: var(--color-info-text); }
 
 .qi-combo-label {
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
 /* Recommandations */
 .recs-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .recs-section h2 {
-  font-size: 1.15rem;
+  font-size: var(--text-xl);
   font-weight: 800;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
 .recs-intro {
-  font-size: 0.875rem;
-  color: #475569;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .rec-block {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   padding: 1.1rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -431,28 +413,17 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 
 .rec-section-title {
   font-weight: 700;
-  color: #1e293b;
-  font-size: 0.9rem;
+  color: var(--color-text);
+  font-size: var(--text-base);
 }
-
-.rec-source {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.src--combo    { background: #dcfce7; color: #14532d; }
-.src--approche { background: #fef9c3; color: #854d0e; }
-.src--matrix   { background: #fef3c7; color: #78350f; }
 
 .rec-justification {
-  font-size: 0.82rem;
-  color: #475569;
-  background: #f8fafc;
-  border-left: 3px solid #2563eb;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-left: 3px solid var(--color-accent);
   padding: 0.6rem 0.75rem;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .rec-tools {
@@ -462,9 +433,9 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .rec-tool-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
@@ -479,66 +450,43 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .rtc-id {
-  font-size: 0.72rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
   font-family: monospace;
-  color: #94a3b8;
+  color: var(--color-text-placeholder);
 }
-
-.rtc-family {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-
-.family--m { background: #dbeafe; color: #1e40af; }
-.family--t { background: #d1fae5; color: #065f46; }
-.family--i { background: #fef3c7; color: #92400e; }
-.family--a { background: #fce7f3; color: #9d174d; }
 
 .rtc-function {
-  font-size: 0.68rem;
-  color: #64748b;
+  font-size: var(--text-2xs);
+  color: var(--color-text-faint);
 }
 
 .rtc-name {
-  font-size: 0.85rem;
+  font-size: var(--text-base);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
 .rtc-desc {
-  font-size: 0.75rem;
-  color: #475569;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
   line-height: 1.45;
 }
 
 .patron-ctx-note {
-  font-size: 0.75rem;
-  color: #9a3412;
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  border-radius: 5px;
+  font-size: var(--text-xs);
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-md);
   padding: 0.3rem 0.6rem;
-}
-
-.empty-state {
-  text-align: center;
-  color: #94a3b8;
-  padding: 2rem;
-  background: #f8fafc;
-  border: 1px dashed #e2e8f0;
-  border-radius: 10px;
-  font-size: 0.875rem;
 }
 
 /* Banniere methodologique */
 .generic-rec-banner {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 0.85rem 1.1rem;
   display: flex;
   align-items: flex-start;
@@ -546,11 +494,11 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .grb-label {
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #64748b;
+  color: var(--color-text-faint);
   white-space: nowrap;
   padding-top: 0.1rem;
   flex-shrink: 0;
@@ -558,7 +506,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 
 .grb-text {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--color-text-faint);
   line-height: 1.6;
 }
 
@@ -566,17 +514,17 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .global-rec {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: 10px;
+  gap: var(--space-4);
+  background: var(--patron-bg);
+  border: 1px solid var(--patron-border);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
 }
 
 .gr-title {
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 800;
-  color: #78350f;
+  color: var(--patron-title);
 }
 
 .gr-stats {
@@ -590,37 +538,25 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   flex-direction: column;
   gap: 0.2rem;
   background: rgba(255,255,255,0.7);
-  border: 1px solid #fde68a;
-  border-radius: 6px;
+  border: 1px solid var(--patron-border);
+  border-radius: var(--radius-md);
   padding: 0.55rem 0.85rem;
   min-width: 120px;
 }
 
 .gr-stat-label {
-  font-size: 0.68rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #92400e;
+  color: var(--patron-text);
 }
 
 .gr-stat-value {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-text);
 }
-
-.gr-risk-badge {
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  align-self: flex-start;
-}
-
-.risk--max { background: #fee2e2; color: #b91c1c; }
-.risk--high { background: #ffedd5; color: #c2410c; }
-.risk--mod { background: #dcfce7; color: #15803d; }
 
 .gr-levers {
   display: flex;
@@ -629,9 +565,9 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .gr-levers-label {
-  font-size: 0.72rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
-  color: #92400e;
+  color: var(--patron-text);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -647,32 +583,32 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   align-items: center;
   gap: 0.5rem;
   background: rgba(255,255,255,0.7);
-  border: 1px solid #fde68a;
-  border-radius: 5px;
+  border: 1px solid var(--patron-border);
+  border-radius: var(--radius-md);
   padding: 0.4rem 0.75rem;
   flex-wrap: wrap;
 }
 
 .gr-lever-id {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   font-family: monospace;
-  color: #475569;
+  color: var(--color-text-muted);
 }
 
 .gr-lever-name {
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-text);
   flex: 1;
 }
 
 .gr-lever-rob {
-  font-size: 0.7rem;
-  color: #15803d;
-  background: #dcfce7;
+  font-size: var(--text-2xs);
+  color: var(--color-success-text);
+  background: var(--color-success-bg);
   padding: 0.1rem 0.4rem;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
 }
 </style>

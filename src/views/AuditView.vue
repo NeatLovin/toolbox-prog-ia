@@ -1,8 +1,8 @@
 <template>
   <div class="audit-view">
-    <div class="page-header">
+    <div class="ui-page-header">
       <h1>Audit de cours PDF</h1>
-      <p>
+      <p class="header-desc">
         Extension exploratoire du PoC. Infere les parametres de votre cours section par section depuis
         un PDF, puis genere une analyse SWOT deterministe croisee avec la matrice de pertinence.
       </p>
@@ -94,43 +94,31 @@ function loadFixture() {
 .audit-view {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-8);
 }
 
-.page-header h1 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 0.4rem;
-}
-
-.page-header p {
-  font-size: 0.95rem;
-  color: #475569;
-  line-height: 1.6;
-  max-width: 680px;
-}
+.header-desc { max-width: 680px; }
 
 .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 4rem 2rem;
-  color: #475569;
-  font-size: 0.95rem;
+  gap: var(--space-4);
+  padding: 4rem var(--space-8);
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
 }
 
 .loading-sub {
-  font-size: 0.82rem;
-  color: #94a3b8;
+  font-size: var(--text-sm);
+  color: var(--color-text-placeholder);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #2563eb;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -138,25 +126,23 @@ function loadFixture() {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .demo-banner {
-  background: #fef3c7;
-  border: 1px solid #fcd34d;
-  border-radius: 8px;
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-lg);
   padding: 0.75rem 1.25rem;
-  font-size: 0.875rem;
-  color: #78350f;
+  font-size: var(--text-sm);
+  color: var(--color-warning-text);
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.demo-banner span {
-  font-weight: 700;
-}
+.demo-banner span { font-weight: 700; }
 
 .error-state {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 10px;
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-xl);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
@@ -166,19 +152,19 @@ function loadFixture() {
 
 .error-title {
   font-weight: 700;
-  color: #b91c1c;
-  font-size: 1rem;
+  color: var(--color-danger-text);
+  font-size: var(--text-base);
 }
 
 .error-msg {
-  font-size: 0.875rem;
-  color: #991b1b;
+  font-size: var(--text-sm);
+  color: var(--color-danger-text);
   font-family: monospace;
 }
 
 .error-hints {
-  font-size: 0.82rem;
-  color: #475569;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .error-hints ul {
@@ -190,23 +176,24 @@ function loadFixture() {
 }
 
 .error-hints code {
-  background: #fee2e2;
+  background: var(--risk-max-bg);
   padding: 0.1rem 0.3rem;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 0.8rem;
 }
 
 .btn-retry {
   padding: 0.55rem 1.25rem;
-  background: #b91c1c;
-  color: #ffffff;
+  background: var(--color-danger-text);
+  color: var(--color-surface);
   border: none;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
   font-weight: 600;
   cursor: pointer;
   align-self: flex-start;
+  transition: opacity 0.15s;
 }
 
-.btn-retry:hover { background: #991b1b; }
+.btn-retry:hover { opacity: 0.85; }
 </style>

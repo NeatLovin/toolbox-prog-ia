@@ -49,6 +49,9 @@
   --color-danger-bg:      #fef2f2;
   --color-danger-border:  #fecaca;
   --color-danger-text:    #991b1b;
+  --color-info-bg:        #ecfeff;
+  --color-info-border:    #a5f3fc;
+  --color-info-text:      #0e7490;
 
   /* --- Famille d'outils --- */
   --family-m-bg:   #dbeafe; --family-m-text:   #1e40af;

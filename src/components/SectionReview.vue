@@ -9,7 +9,7 @@
           Cette etape est obligatoire : c'est vous qui validez, le modele ne fait que proposer.
         </p>
       </div>
-      <button class="btn-confirm" @click="handleConfirm">
+      <button class="ui-btn ui-btn-primary btn-confirm" @click="handleConfirm">
         Confirmer et analyser &rarr;
       </button>
     </div>
@@ -84,7 +84,7 @@
     </div>
 
     <div class="review-footer">
-      <button class="btn-confirm" @click="handleConfirm">
+      <button class="ui-btn ui-btn-primary btn-confirm" @click="handleConfirm">
         Confirmer et generer l'analyse &rarr;
       </button>
     </div>
@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import conceptsData from '../data/concepts.json'
 
 const props = defineProps({
@@ -156,61 +156,51 @@ function handleConfirm() {
 .review {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 
 .review-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: var(--space-6);
   flex-wrap: wrap;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem var(--space-6);
 }
 
 .review-header h2 {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   font-weight: 800;
-  color: #1e293b;
+  color: var(--color-text);
   margin-bottom: 0.35rem;
 }
 
 .review-header p {
-  font-size: 0.875rem;
-  color: #475569;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   line-height: 1.6;
   max-width: 560px;
 }
 
 .btn-confirm {
-  padding: 0.65rem 1.4rem;
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s;
   flex-shrink: 0;
 }
-
-.btn-confirm:hover { background: #1d4ed8; }
 
 .sections-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .section-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -225,62 +215,62 @@ function handleConfirm() {
 }
 
 .section-num {
-  font-size: 0.72rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
-  color: #64748b;
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .section-page {
-  font-size: 0.72rem;
-  color: #94a3b8;
+  font-size: var(--text-2xs);
+  color: var(--color-text-placeholder);
 }
 
 .confidence-badge {
-  font-size: 0.7rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
-.conf--low { background: #fef2f2; color: #991b1b; }
-.conf--mid { background: #fff7ed; color: #9a3412; }
-.conf--high { background: #f0fdf4; color: #166534; }
+.conf--low  { background: var(--color-danger-bg);  color: var(--color-danger-text);  }
+.conf--mid  { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.conf--high { background: var(--color-success-bg); color: var(--color-success-text); }
 
 .btn-skip {
   margin-left: auto;
-  font-size: 0.72rem;
+  font-size: var(--text-2xs);
   font-weight: 600;
   padding: 0.15rem 0.6rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  background: #f8fafc;
-  color: #64748b;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text-faint);
   cursor: pointer;
 }
 
 .btn-skip--active {
-  background: #fef2f2;
-  color: #991b1b;
-  border-color: #fecaca;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: var(--color-danger-border);
 }
 
 .section-title {
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-text);
 }
 
-.section-title--muted { color: #94a3b8; }
+.section-title--muted { color: var(--color-text-placeholder); }
 
 .section-excerpt {
-  font-size: 0.78rem;
-  color: #64748b;
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
   line-height: 1.5;
-  background: #f8fafc;
+  background: var(--color-bg);
   padding: 0.6rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
 }
 
 .field-row {
@@ -290,9 +280,9 @@ function handleConfirm() {
 }
 
 .field-label {
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-muted);
   min-width: 120px;
   padding-top: 0.3rem;
   flex-shrink: 0;
@@ -310,23 +300,24 @@ function handleConfirm() {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  background: #dbeafe;
-  color: #1e40af;
-  font-size: 0.75rem;
+  background: var(--color-accent-subtle);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-xs);
   font-weight: 600;
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .concept-name {
   font-weight: 400;
-  color: #3b82f6;
+  color: var(--color-text-faint);
 }
 
 .tag-remove {
   background: none;
   border: none;
-  color: #1e40af;
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 0.9rem;
   line-height: 1;
@@ -334,27 +325,27 @@ function handleConfirm() {
 }
 
 .add-concept {
-  font-size: 0.78rem;
-  border: 1px dashed #93c5fd;
-  border-radius: 4px;
+  font-size: var(--text-xs);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
   padding: 0.2rem 0.4rem;
-  background: #f0f9ff;
-  color: #1e40af;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
   cursor: pointer;
 }
 
 .field-select {
-  font-size: 0.875rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  font-size: var(--text-base);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   padding: 0.3rem 0.6rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .section-note {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  font-size: var(--text-xs);
+  color: var(--color-text-placeholder);
   font-style: italic;
 }
 

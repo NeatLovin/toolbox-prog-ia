@@ -53,20 +53,20 @@ function onFileChange(e) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: var(--space-5);
   max-width: 520px;
   margin: 0 auto;
 }
 
 .dropzone {
   width: 100%;
-  border: 2px dashed #cbd5e1;
-  border-radius: 12px;
-  padding: 3rem 2rem;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-2xl);
+  padding: 3rem var(--space-8);
   text-align: center;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
-  background: #ffffff;
+  background: var(--color-surface);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,36 +75,32 @@ function onFileChange(e) {
 
 .dropzone:hover,
 .dropzone--over {
-  border-color: #2563eb;
-  background: #eff6ff;
+  border-color: var(--color-accent);
+  background: var(--color-accent-subtle);
 }
 
-.dropzone-icon {
-  font-size: 2.5rem;
-}
+.dropzone-icon { font-size: 2.5rem; }
 
 .dropzone-main {
   font-weight: 700;
-  color: #1e293b;
-  font-size: 1rem;
+  color: var(--color-text);
+  font-size: var(--text-base);
 }
 
 .dropzone-sub {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
 }
 
-.file-hidden {
-  display: none;
-}
+.file-hidden { display: none; }
 
 .demo-separator {
   display: flex;
   align-items: center;
   width: 100%;
   gap: 0.75rem;
-  color: #94a3b8;
-  font-size: 0.875rem;
+  color: var(--color-text-placeholder);
+  font-size: var(--text-sm);
 }
 
 .demo-separator::before,
@@ -112,29 +108,27 @@ function onFileChange(e) {
   content: '';
   flex: 1;
   height: 1px;
-  background: #e2e8f0;
+  background: var(--color-border);
 }
 
 .btn-demo {
   width: 100%;
-  padding: 0.8rem 1.5rem;
-  background: #1e293b;
-  color: #f8fafc;
+  padding: 0.8rem var(--space-6);
+  background: var(--color-accent-hover);
+  color: var(--color-bg);
   border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s;
 }
 
-.btn-demo:hover {
-  background: #334155;
-}
+.btn-demo:hover { background: var(--color-accent); }
 
 .demo-note {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  font-size: var(--text-xs);
+  color: var(--color-text-placeholder);
   text-align: center;
   line-height: 1.5;
 }

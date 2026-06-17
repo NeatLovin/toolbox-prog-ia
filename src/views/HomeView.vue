@@ -7,7 +7,7 @@
         a l'heure de l'intelligence artificielle generative.
       </p>
       <p class="context">
-        Proof of concept &mdash; Travail de Bachelor, HEG Arc, HES-SO
+        Proof of concept, Travail de Bachelor, HEG Arc, HES-SO
       </p>
     </section>
 

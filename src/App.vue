@@ -20,7 +20,7 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       <router-view />
     </main>
     <footer class="site-footer">
-      <p>Travail de Bachelor &mdash; HEG Arc, HES-SO &mdash; 2025-2026</p>
+      <p>Travail de Bachelor, HEG Arc, HES-SO, 2025-2026</p>
     </footer>
   </div>
 </template>
@@ -84,10 +84,10 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   background: var(--color-accent);
 }
 
-.nav-audit { color: #fcd34d !important; }
+.nav-audit { color: var(--patron-border) !important; }
 .nav-audit:hover,
 .nav-audit.router-link-active {
-  background: #422006 !important;
+  background: var(--patron-title) !important;
 }
 
 .main-content {

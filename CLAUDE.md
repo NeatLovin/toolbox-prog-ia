@@ -12,7 +12,7 @@ Le detail des choix techniques est dans @Choix_stack_technique_PoC_Toolbox.md
 
 - Vue 3, Composition API.
 - Donnees : fichiers JSON statiques dans src/data/. Pas de backend, pas de base de donnees.
-- Styling : CSS scoped Vue.
+- Styling : systeme de design a deux couches. `src/assets/tokens.css` : 90+ CSS custom properties importees une fois dans main.js (couleurs, espacement, typographie, ombres). `src/assets/base.css` : reset global + primitives partagees prefixees `ui-` (ui-card, ui-badge + 30 variantes, ui-btn, ui-collapsible, ui-page-header, ui-filter-bar, ui-empty-state). Les composants utilisent ces primitives globales + CSS scoped pour les styles specifiques. Pas de framework UI.
 - Build : Vite.
 - Hebergement : GitHub Pages, depot NeatLovin/toolbox-prog-ia. base: '/toolbox-prog-ia/' dans vite.config.js.
 - Ne pas reintroduire React, Svelte, ni framework UI lourd.
@@ -109,17 +109,34 @@ Extension exploratoire. Pipeline en 6 etapes :
 
 ```
 src/
+  assets/         tokens.css (design tokens), base.css (reset + primitives ui-)
   data/           tools.json, concepts.json, matrix.json, combos.json, meta.json
                   fixtures/cours-exemple.json
   lib/            recommendation.js (moteur factorise)
   composables/    useData.js, useRecommendation.js, useAudit.js
   views/          HomeView, CatalogueView, ConceptsView, ArboreView, MethodologieView, AuditView
-  components/     ToolCard, ToolDetailModal, PdfDropzone, SectionReview, CourseAudit
+  components/     ToolCard, ToolDetailModal, PdfDropzone, SectionReview, CourseAudit, PatronBlock
   router/         index.js
   App.vue, main.js
 proxy/
   server.js       (Express, Node >= 18, non bundle par Vite)
 ```
+
+## Systeme de design (tokens + primitives)
+
+**Accent** : `--color-accent: #334155` (slate-700, neutre encre). Jamais confondu avec les couleurs de zone. Utilise pour les boutons, focus, liens actifs, bordures d'emphase.
+
+**Zones** : bleu = Syntaxe, vert = Logique, violet = Architecture. Ces trois couleurs sont reservees aux affichages de zone (cartes de selection, badges, bannieres de principe). Ne pas les reutiliser ailleurs.
+
+**Etats semantiques** : success (vert), warning (orange), danger (rouge), info (cyan/sarcelle `#0e7490`). Le SWOT se mappe : Forces = success, Faiblesses = warning, Risques = danger, Opportunites = info.
+
+**Badges** : toujours `class="ui-badge ui-badge--variante"`. Les fonctions JS (`familyClass`, `sourceBadgeClass`, `riskClass`) retournent la chaine de classe `ui-badge--*`. Ne pas creer de classes de couleur locales redupliquant les variantes globales.
+
+**Boutons** : `ui-btn` + modificateur (`ui-btn-primary`, `ui-btn-secondary`, `ui-btn-ghost`). Les styles locaux n'ajoutent que des proprietes de mise en page (width, flex-shrink), jamais de couleur.
+
+**Repliables** : `<details class="ui-collapsible">` + `<div class="ui-collapsible-body">`. Variante compacte : ajouter `ui-collapsible--compact`.
+
+**Regles de migration** : aucune couleur hex (#rrggbb) dans les fichiers `.vue` hors tokens.css et base.css. Seule exception admise : `rgba(255,255,255,0.7)` pour des superpositions translucides sans equivalent en token.
 
 ## Commandes
 

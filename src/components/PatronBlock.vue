@@ -129,7 +129,7 @@ function contexteClass(ctx) {
   font-style: italic;
   line-height: 1.5;
   padding: 0.4rem 0.6rem;
-  background: rgba(254, 243, 199, 0.6);
+  background: var(--patron-tag-bg);
   border-radius: var(--radius-sm);
 }
 
@@ -152,7 +152,7 @@ function contexteClass(ctx) {
 
 .pf-text {
   font-size: 0.8rem;
-  color: #44403c;
+  color: var(--color-text-muted);
   line-height: 1.55;
 }
 .pf-text--risk { color: var(--patron-risk-text); }
@@ -166,7 +166,7 @@ function contexteClass(ctx) {
   align-items: center;
   gap: 0.3rem;
   background: var(--color-accent);
-  color: #f8fafc;
+  color: var(--color-bg);
   border: none;
   border-radius: var(--radius-sm);
   padding: 0.25rem 0.6rem;

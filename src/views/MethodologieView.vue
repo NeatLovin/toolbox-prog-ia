@@ -91,14 +91,14 @@
           <span class="ui-badge ui-badge--family-i">FM3</span>
           <div>
             <strong>Tuteurs IA et dispositifs scaffoldes</strong>
-            <p>CodeAid, CodeHelp, CS50 Duck, NotebookLM &mdash; garde-fous pedagogiques explicites.</p>
+            <p>CodeAid, CodeHelp, CS50 Duck, NotebookLM (garde-fous pedagogiques explicites).</p>
           </div>
         </div>
         <div class="family-item">
           <span class="ui-badge ui-badge--family-a">FM4</span>
           <div>
             <strong>Outils agentiques et IA generaliste</strong>
-            <p>Cursor, Claude Code, GitHub Copilot, ChatGPT &mdash; usage encadre en S3-S6.</p>
+            <p>Cursor, Claude Code, GitHub Copilot, ChatGPT (usage encadre en S3-S6).</p>
           </div>
         </div>
       </div>
