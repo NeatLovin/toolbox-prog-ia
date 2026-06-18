@@ -28,7 +28,7 @@
             <span class="ui-badge" :class="functionClass">{{ functionLabel }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Cursus cible</span>
+            <span class="info-label">Sequencement conseille</span>
             <span class="info-value">{{ tool.cursus }}</span>
           </div>
           <div class="info-row">

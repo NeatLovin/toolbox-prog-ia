@@ -62,9 +62,9 @@ references     : sources academiques
 
 Quatre fichiers JSON dans src/data/, derives de la cartographie du TB. Source de verite absolue. Ne jamais inventer un outil, un concept ou un score absent de ces fichiers.
 
-- tools.json : 48 outils (NVivo supprime, Argos=T11). Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources, link (optionnel, URL externe pour ~9 outils).
+- tools.json : 48 outils (M01-M13, T01-T11, I01-I16, A01-A08). Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources, link (optionnel, URL externe pour ~9 outils). Le champ cursus est un sequencement conseille (valeurs : "Transversal", "Novices", "Debut de cursus", "Apres fondamentaux") affiche sous le libelle "Sequencement conseille" dans ToolCard et ToolDetailModal. Champ display-only, non filtre, non parse.
 - concepts.json : 21 sous-concepts en 3 familles. Champs : id, family, family_id, family_description, risk_ai, name, description, bloom[], fuller, level, references. (Champ "level" = niveau etudiant : Novice / Intermediaire / Avance / Transversal. Ancien champ "year" supprime.)
-- matrix.json : matrice de pertinence outil x concept. { scale, cells: [{tool, concept, score}] }. Scores 1/2/3.
+- matrix.json : matrice de pertinence outil x concept. { scale, cells: [{tool, concept, score}] }. Scores 1/2/3. Revision de coherence : tuteurs IA differencies (I06, I08, I09, I10, I13, I14, I15, I16 ne sont plus plats). I13 EduAide passe de vide a contextuel. Total 861 cellules.
 - combos.json : 16 combinatoires. Champs : id, year, concept_family, bloom, function, context, recommended_tools[], justification.
 - meta.json : definitions des fils_rouges (Fil A/B/C/D) et scenarios (S1/S2/S3).
 - fixtures/cours-exemple.json : classification pre-calculee d'un cours S1 pour la demo sans reseau.
