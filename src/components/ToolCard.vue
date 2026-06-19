@@ -68,7 +68,7 @@ function filClass(fil) {
 }
 
 const familyShort = computed(() => {
-  const labels = { FM1: 'Traditionnel', FM2: 'Outille', FM3: 'Tuteur IA', FM4: 'IA generaliste' }
+  const labels = { FM1: 'Traditionnel', FM2: 'Outillé', FM3: 'Tuteur IA', FM4: 'IA généraliste' }
   return labels[props.tool.family] || props.tool.family_label
 })
 
@@ -109,9 +109,9 @@ const robustnessClass = computed(() => {
 })
 
 const efficaciteClass = computed(() => ({
-  'ui-badge--efficacite-validee':   props.tool.efficacite === 'Validee',
-  'ui-badge--efficacite-etablie':   props.tool.efficacite === 'Etablie',
-  'ui-badge--efficacite-emergente': props.tool.efficacite === 'Emergente'
+  'ui-badge--efficacite-validee':   props.tool.efficacite === 'Validée',
+  'ui-badge--efficacite-etablie':   props.tool.efficacite === 'Établie',
+  'ui-badge--efficacite-emergente': props.tool.efficacite === 'Émergente'
 }))
 </script>
 

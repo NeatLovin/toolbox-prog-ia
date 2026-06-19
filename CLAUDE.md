@@ -62,7 +62,7 @@ references     : sources academiques
 
 Quatre fichiers JSON dans src/data/, derives de la cartographie du TB. Source de verite absolue. Ne jamais inventer un outil, un concept ou un score absent de ces fichiers.
 
-- tools.json : 48 outils (M01-M13, T01-T11, I01-I16, A01-A08). Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources, link (optionnel, URL externe pour ~9 outils), efficacite ("Validee", "Etablie", "Emergente"). Le champ cursus est un sequencement conseille (valeurs : "Transversal", "Novices", "Debut de cursus", "Apres fondamentaux") affiche sous le libelle "Sequencement conseille" dans ToolCard et ToolDetailModal. Champ display-only, non filtre, non parse. Le champ efficacite est un signal de niveau de preuve affiche comme badge dans ToolCard et ToolDetailModal (avec InfoTooltip). Tri secondaire par efficacite (Validee avant Etablie avant Emergente) dans getToolsForConcept, le repli matriciel de getRecommendation et computeCourseGlobalRec. Jamais filtre eliminatoire, jamais parametre du moteur.
+- tools.json : 48 outils (M01-M13, T01-T11, I01-I16, A01-A08). Champs : id, name, description, detail, scenarios[], family, family_label, fils_rouges[], cursus, cyberlearn, cost_teacher, cost_num (1/2/3), cost_student, robustness_ai, robustness_num (0-4), function (F/S/FS/R), sources, link (optionnel, URL externe pour ~9 outils), efficacite ("Validée", "Établie", "Émergente"). Le champ cursus est un séquencement conseillé (valeurs : "Transversal", "Novices", "Début de cursus", "Après fondamentaux") affiché sous le libellé "Séquencement conseillé" dans ToolCard et ToolDetailModal. Champ display-only, non filtré, non parsé. Le champ efficacite est un signal de niveau de preuve affiché comme badge dans ToolCard et ToolDetailModal (avec InfoTooltip). Tri secondaire par efficacite (Validée avant Établie avant Émergente) dans getToolsForConcept, le repli matriciel de getRecommendation et computeCourseGlobalRec. Jamais filtre éliminatoire, jamais paramètre du moteur.
 - concepts.json : 21 sous-concepts en 3 familles. Champs : id, family, family_id, family_description, risk_ai, name, description, bloom[], fuller, level, references. (Champ "level" = niveau etudiant : Novice / Intermediaire / Avance / Transversal. Ancien champ "year" supprime.)
 - matrix.json : matrice de pertinence outil x concept. { scale, cells: [{tool, concept, score}] }. Scores 1/2/3. Revision de coherence : tuteurs IA differencies (I06, I08, I09, I10, I13, I14, I15, I16 ne sont plus plats). I13 EduAide passe de vide a contextuel. M13 controle continu devient degressif : score 2 en Syntaxe et Logique, score 1 en Architecture. Total 861 cellules.
 - combos.json : 16 combinatoires. Champs : id, year, concept_family, bloom, function, context, recommended_tools[], justification.
@@ -153,6 +153,8 @@ proxy/
 - `npm run dev:full` pour le dev avec audit (Vite + proxy en parallele).
 - `npm run build` genere le bundle statique pour GitHub Pages.
 
-## Convention de redaction
+## Convention de rédaction
 
-Pour tout texte affiche dans l'interface ou tout contenu redige : pas de longs tirets (em-dash), ponctuation naturelle.
+Pour tout texte affiché dans l'interface ou tout contenu rédigé : pas de longs tirets (em-dash), ponctuation naturelle.
+
+**Accents** : les valeurs de chaînes JSON destinées à l'affichage portent les accents français corrects (ex. : "Validée", "Établie", "Émergente", "Élevé", "Modéré", "Début de cursus", "Après fondamentaux"). Les noms de propriétés JSON (clés de champ), les identifiants techniques (M01, C2.2, F/S/FS, S1-S3, Bloom en anglais, Fuller en anglais) restent en ASCII sans accent. Quand une valeur accentuée sert de clé de comparaison dans le code JS (EFFICACITE_RANK, riskClass(), filtres), les deux côtés de la comparaison utilisent la même forme accentuée.

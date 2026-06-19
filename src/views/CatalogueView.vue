@@ -20,12 +20,12 @@
         </select>
       </div>
 
-      <button v-if="hasFilters" class="ui-reset-btn" @click="resetFilters">Reinitialiser</button>
+      <button v-if="hasFilters" class="ui-reset-btn" @click="resetFilters">Réinitialiser</button>
     </div>
 
     <!-- Filtres avances (repliables) -->
     <details class="ui-collapsible advanced-filters">
-      <summary>Filtres avances (Fonction, Cout, Robustesse IA, Fil rouge)</summary>
+      <summary>Filtres avancés (Fonction, Coût, Robustesse IA, Fil rouge)</summary>
       <div class="ui-collapsible-body advanced-body">
         <div class="ui-filter-group">
           <label>Fonction <InfoTooltip :content="GLOSSARY.fonction.short" /></label>
@@ -38,12 +38,12 @@
         </div>
 
         <div class="ui-filter-group">
-          <label>Cout enseignant <InfoTooltip :content="GLOSSARY.cout.short" /></label>
+          <label>Coût enseignant <InfoTooltip :content="GLOSSARY.cout.short" /></label>
           <select v-model="selectedCost" class="ui-filter-select">
             <option value="">Tous</option>
             <option value="1">Faible (1/3)</option>
-            <option value="2">Modere (2/3)</option>
-            <option value="3">Eleve (3/3)</option>
+            <option value="2">Modéré (2/3)</option>
+            <option value="3">Élevé (3/3)</option>
           </select>
         </div>
 
@@ -53,9 +53,9 @@
             <option value="">Toutes</option>
             <option value="0">Nulle</option>
             <option value="1">Faible</option>
-            <option value="2">Moderee</option>
-            <option value="3">Elevee</option>
-            <option value="4">Tres elevee</option>
+            <option value="2">Modérée</option>
+            <option value="3">Élevée</option>
+            <option value="4">Très élevée</option>
           </select>
         </div>
 
@@ -70,7 +70,7 @@
     </details>
 
     <div v-if="filtered.length === 0" class="ui-empty-state">
-      Aucun outil ne correspond aux filtres selectionnes.
+      Aucun outil ne correspond aux filtres sélectionnés.
     </div>
 
     <div v-else class="tools-grid">
@@ -106,10 +106,10 @@ const selectedFil        = ref('')
 const selectedTool       = ref(null)
 
 const families = [
-  { id: 'FM1', label: 'Methodes pedagogiques traditionnelles' },
-  { id: 'FM2', label: 'Dispositifs traditionnels outilles' },
-  { id: 'FM3', label: 'Tuteurs IA et dispositifs scaffoldes' },
-  { id: 'FM4', label: 'Outils agentiques et IA generaliste' }
+  { id: 'FM1', label: 'Méthodes pédagogiques traditionnelles' },
+  { id: 'FM2', label: 'Dispositifs traditionnels outillés' },
+  { id: 'FM3', label: 'Tuteurs IA et dispositifs scaffoldés' },
+  { id: 'FM4', label: 'Outils agentiques et IA généraliste' }
 ]
 
 const hasFilters = computed(() =>

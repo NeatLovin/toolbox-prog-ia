@@ -3,46 +3,46 @@
     {
       "id": "Fil A",
       "label": "Scaffolding de l'apprentissage",
-      "description": "Methodes actives et accompagnement guide qui preservent la construction des competences face aux raccourcis induits par l'IA generative."
+      "description": "Méthodes actives et accompagnement guidé qui préservent la construction des compétences face aux raccourcis induits par l'IA générative."
     },
     {
       "id": "Fil B",
-      "label": "Robustesse de l'evaluation",
-      "description": "Dispositifs maintenant l'integrite academique et la tracabilite de la production etudiante en presence d'IA generative."
+      "label": "Robustesse de l'évaluation",
+      "description": "Dispositifs maintenant l'intégrité académique et la traçabilité de la production étudiante en présence d'IA générative."
     },
     {
       "id": "Fil C",
-      "label": "Exposition progressive a l'IA",
-      "description": "Introduction sequencee des outils IA selon la maturite de l'etudiant et la solidite de son socle de competences precurseurs."
+      "label": "Exposition progressive à l'IA",
+      "description": "Introduction séquencée des outils IA selon la maturité de l'étudiant et la solidité de son socle de compétences précurseurs."
     },
     {
       "id": "Fil D",
-      "label": "Developpement du jugement",
-      "description": "Evaluation par les pairs, oraux et portfolio qui developpent la capacite critique et le jugement evaluatif au sens Bloom Evaluate."
+      "label": "Développement du jugement",
+      "description": "Évaluation par les pairs, oraux et portfolio qui développent la capacité critique et le jugement évaluatif au sens Bloom Evaluate."
     }
   ],
   "scenarios": [
     {
       "id": "S1",
-      "label": "IA generaliste et agentique",
-      "description": "Usage des outils IA grand public ou agentiques (FM4). Pertinent en S3-S6 apres consolidation du socle. Robustesse IA nulle par construction."
+      "label": "IA généraliste et agentique",
+      "description": "Usage des outils IA grand public ou agentiques (FM4). Pertinent en S3-S6 après consolidation du socle. Robustesse IA nulle par construction."
     },
     {
       "id": "S2",
-      "label": "Robustesse de l'evaluation",
-      "description": "Methodes et dispositifs (FM1/FM2) garantissant une evaluation fiable meme en presence d'IA generative. Coeur de la re-valorisation des methodes traditionnelles."
+      "label": "Robustesse de l'évaluation",
+      "description": "Méthodes et dispositifs (FM1/FM2) garantissant une évaluation fiable même en présence d'IA générative. Coeur de la revalorisation des méthodes traditionnelles."
     },
     {
       "id": "S3",
-      "label": "Tuteur IA scaffolde",
-      "description": "Outils IA pedagogiques avec garde-fous explicites (FM3) qui assistent la pratique formative sans substituer la comprehension de l'etudiant."
+      "label": "Tuteur IA scaffoldé",
+      "description": "Outils IA pédagogiques avec garde-fous explicites (FM3) qui assistent la pratique formative sans substituer la compréhension de l'étudiant."
     }
   ],
   "robustness_scale": {
     "0": "Nulle",
     "1": "Faible",
-    "2": "Moderee",
-    "3": "Elevee",
-    "4": "Tres elevee"
+    "2": "Modérée",
+    "3": "Élevée",
+    "4": "Très élevée"
   }
 }

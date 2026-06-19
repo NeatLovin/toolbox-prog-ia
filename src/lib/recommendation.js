@@ -5,13 +5,13 @@ import combosData from '../data/combos.json'
 
 export const BLOOM_ORDER = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
 
-const EFFICACITE_RANK = { Validee: 0, Etablie: 1, Emergente: 2 }
+const EFFICACITE_RANK = { Validée: 0, Établie: 1, Émergente: 2 }
 function efficaciteRank(t) { return EFFICACITE_RANK[t.efficacite] ?? 3 }
 
 export const ZONE_PRINCIPLES = {
-  Syntaxe: "L'IA generative est tres performante sur la syntaxe. Laissez les etudiants s'en servir, mais evaluez la comprehension reelle autrement que par le code produit : oral, reformulation, lecture de code, papier.",
-  Logique: "Zone critique de l'apprentissage. Privilegiez un tuteur IA scaffolde qui guide par questions sans livrer la solution, et faites tracer, decomposer et raisonner a la main avant tout recours a l'IA.",
-  Architecture: "L'IA assiste la production mais le jugement de conception reste humain. Exigez une justification explicite des choix d'architecture : defense orale, revue par les pairs, comparaison d'alternatives."
+  Syntaxe: "L'IA générative est très performante sur la syntaxe. Laissez les étudiants s'en servir, mais évaluez la compréhension réelle autrement que par le code produit : oral, reformulation, lecture de code, papier.",
+  Logique: "Zone critique de l'apprentissage. Privilégiez un tuteur IA scaffoldé qui guide par questions sans livrer la solution, et faites tracer, décomposer et raisonner à la main avant tout recours à l'IA.",
+  Architecture: "L'IA assiste la production mais le jugement de conception reste humain. Exigez une justification explicite des choix d'architecture : défense orale, revue par les pairs, comparaison d'alternatives."
 }
 
 export function bloomCovers(comboBloom, userBloom) {
@@ -121,7 +121,7 @@ export function getToolsForConcept(conceptId, minScore = 2) {
     .sort((a, b) => b.matrix_score - a.matrix_score || efficaciteRank(a) - efficaciteRank(b))
 }
 
-export const GENERIC_RECOMMENDATION = `Cette analyse croise les concepts detectes dans votre cours avec la matrice de pertinence (861 cellules, scores 1 a 3) et les 32 patrons d'activite du TB. Chaque recommandation est tracable jusqu'aux donnees sources. La Toolbox aide a identifier des leviers pertinents selon la configuration pedagogique detectee ; les choix restent ceux de l'enseignant.`
+export const GENERIC_RECOMMENDATION = `Cette analyse croise les concepts détectés dans votre cours avec la matrice de pertinence (861 cellules, scores 1 à 3) et les 32 patrons d'activité du TB. Chaque recommandation est traçable jusqu'aux données sources. La Toolbox aide à identifier des leviers pertinents selon la configuration pédagogique détectée ; les choix restent ceux de l'enseignant.`
 
 // Calcule une recommandation globale deterministe pour l'ensemble du cours.
 // Retourne : { dominantFamily, risk, dominantBloom, levers, conceptCount, sectionCount }

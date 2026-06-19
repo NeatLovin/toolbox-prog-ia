@@ -28,7 +28,7 @@
             <span class="ui-badge" :class="functionClass">{{ functionLabel }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Sequencement conseille</span>
+            <span class="info-label">Séquencement conseillé</span>
             <span class="info-value">{{ tool.cursus }}</span>
           </div>
           <div class="info-row">
@@ -152,9 +152,9 @@ const robustnessClass = computed(() => {
 })
 
 const efficaciteClass = computed(() => ({
-  'ui-badge--efficacite-validee':   props.tool?.efficacite === 'Validee',
-  'ui-badge--efficacite-etablie':   props.tool?.efficacite === 'Etablie',
-  'ui-badge--efficacite-emergente': props.tool?.efficacite === 'Emergente'
+  'ui-badge--efficacite-validee':   props.tool?.efficacite === 'Validée',
+  'ui-badge--efficacite-etablie':   props.tool?.efficacite === 'Établie',
+  'ui-badge--efficacite-emergente': props.tool?.efficacite === 'Émergente'
 }))
 </script>
 

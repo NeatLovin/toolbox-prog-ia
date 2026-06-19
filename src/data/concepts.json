@@ -3,27 +3,27 @@
     "id": "C1.1",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Variables, types et declarations",
-    "description": "Notion de variable, typage statique vs dynamique, scope, duree de vie, conversion de types.",
+    "name": "Variables, types et déclarations",
+    "description": "Notion de variable, typage statique vs dynamique, scope, durée de vie, conversion de types.",
     "bloom": [
       "Remember",
       "Understand",
       "Apply"
     ],
     "fuller": "Produce + Interpret",
-    "references": "Brennan & Resnick 2012 Â· Fuller et al. 2007",
+    "references": "Brennan & Resnick 2012 · Fuller et al. 2007",
     "level": "S1"
   },
   {
     "id": "C1.2",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Structures de controle",
-    "description": "if/else, switch, while, for, do-while, break/continue, expressions booleennes.",
+    "name": "Structures de contrôle",
+    "description": "if/else, switch, while, for, do-while, break/continue, expressions booléennes.",
     "bloom": [
       "Apply"
     ],
@@ -35,10 +35,10 @@
     "id": "C1.3",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Fonctions et parametrisation",
-    "description": "Definition, appel, parametres par valeur/reference, retour, recursivite, scope.",
+    "name": "Fonctions et paramétrisation",
+    "description": "Définition, appel, paramètres par valeur/référence, retour, récursivité, scope.",
     "bloom": [
       "Apply",
       "Analyze"
@@ -51,26 +51,26 @@
     "id": "C1.4",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Structures de donnees primitives",
-    "description": "Tableaux, listes, dictionnaires/maps, ensembles, chaines de caracteres.",
+    "name": "Structures de données primitives",
+    "description": "Tableaux, listes, dictionnaires/maps, ensembles, chaînes de caractères.",
     "bloom": [
       "Apply",
       "Analyze"
     ],
     "fuller": "Produce + Interpret",
-    "references": "Lister et al. 2004 Â· Fuller et al. 2007",
+    "references": "Lister et al. 2004 · Fuller et al. 2007",
     "level": "S1-S2"
   },
   {
     "id": "C1.5",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Syntaxe orientee objet",
-    "description": "Classes, instances, attributs, methodes, heritage, polymorphisme, encapsulation.",
+    "name": "Syntaxe orientée objet",
+    "description": "Classes, instances, attributs, méthodes, héritage, polymorphisme, encapsulation.",
     "bloom": [
       "Apply",
       "Analyze"
@@ -83,10 +83,10 @@
     "id": "C1.6",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Gestion des erreurs",
-    "description": "try/catch/finally, throw, types d'exceptions, gestion defensive, contrats.",
+    "description": "try/catch/finally, throw, types d'exceptions, gestion défensive, contrats.",
     "bloom": [
       "Apply"
     ],
@@ -98,72 +98,72 @@
     "id": "C1.7",
     "family": "Syntaxe",
     "family_id": "F1",
-    "family_description": "Concepts relatifs a la production et a l'interpretation du code en tant que texte conforme aux regles formelles du langage. Zone ou l'IA generative est la plus performante et ou le risque de vibe coding et de fragile knowledge est maximal.",
+    "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
-    "name": "Conventions de style et lisibilite",
-    "description": "Nommage, indentation, commentaires, conventions de langage, linting, formattage.",
+    "name": "Conventions de style et lisibilité",
+    "description": "Nommage, indentation, commentaires, conventions de langage, linting, formatage.",
     "bloom": [
       "Understand",
       "Evaluate"
     ],
     "fuller": "Interpret (principalement)",
-    "references": "Brooks 1983 (beacons) Â· Wiedenbeck 1986",
+    "references": "Brooks 1983 (beacons) · Wiedenbeck 1986",
     "level": "Transversal"
   },
   {
     "id": "C2.1",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Decomposition algorithmique",
-    "description": "Decomposer un probleme en sous-problemes resolubles, identifier les invariants.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Décomposition algorithmique",
+    "description": "Décomposer un problème en sous-problèmes résolubles, identifier les invariants.",
     "bloom": [
       "Analyze"
     ],
     "fuller": "Produce",
-    "references": "McCracken et al. 2001 Â· Wing 2006",
+    "references": "McCracken et al. 2001 · Wing 2006",
     "level": "Transversal"
   },
   {
     "id": "C2.2",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Tracage de code (reading skills)",
-    "description": "Executer mentalement un programme, suivre l'etat des variables, predire la sortie.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Traçage de code (reading skills)",
+    "description": "Exécuter mentalement un programme, suivre l'état des variables, prédire la sortie.",
     "bloom": [
       "Understand",
       "Apply"
     ],
     "fuller": "Interpret",
-    "references": "Lister et al. 2004 Â· Perkins & Martin 1986",
+    "references": "Lister et al. 2004 · Perkins & Martin 1986",
     "level": "S1-S2"
   },
   {
     "id": "C2.3",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
     "name": "Debugging et diagnostic",
-    "description": "Identifier la nature d'un bug, localiser sa source, formuler une hypothese, tester.",
+    "description": "Identifier la nature d'un bug, localiser sa source, formuler une hypothèse, tester.",
     "bloom": [
       "Analyze"
     ],
     "fuller": "Produce + Interpret",
-    "references": "Perkins et al. 1989 Â· Soloway 1986",
+    "references": "Perkins et al. 1989 · Soloway 1986",
     "level": "Transversal"
   },
   {
     "id": "C2.4",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Ecriture de tests et validation",
-    "description": "Tests unitaires, integration, TDD, couverture, assertions, contrats.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Écriture de tests et validation",
+    "description": "Tests unitaires, intégration, TDD, couverture, assertions, contrats.",
     "bloom": [
       "Apply",
       "Evaluate"
@@ -176,10 +176,10 @@
     "id": "C2.5",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Raisonnement sur la complexite",
-    "description": "Notation O() asymptotique, analyse cout memoire, comparaison d'algorithmes.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Raisonnement sur la complexité",
+    "description": "Notation O() asymptotique, analyse coût mémoire, comparaison d'algorithmes.",
     "bloom": [
       "Analyze",
       "Evaluate"
@@ -192,10 +192,10 @@
     "id": "C2.6",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Invariants et preservation d'etat",
-    "description": "Identifier les invariants d'une boucle, conditions de bord, preconditions/postconditions.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Invariants et préservation d'état",
+    "description": "Identifier les invariants d'une boucle, conditions de bord, préconditions/postconditions.",
     "bloom": [
       "Analyze"
     ],
@@ -207,40 +207,40 @@
     "id": "C2.7",
     "family": "Logique",
     "family_id": "F2",
-    "family_description": "Concepts relatifs au raisonnement algorithmique, a l'interpretation dynamique du code et a la resolution de problemes. Zone disputee ou l'IA est partielle et variable, risque eleve de delegation sans comprehension.",
-    "risk_ai": "Eleve",
-    "name": "Patterns de resolution de problemes",
-    "description": "Reconnaitre des patterns algorithmiques et les transposer dans de nouveaux contextes.",
+    "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
+    "risk_ai": "Élevé",
+    "name": "Patterns de résolution de problèmes",
+    "description": "Reconnaître des patterns algorithmiques et les transposer dans de nouveaux contextes.",
     "bloom": [
       "Analyze",
       "Create"
     ],
     "fuller": "Produce",
-    "references": "Soloway & Ehrlich 1984 Â· Clancy & Linn 1999",
+    "references": "Soloway & Ehrlich 1984 · Clancy & Linn 1999",
     "level": "Transversal"
   },
   {
     "id": "C3.1",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
     "name": "Conception modulaire",
-    "description": "Decoupage en modules coherents et faiblement couples. Single Responsibility, interfaces, abstractions.",
+    "description": "Découpage en modules cohérents et faiblement couplés. Single Responsibility, interfaces, abstractions.",
     "bloom": [
       "Analyze",
       "Create"
     ],
     "fuller": "Produce",
-    "references": "Brennan & Resnick 2012 Â· Anthropic 2025a",
+    "references": "Brennan & Resnick 2012 · Anthropic 2025a",
     "level": "S3-S5"
   },
   {
     "id": "C3.2",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
     "name": "Design patterns",
     "description": "Patterns du Gang of Four (Singleton, Factory, Observer, MVC, etc.), reconnaissance et application.",
     "bloom": [
@@ -255,10 +255,10 @@
     "id": "C3.3",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
     "name": "Architecture multi-tiers",
-    "description": "Architectures n-tiers, API REST, separation presentation/metier/donnees, microservices.",
+    "description": "Architectures n-tiers, API REST, séparation présentation/métier/données, microservices.",
     "bloom": [
       "Analyze"
     ],
@@ -270,10 +270,10 @@
     "id": "C3.4",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
     "name": "Performance et optimisation",
-    "description": "Profilage, identification de goulots, optimisations algorithmiques et systemes.",
+    "description": "Profilage, identification de goulots, optimisations algorithmiques et systèmes.",
     "bloom": [
       "Analyze",
       "Evaluate"
@@ -286,9 +286,9 @@
     "id": "C3.5",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
-    "name": "Securite et validation d'entrees",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
+    "name": "Sécurité et validation d'entrées",
     "description": "Input validation, authentification, autorisation, OWASP Top 10, gestion des secrets.",
     "bloom": [
       "Apply",
@@ -302,10 +302,10 @@
     "id": "C3.6",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
-    "name": "Maintenabilite et evolutivite",
-    "description": "Dette technique, refactoring, conception orientee evolution, tests de regression.",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
+    "name": "Maintenabilité et évolutivité",
+    "description": "Dette technique, refactoring, conception orientée évolution, tests de régression.",
     "bloom": [
       "Evaluate",
       "Create"
@@ -318,8 +318,8 @@
     "id": "C3.7",
     "family": "Architecture",
     "family_id": "F3",
-    "family_description": "Concepts relatifs a la conception et a l'evaluation de systemes logiciels au-dela du code-unite. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modere : l'IA assiste mais ne remplace pas le jugement architectural.",
-    "risk_ai": "Modere",
+    "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
+    "risk_ai": "Modéré",
     "name": "Documentation et ADR",
     "description": "Documentation technique (README, ADR, UML), justification des choix architecturaux.",
     "bloom": [

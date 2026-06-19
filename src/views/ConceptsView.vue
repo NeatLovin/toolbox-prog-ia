@@ -1,12 +1,12 @@
 <template>
   <div class="concepts">
     <div class="ui-page-header">
-      <h1>Concepts pedagogiques</h1>
+      <h1>Concepts pédagogiques</h1>
       <p>
-        La cartographie du TB decompose l'enseignement de la programmation en
-        {{ concepts.length }} sous-concepts regroupes en {{ families.length }} familles macroscopiques.
-        Chaque concept est annote selon la taxonomie de Bloom, la dimension Fuller et le niveau de risque
-        induit par l'IA generative. Les outils de reference sont extraits de la matrice de pertinence.
+        La cartographie du TB décompose l'enseignement de la programmation en
+        {{ concepts.length }} sous-concepts regroupés en {{ families.length }} familles macroscopiques.
+        Chaque concept est annoté selon la taxonomie de Bloom, la dimension Fuller et le niveau de risque
+        induit par l'IA générative. Les outils de référence sont extraits de la matrice de pertinence.
       </p>
     </div>
 
@@ -30,11 +30,11 @@
         <select v-model="selectedRisk" class="ui-filter-select">
           <option value="">Tous</option>
           <option value="Maximal">Maximal</option>
-          <option value="Eleve">Eleve</option>
-          <option value="Modere">Modere</option>
+          <option value="Élevé">Élevé</option>
+          <option value="Modéré">Modéré</option>
         </select>
       </div>
-      <button v-if="hasFilters" class="ui-reset-btn" @click="resetFilters">Reinitialiser</button>
+      <button v-if="hasFilters" class="ui-reset-btn" @click="resetFilters">Réinitialiser</button>
     </div>
 
     <!-- Legende explicative -->
@@ -46,8 +46,8 @@
         <div class="legend-section">
           <h3>Taxonomie de Bloom en programmation</h3>
           <p class="legend-intro">
-            Grille institutionnelle HES-SO (Guide IA 2024). Chaque sous-concept est annote par le ou
-            les niveaux Bloom qu'il mobilise principalement. L'IA generative perturbe differemment
+            Grille institutionnelle HES-SO (Guide IA 2024). Chaque sous-concept est annoté par le ou
+            les niveaux Bloom qu'il mobilise principalement. L'IA générative perturbe différemment
             chaque niveau : elle excelle sur Remember-Apply (production syntaxique), performe moins
             bien sur Analyze-Evaluate et ne remplace pas le jugement requis par Create.
           </p>
@@ -65,31 +65,31 @@
         <div class="legend-section">
           <h3>Risque IA par famille de concepts</h3>
           <p class="legend-intro">
-            Niveau de risque que l'etudiant delegue a l'IA sans construire de comprehension reelle.
-            Derive de la litterature (Bastani 2025 PNAS, Lister 2004, Fuller 2007) et des 22
+            Niveau de risque que l'étudiant délègue à l'IA sans construire de compréhension réelle.
+            Dérivé de la littérature (Bastani 2025 PNAS, Lister 2004, Fuller 2007) et des 22
             entretiens enseignants du TB. Ce n'est pas un jugement sur l'outil IA mais sur le
-            sequençage de son introduction dans le cursus.
+            séquençage de son introduction dans le cursus.
           </p>
           <div class="risk-grid">
             <div class="risk-entry risk-entry--max">
               <span class="ui-badge ui-badge--risk-max">Risque Maximal</span>
               <div>
                 <strong>Famille Syntaxe (F1)</strong>
-                <p>L'IA generative produit de la syntaxe correcte de maniere quasi systematique. Un etudiant peut generer et soumettre du code valide sans en comprendre un seul element. C'est la zone du vibe coding et du fragile knowledge, ou la detection est la plus difficile. Les outils d'evaluation doivent etre robustes par construction (examen papier, oral, tracage).</p>
+                <p>L'IA générative produit de la syntaxe correcte de manière quasi systématique. Un étudiant peut générer et soumettre du code valide sans en comprendre un seul élément. C'est la zone du vibe coding et du fragile knowledge, où la détection est la plus difficile. Les outils d'évaluation doivent être robustes par construction (examen papier, oral, traçage).</p>
               </div>
             </div>
             <div class="risk-entry risk-entry--high">
-              <span class="ui-badge ui-badge--risk-high">Risque Eleve</span>
+              <span class="ui-badge ui-badge--risk-high">Risque Élevé</span>
               <div>
                 <strong>Famille Logique (F2)</strong>
-                <p>L'IA peut aider sur le raisonnement algorithmique mais risque de resoudre le probleme a la place de l'etudiant, notamment sur le debugging et les tests. Le risque de delegation sans comprehension est eleve, en particulier hors classe ou l'usage est non supervise.</p>
+                <p>L'IA peut aider sur le raisonnement algorithmique mais risque de résoudre le problème à la place de l'étudiant, notamment sur le debugging et les tests. Le risque de délégation sans compréhension est élevé, en particulier hors classe où l'usage est non supervisé.</p>
               </div>
             </div>
             <div class="risk-entry risk-entry--mod">
-              <span class="ui-badge ui-badge--risk-mod">Risque Modere</span>
+              <span class="ui-badge ui-badge--risk-mod">Risque Modéré</span>
               <div>
                 <strong>Famille Architecture (F3)</strong>
-                <p>L'IA assiste sur la conception et la documentation mais ne remplace pas le jugement architectural : les choix de design sont non-triviaux et l'etudiant doit evaluer la pertinence des suggestions generees. Le risque reste present (vibe coding architectural en S3-S4) mais l'ecart entre sortie IA et attente pedagogique est plus facilement detectable.</p>
+                <p>L'IA assiste sur la conception et la documentation mais ne remplace pas le jugement architectural : les choix de design sont non-triviaux et l'étudiant doit évaluer la pertinence des suggestions générées. Le risque reste présent (vibe coding architectural en S3-S4) mais l'écart entre sortie IA et attente pédagogique est plus facilement détectable.</p>
               </div>
             </div>
           </div>
@@ -98,32 +98,32 @@
         <div class="legend-section">
           <h3>Dimension Fuller (Fuller et al. 2007)</h3>
           <p class="legend-intro">
-            Extension CS-specifique de la taxonomie de Bloom publiee par Fuller et al. dans un rapport
+            Extension CS-spécifique de la taxonomie de Bloom publiée par Fuller et al. dans un rapport
             ITiCSE Working Group international de 2007. Elle croise les niveaux Bloom avec deux
-            dimensions disciplinaires qui sont au coeur du diagnostic du TB sur l'IA generative.
+            dimensions disciplinaires qui sont au coeur du diagnostic du TB sur l'IA générative.
           </p>
           <div class="fuller-grid">
             <div class="fuller-entry">
               <span class="fe-tag">Produce</span>
               <div>
                 <strong>Produire du code, un algorithme, une solution</strong>
-                <p>La dimension que l'IA generative supplante le plus facilement : generer du code fonctionnel a partir d'un enonce. Un etudiant qui s'appuie sur l'IA pour la production sans pratiquer lui-meme ne developpe pas cette competence.</p>
+                <p>La dimension que l'IA générative supplante le plus facilement : générer du code fonctionnel à partir d'un énoncé. Un étudiant qui s'appuie sur l'IA pour la production sans pratiquer lui-même ne développe pas cette compétence.</p>
               </div>
             </div>
             <div class="fuller-entry">
               <span class="fe-tag">Interpret</span>
               <div>
                 <strong>Lire, tracer, expliquer du code existant</strong>
-                <p>La dimension que l'IA maitrise moins bien et que l'etudiant peut moins facilement deleguer. Les tuteurs IA scaffoldes (CodeHelp I02, CS50 Duck I04) misent precisement sur Interpret pour verifier la comprehension reelle. Lister et al. 2004 montrent que la maitrise d'Interpret est le meilleur predicteur de reussite en programmation.</p>
+                <p>La dimension que l'IA maîtrise moins bien et que l'étudiant peut moins facilement déléguer. Les tuteurs IA scaffoldés (CodeHelp I02, CS50 Duck I04) misent précisément sur Interpret pour vérifier la compréhension réelle. Lister et al. 2004 montrent que la maîtrise d'Interpret est le meilleur prédicteur de réussite en programmation.</p>
               </div>
             </div>
           </div>
           <div class="matrix-legend">
             <span class="ml-title">Scores de la matrice de pertinence :</span>
-            <span class="ui-badge ui-badge--score-ideal">Ideal (3)</span>
-            <span class="ml-sep">reference litterature ou terrain</span>
+            <span class="ui-badge ui-badge--score-ideal">Idéal (3)</span>
+            <span class="ml-sep">référence littérature ou terrain</span>
             <span class="ui-badge ui-badge--score-utile">Utile (2)</span>
-            <span class="ml-sep">complement efficace</span>
+            <span class="ml-sep">complément efficace</span>
             <span class="ui-badge ui-badge--score-ctx">Contextuel (1)</span>
             <span class="ml-sep">pertinent selon les cas</span>
           </div>
@@ -178,14 +178,14 @@
                 </div>
 
                 <div v-if="topTools(concept.id).length" class="concept-tools">
-                  <span class="tools-label">Outils de reference</span>
+                  <span class="tools-label">Outils de référence</span>
                   <div class="tools-list">
                     <span
                       v-for="entry in topTools(concept.id)"
                       :key="entry.toolId"
                       class="ui-badge"
                       :class="entry.score === 3 ? 'ui-badge--score-ideal' : 'ui-badge--score-utile'"
-                      :title="toolName(entry.toolId) + (entry.score === 3 ? ' - Ideal' : ' - Utile')"
+                      :title="toolName(entry.toolId) + (entry.score === 3 ? ' - Idéal' : ' - Utile')"
                       style="font-family: monospace;"
                     >{{ entry.toolId }}</span>
                   </div>
@@ -209,7 +209,7 @@
     </template>
 
     <div v-if="visibleFamilies.length === 0" class="ui-empty-state">
-      Aucun concept ne correspond aux filtres selectionnes.
+      Aucun concept ne correspond aux filtres sélectionnés.
     </div>
   </div>
 </template>
@@ -228,28 +228,28 @@ const selectedRisk   = ref('')
 const bloomLevels = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
 
 const bloomDesc = {
-  Remember:  'Memoriser, reconnaitre la syntaxe et les regles. Zone de risque IA maximal.',
-  Understand:'Expliquer, predire le comportement d\'un programme, tracer son execution.',
-  Apply:     'Ecrire du code fonctionnel pour un probleme donne. Cible privilegiee du vibe coding.',
-  Analyze:   'Decomposer, identifier des bugs, comparer des solutions et des algorithmes.',
-  Evaluate:  'Juger la qualite d\'un code, argumenter des choix de conception, faire un code review.',
-  Create:    'Concevoir une architecture ou un systeme original. Bloom maximal, S5-S6.'
+  Remember:  'Mémoriser, reconnaître la syntaxe et les règles. Zone de risque IA maximal.',
+  Understand:'Expliquer, prédire le comportement d\'un programme, tracer son exécution.',
+  Apply:     'Écrire du code fonctionnel pour un problème donné. Cible privilégiée du vibe coding.',
+  Analyze:   'Décomposer, identifier des bugs, comparer des solutions et des algorithmes.',
+  Evaluate:  'Juger la qualité d\'un code, argumenter des choix de conception, faire un code review.',
+  Create:    'Concevoir une architecture ou un système original. Bloom maximal, S5-S6.'
 }
 
 const bloomEntries = [
-  { key: 'remember',  label: 'Remember',  strong: 'Memoriser, reconnaitre',    desc: bloomDesc.Remember  },
-  { key: 'understand',label: 'Understand', strong: 'Expliquer, predire',        desc: bloomDesc.Understand},
-  { key: 'apply',     label: 'Apply',      strong: 'Executer, implementer',     desc: bloomDesc.Apply     },
-  { key: 'analyze',   label: 'Analyze',    strong: 'Decomposer, differencier',  desc: bloomDesc.Analyze   },
+  { key: 'remember',  label: 'Remember',  strong: 'Mémoriser, reconnaître',    desc: bloomDesc.Remember  },
+  { key: 'understand',label: 'Understand', strong: 'Expliquer, prédire',        desc: bloomDesc.Understand},
+  { key: 'apply',     label: 'Apply',      strong: 'Exécuter, implémenter',     desc: bloomDesc.Apply     },
+  { key: 'analyze',   label: 'Analyze',    strong: 'Décomposer, différencier',  desc: bloomDesc.Analyze   },
   { key: 'evaluate',  label: 'Evaluate',   strong: 'Juger, critiquer',          desc: bloomDesc.Evaluate  },
   { key: 'create',    label: 'Create',     strong: 'Concevoir, produire',       desc: bloomDesc.Create    }
 ]
 
 function fullerHint(fuller) {
   if (fuller?.includes('Produce') && fuller?.includes('Interpret'))
-    return 'Produce (ecrire du code) et Interpret (lire/tracer du code) sont tous les deux mobilises.'
-  if (fuller?.includes('Produce'))  return 'Principalement Produce : l\'etudiant doit produire du code ou un algorithme.'
-  if (fuller?.includes('Interpret'))return 'Principalement Interpret : l\'etudiant doit lire, tracer et expliquer du code existant.'
+    return 'Produce (écrire du code) et Interpret (lire/tracer du code) sont tous les deux mobilisés.'
+  if (fuller?.includes('Produce'))  return 'Principalement Produce : l\'étudiant doit produire du code ou un algorithme.'
+  if (fuller?.includes('Interpret'))return 'Principalement Interpret : l\'étudiant doit lire, tracer et expliquer du code existant.'
   return fuller || ''
 }
 
@@ -303,7 +303,7 @@ const visibleFamilies = computed(() =>
 
 function riskClass(risk) {
   if (risk === 'Maximal') return 'ui-badge--risk-max'
-  if (risk === 'Eleve')   return 'ui-badge--risk-high'
+  if (risk === 'Élevé')   return 'ui-badge--risk-high'
   return 'ui-badge--risk-mod'
 }
 

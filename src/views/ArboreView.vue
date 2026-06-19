@@ -1,8 +1,8 @@
 <template>
   <div class="arbre">
     <div class="ui-page-header">
-      <h1>Arbre de decision</h1>
-      <p>Trois etapes pour une recommandation d'outils adaptee a votre contexte pedagogique.</p>
+      <h1>Arbre de décision</h1>
+      <p>Trois étapes pour une recommandation d'outils adaptée à votre contexte pédagogique.</p>
     </div>
 
     <!-- Fil d'Ariane (masque a l'etape zone) -->
@@ -27,6 +27,7 @@
     <!-- Etape 1 : Zone -->
     <section v-if="step === 'zone'" class="step-section">
       <h2 class="step-title">Quelle zone conceptuelle travaillez-vous ?</h2>
+
       <div class="zone-grid">
         <button
           v-for="z in ZONES"
@@ -48,7 +49,7 @@
       <div class="concept-list">
         <button class="concept-btn concept-btn--all" @click="chooseConcept(null)">
           <span class="cb-name">Toute la zone {{ selectedZone }}</span>
-          <span class="cb-desc">Vue d'ensemble de la famille, sans patron specifique</span>
+          <span class="cb-desc">Vue d'ensemble de la famille, sans patron spécifique</span>
         </button>
         <button
           v-for="c in conceptsInZone"
@@ -84,13 +85,14 @@
     <!-- Etape 4 : Objectif cognitif (facultatif) -->
     <section v-else-if="step === 'bloom'" class="step-section">
       <h2 class="step-title">
-        Quel est l'objectif cognitif vise ?
+        Quel est l'objectif cognitif visé ?
         <InfoTooltip :content="GLOSSARY.bloom.short" />
         <span class="optional-tag">Facultatif</span>
+
       </h2>
       <p class="step-hint">
         Si vous passez, l'objectif retenu sera "{{ dominantBloom }}"
-        {{ selectedConcept ? '(predominant sur ce concept)' : '(valeur par defaut)' }}.
+        {{ selectedConcept ? '(prédominant sur ce concept)' : '(valeur par défaut)' }}.
       </p>
       <div class="bloom-grid">
         <button
@@ -118,7 +120,7 @@
 
       <!-- En-tete et outils -->
       <div class="result-header">
-        <h2 class="result-title">Outils recommandes</h2>
+        <h2 class="result-title">Outils recommandés</h2>
         <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
         <InfoTooltip :content="GLOSSARY.combinatoire.short" />
       </div>
@@ -128,7 +130,7 @@
 
       <!-- Invitation si "toute la zone" (pas de patron) -->
       <p v-if="!selectedConcept" class="zone-invite">
-        Choisissez un concept precis (etape 2) pour obtenir un patron d'activite pedagogique adapte.
+        Choisissez un concept précis (étape 2) pour obtenir un patron d'activité pédagogique adapté.
       </p>
 
       <!-- Justification (repliable) -->
@@ -169,6 +171,7 @@
       <div class="result-actions">
         <button class="ui-btn ui-btn-primary" @click="restart">Nouvelle recherche</button>
         <router-link to="/catalogue" class="ui-btn ui-btn-secondary">Voir le catalogue complet</router-link>
+
       </div>
     </section>
   </div>
@@ -187,8 +190,8 @@ const { concepts, getPatronsByConceptAndContext } = useData()
 
 const ZONES = [
   { family: 'Syntaxe',      key: 'syntaxe',      sub: 'Variables, structures, POO, syntaxe formelle',       risk: 'Maximal' },
-  { family: 'Logique',      key: 'logique',       sub: 'Algorithmes, debug, tests, raisonnement',             risk: 'Eleve'   },
-  { family: 'Architecture', key: 'architecture',  sub: 'Design patterns, securite, qualite logicielle',       risk: 'Modere'  }
+  { family: 'Logique',      key: 'logique',       sub: 'Algorithmes, debug, tests, raisonnement',             risk: 'Élevé'   },
+  { family: 'Architecture', key: 'architecture',  sub: 'Design patterns, sécurité, qualité logicielle',       risk: 'Modéré'  }
 ]
 
 const CONTEXTS = [
@@ -241,7 +244,7 @@ const sourceBadgeClass = computed(() => {
 const sourceLabel = computed(() => {
   const s = result.value?.source
   if (s === 'combo') return 'Combinatoire exacte'
-  if (s === 'combo-approche') return 'Combinatoire approchee'
+  if (s === 'combo-approche') return 'Combinatoire approchée'
   return 'Score matriciel'
 })
 

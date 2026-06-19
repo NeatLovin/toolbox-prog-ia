@@ -1,50 +1,50 @@
 export const GLOSSARY = {
   robustesse_ia: {
     term: 'Robustesse IA',
-    short: 'Capacite d\'un outil a resister a la delegation de la tache vers l\'IA. Echelle 0 (nulle) a 4 (tres elevee).'
+    short: 'Capacité d\'un outil à résister à la délégation de la tâche vers l\'IA. Échelle 0 (nulle) à 4 (très élevée).'
   },
   fil_rouge: {
     term: 'Fil rouge',
-    short: 'Axe pedagogique transversal regroupant des outils par intention. Fil A : scaffolding. Fil B : robustesse de l\'evaluation. Fil C : exposition progressive. Fil D : developpement du jugement.'
+    short: 'Axe pédagogique transversal regroupant des outils par intention. Fil A : scaffolding. Fil B : robustesse de l\'évaluation. Fil C : exposition progressive. Fil D : développement du jugement.'
   },
   scenario: {
-    term: 'Scenario d\'usage',
-    short: 'Profil d\'integration de l\'IA dans le cours. S1 : IA agentique (FM4). S2 : robustesse evaluation (FM1/FM2). S3 : tuteur IA scaffolde (FM3).'
+    term: 'Scénario d\'usage',
+    short: 'Profil d\'intégration de l\'IA dans le cours. S1 : IA agentique (FM4). S2 : robustesse évaluation (FM1/FM2). S3 : tuteur IA scaffoldé (FM3).'
   },
   fonction: {
-    term: 'Fonction pedagogique',
-    short: 'F = Formative (pratique et feedback). S = Sommative (evaluation notee). FS = les deux selon le contexte.'
+    term: 'Fonction pédagogique',
+    short: 'F = Formative (pratique et feedback). S = Sommative (évaluation notée). FS = les deux selon le contexte.'
   },
   famille: {
     term: 'Famille d\'outils',
-    short: 'FM1 : methodes traditionnelles. FM2 : dispositifs outilles. FM3 : tuteurs IA scaffoldes. FM4 : IA agentique (Cursor, Claude Code).'
+    short: 'FM1 : méthodes traditionnelles. FM2 : dispositifs outillés. FM3 : tuteurs IA scaffoldés. FM4 : IA agentique (Cursor, Claude Code).'
   },
   combinatoire: {
     term: 'Combinatoire',
-    short: 'Configuration precalculee liant famille, Bloom, contexte et outils. 16 combinatoires issues de la cartographie du TB, sans generation de texte.'
+    short: 'Configuration précalculée liant famille, Bloom, contexte et outils. 16 combinatoires issues de la cartographie du TB, sans génération de texte.'
   },
   patron: {
-    term: 'Patron pedagogique',
-    short: 'Description concrete d\'une activite : competence visee, activite, outils, risque IA du concept, parade et modalite d\'evaluation (Biggs 1996).'
+    term: 'Patron pédagogique',
+    short: 'Description concrète d\'une activité : compétence visée, activité, outils, risque IA du concept, parade et modalité d\'évaluation (Biggs 1996).'
   },
   bloom: {
     term: 'Taxonomie de Bloom',
-    short: 'Six niveaux cognitifs : Remember, Understand, Apply, Analyze, Evaluate, Create. L\'IA performe surtout sur Remember-Apply. Analyze a Create sont plus proteges.'
+    short: 'Six niveaux cognitifs : Remember, Understand, Apply, Analyze, Evaluate, Create. L\'IA performe surtout sur Remember-Apply. Analyze à Create sont plus protégés.'
   },
   contexte: {
     term: 'Contexte d\'usage',
-    short: 'Presentiel encadre : en classe. Autonomie supervisee : hors classe. Projet long : semestre. Diagnostic : evaluation initiale du niveau.'
+    short: 'Présentiel encadré : en classe. Autonomie supervisée : hors classe. Projet long : semestre. Diagnostic : évaluation initiale du niveau.'
   },
   alignement_constructif: {
     term: 'Alignement constructif',
-    short: 'Coherence entre objectif cognitif (Bloom), activite pedagogique et modalite d\'evaluation. Principe central des patrons (Biggs 1996).'
+    short: 'Cohérence entre objectif cognitif (Bloom), activité pédagogique et modalité d\'évaluation. Principe central des patrons (Biggs 1996).'
   },
   cout: {
-    term: 'Cout enseignant',
-    short: 'Effort de mise en oeuvre pour l\'enseignant. 1 = faible (quasi zero prep). 2 = modere. 3 = eleve (configuration ou adaptation significative).'
+    term: 'Coût enseignant',
+    short: 'Effort de mise en oeuvre pour l\'enseignant. 1 = faible (quasi zéro prep). 2 = modéré. 3 = élevé (configuration ou adaptation significative).'
   },
   efficacite: {
-    term: 'Efficacite documentee',
-    short: 'Validee = etude evaluee par les pairs (RCT ou etude empirique publiee). Etablie = pratique reconnue sans etude dediee. Emergente = outil recent ou non encore documente.'
+    term: 'Efficacité documentée',
+    short: 'Validée = étude évaluée par les pairs (RCT ou étude empirique publiée). Établie = pratique reconnue sans étude dédiée. Émergente = outil récent ou non encore documenté.'
   }
 }
