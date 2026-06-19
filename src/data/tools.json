@@ -290,7 +290,7 @@
     "robustness_num": 2,
     "function": "FS",
     "sources": "E06 · E28 · Lau & Guo 2023",
-    "link": "",
+    "link": "https://git-scm.com",
     "efficacite": "Validee"
   },
   {
@@ -332,7 +332,7 @@
     "robustness_num": 1,
     "function": "S",
     "sources": "Saglam & Schmid 2025",
-    "link": "",
+    "link": "https://github.com/jplag/JPlag",
     "efficacite": "Validee"
   },
   {
@@ -353,7 +353,7 @@
     "robustness_num": 1,
     "function": "S",
     "sources": "E35 · Maertens et al. 2022",
-    "link": "",
+    "link": "https://dolos.ugent.be",
     "efficacite": "Validee"
   },
   {
@@ -374,7 +374,7 @@
     "robustness_num": 2,
     "function": "FS",
     "sources": "E06 (HEIG-VD) · E28 (envisage)",
-    "link": "",
+    "link": "https://classroom.github.com",
     "efficacite": "Etablie"
   },
   {
@@ -437,7 +437,7 @@
     "robustness_num": 0,
     "function": "S",
     "sources": "HES-SO Guide 2024",
-    "link": "",
+    "link": "https://www.compilatio.net",
     "efficacite": "Etablie"
   },
   {
@@ -521,7 +521,7 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Kazemitabaar et al. 2024 (CHI)",
-    "link": "",
+    "link": "https://austinhenley.com/blog/codeaid.html",
     "efficacite": "Validee"
   },
   {
@@ -563,7 +563,7 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Bassner Frankford Krusche 2024",
-    "link": "",
+    "link": "https://artemis.cit.tum.de",
     "efficacite": "Validee"
   },
   {
@@ -584,7 +584,7 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Liu et al. 2024",
-    "link": "",
+    "link": "https://cs50.ai",
     "efficacite": "Validee"
   },
   {
@@ -626,7 +626,7 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "LearnLM team 2025",
-    "link": "",
+    "link": "https://ai.google.dev/gemini-api/docs/learnlm",
     "efficacite": "Validee"
   },
   {
@@ -689,7 +689,7 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Stanford et al. 2024",
-    "link": "",
+    "link": "https://edunlp.stanford.edu/projects/tutor-copilot",
     "efficacite": "Validee"
   },
   {
@@ -731,7 +731,7 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Jung et al. 2022 (EMNLP)",
-    "link": "",
+    "link": "https://arxiv.org/abs/2205.11822",
     "efficacite": "Validee"
   },
   {
@@ -773,7 +773,7 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "E32 (test)",
-    "link": "",
+    "link": "https://www.eduaide.ai",
     "efficacite": "Emergente"
   },
   {
@@ -878,7 +878,7 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E39",
-    "link": "",
+    "link": "https://windsurf.com",
     "efficacite": "Emergente"
   },
   {
@@ -920,7 +920,7 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E05",
-    "link": "",
+    "link": "https://github.com/openai/codex",
     "efficacite": "Emergente"
   },
   {
