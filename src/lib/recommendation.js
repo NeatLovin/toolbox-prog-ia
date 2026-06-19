@@ -5,6 +5,9 @@ import combosData from '../data/combos.json'
 
 export const BLOOM_ORDER = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
 
+const EFFICACITE_RANK = { Validee: 0, Etablie: 1, Emergente: 2 }
+function efficaciteRank(t) { return EFFICACITE_RANK[t.efficacite] ?? 3 }
+
 export const ZONE_PRINCIPLES = {
   Syntaxe: "L'IA generative est tres performante sur la syntaxe. Laissez les etudiants s'en servir, mais evaluez la comprehension reelle autrement que par le code produit : oral, reformulation, lecture de code, papier.",
   Logique: "Zone critique de l'apprentissage. Privilegiez un tuteur IA scaffolde qui guide par questions sans livrer la solution, et faites tracer, decomposer et raisonner a la main avant tout recours a l'IA.",
@@ -94,7 +97,7 @@ export function getRecommendation({ year, concept_family, bloom, function: fn, c
   const ranked = toolsData
     .filter(t => !fnCode || t.function === fnCode || t.function === 'FS')
     .map(t => ({ tool: t, score: scores[t.id] || 0 }))
-    .sort((a, b) => b.score - a.score || a.tool.cost_num - b.tool.cost_num)
+    .sort((a, b) => b.score - a.score || efficaciteRank(a.tool) - efficaciteRank(b.tool) || a.tool.cost_num - b.tool.cost_num)
     .slice(0, 3)
     .map(({ tool }) => tool)
 
@@ -115,10 +118,10 @@ export function getToolsForConcept(conceptId, minScore = 2) {
       return tool ? { ...tool, matrix_score: c.score } : null
     })
     .filter(Boolean)
-    .sort((a, b) => b.matrix_score - a.matrix_score)
+    .sort((a, b) => b.matrix_score - a.matrix_score || efficaciteRank(a) - efficaciteRank(b))
 }
 
-export const GENERIC_RECOMMENDATION = `Cette analyse croise les concepts detectes dans votre cours avec la matrice de pertinence (840 cellules, scores 1 a 3) et les 32 patrons d'activite du TB. Chaque recommandation est tracable jusqu'aux donnees sources. La Toolbox aide a identifier des leviers pertinents selon la configuration pedagogique detectee ; les choix restent ceux de l'enseignant.`
+export const GENERIC_RECOMMENDATION = `Cette analyse croise les concepts detectes dans votre cours avec la matrice de pertinence (861 cellules, scores 1 a 3) et les 32 patrons d'activite du TB. Chaque recommandation est tracable jusqu'aux donnees sources. La Toolbox aide a identifier des leviers pertinents selon la configuration pedagogique detectee ; les choix restent ceux de l'enseignant.`
 
 // Calcule une recommandation globale deterministe pour l'ensemble du cours.
 // Retourne : { dominantFamily, risk, dominantBloom, levers, conceptCount, sectionCount }
@@ -150,7 +153,7 @@ export function computeCourseGlobalRec(validatedClassifs) {
 
   const levers = toolsData
     .filter(t => (t.robustness_num ?? 0) >= 3 && toolScores[t.id])
-    .sort((a, b) => (toolScores[b.id] || 0) - (toolScores[a.id] || 0))
+    .sort((a, b) => (toolScores[b.id] || 0) - (toolScores[a.id] || 0) || efficaciteRank(a) - efficaciteRank(b))
     .slice(0, 3)
 
   return { dominantFamily, risk, dominantBloom, levers, conceptCount: allConceptIds.length, sectionCount: validatedClassifs.length }

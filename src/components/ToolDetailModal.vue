@@ -43,6 +43,10 @@
             <span class="info-label">Cyberlearn</span>
             <span class="info-value">{{ tool.cyberlearn }}</span>
           </div>
+          <div v-if="tool.efficacite" class="info-row">
+            <span class="info-label">Efficacite <InfoTooltip :content="GLOSSARY.efficacite.short" /></span>
+            <span class="ui-badge" :class="efficaciteClass">{{ tool.efficacite }}</span>
+          </div>
         </div>
 
         <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="section">
@@ -87,6 +91,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
+import InfoTooltip from './InfoTooltip.vue'
+import { GLOSSARY } from '../lib/glossary.js'
 
 const props = defineProps({
   tool: { type: Object, default: null }
@@ -144,6 +150,12 @@ const robustnessClass = computed(() => {
   if (n === 3) return 'ui-badge--rob-high'
   return 'ui-badge--rob-max'
 })
+
+const efficaciteClass = computed(() => ({
+  'ui-badge--efficacite-validee':   props.tool?.efficacite === 'Validee',
+  'ui-badge--efficacite-etablie':   props.tool?.efficacite === 'Etablie',
+  'ui-badge--efficacite-emergente': props.tool?.efficacite === 'Emergente'
+}))
 </script>
 
 <style scoped>

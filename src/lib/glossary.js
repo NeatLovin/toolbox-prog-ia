@@ -42,5 +42,9 @@ export const GLOSSARY = {
   cout: {
     term: 'Cout enseignant',
     short: 'Effort de mise en oeuvre pour l\'enseignant. 1 = faible (quasi zero prep). 2 = modere. 3 = eleve (configuration ou adaptation significative).'
+  },
+  efficacite: {
+    term: 'Efficacite documentee',
+    short: 'Validee = etude evaluee par les pairs (RCT ou etude empirique publiee). Etablie = pratique reconnue sans etude dediee. Emergente = outil recent ou non encore documente.'
   }
 }

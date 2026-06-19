@@ -17,7 +17,8 @@
     "robustness_num": 4,
     "function": "S",
     "sources": "E01 · E15 · E04 · E27",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M02",
@@ -37,7 +38,8 @@
     "robustness_num": 3,
     "function": "S",
     "sources": "E06 · E14 · E27",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M03",
@@ -57,7 +59,8 @@
     "robustness_num": 4,
     "function": "S",
     "sources": "E04 · E03 · E05 · E13 · E39 · Ipeirotis voice AI",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M04",
@@ -77,7 +80,8 @@
     "robustness_num": 2,
     "function": "S",
     "sources": "E04 · E13",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M05",
@@ -97,7 +101,8 @@
     "robustness_num": 3,
     "function": "FS",
     "sources": "E35 (UNIGE) · Chi & Wylie 2014",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "M06",
@@ -117,7 +122,8 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "Brennan & Resnick 2012",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "M07",
@@ -137,7 +143,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Atkinson et al. 2000 · Sweller 1988 · E35 (classe inversee)",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "M08",
@@ -157,7 +164,8 @@
     "robustness_num": 3,
     "function": "FS",
     "sources": "Lister et al. 2004 · Perkins & Martin 1986",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "M09",
@@ -177,7 +185,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Lister et al. 2004 (37 entretiens) · Davies 1996",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "M10",
@@ -197,7 +206,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "E27 (refonte HEG-GE) · E33 · Lister 2004 · Wing 2006",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M11",
@@ -217,7 +227,8 @@
     "robustness_num": 3,
     "function": "S",
     "sources": "E09 (Digital Team Academy)",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M12",
@@ -237,7 +248,8 @@
     "robustness_num": 2,
     "function": "S",
     "sources": "E09 (DTA)",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "M13",
@@ -257,7 +269,8 @@
     "robustness_num": 1,
     "function": "FS",
     "sources": "E01 (30 %)",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "T01",
@@ -277,7 +290,8 @@
     "robustness_num": 2,
     "function": "FS",
     "sources": "E06 · E28 · Lau & Guo 2023",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "T02",
@@ -297,7 +311,8 @@
     "robustness_num": 2,
     "function": "FS",
     "sources": "Directeur TB",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "T03",
@@ -317,7 +332,8 @@
     "robustness_num": 1,
     "function": "S",
     "sources": "Saglam & Schmid 2025",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "T04",
@@ -337,7 +353,8 @@
     "robustness_num": 1,
     "function": "S",
     "sources": "E35 · Maertens et al. 2022",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "T05",
@@ -357,7 +374,8 @@
     "robustness_num": 2,
     "function": "FS",
     "sources": "E06 (HEIG-VD) · E28 (envisage)",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "T06",
@@ -377,7 +395,8 @@
     "robustness_num": 4,
     "function": "S",
     "sources": "E06 (co-developpeur)",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "T07",
@@ -397,7 +416,8 @@
     "robustness_num": 4,
     "function": "S",
     "sources": "E14",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "T08",
@@ -417,7 +437,8 @@
     "robustness_num": 0,
     "function": "S",
     "sources": "HES-SO Guide 2024",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "T09",
@@ -437,7 +458,8 @@
     "robustness_num": 3,
     "function": "FS",
     "sources": "Zhang et al. 2026",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "T10",
@@ -457,7 +479,8 @@
     "robustness_num": 2,
     "function": "S",
     "sources": "Whodunit · Bisztray · Gurioli · Tian",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "T11",
@@ -477,7 +500,8 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "E05 (auteur) · E11 · E26",
-    "link": ""
+    "link": "",
+    "efficacite": "Etablie"
   },
   {
     "id": "I01",
@@ -497,7 +521,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Kazemitabaar et al. 2024 (CHI)",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I02",
@@ -517,7 +542,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Liffiton et al. 2024 (Koli Calling) · Sheese et al. 2024",
-    "link": "https://github.com/liffiton/Gen-Ed"
+    "link": "https://github.com/liffiton/Gen-Ed",
+    "efficacite": "Validee"
   },
   {
     "id": "I03",
@@ -537,7 +563,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Bassner Frankford Krusche 2024",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I04",
@@ -557,7 +584,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Liu et al. 2024",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I05",
@@ -577,7 +605,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Nathaniel et al. 2025-2026",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I06",
@@ -597,7 +626,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "LearnLM team 2025",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I07",
@@ -617,7 +647,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "E04 · E33",
-    "link": "https://notebooklm.google.com"
+    "link": "https://notebooklm.google.com",
+    "efficacite": "Emergente"
   },
   {
     "id": "I08",
@@ -637,7 +668,8 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "E32 · E29",
-    "link": "https://chatgpt.com"
+    "link": "https://chatgpt.com",
+    "efficacite": "Emergente"
   },
   {
     "id": "I09",
@@ -657,7 +689,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Stanford et al. 2024",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I10",
@@ -677,7 +710,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Dickey et al. 2024",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I11",
@@ -697,7 +731,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Jung et al. 2022 (EMNLP)",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I12",
@@ -717,7 +752,8 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "Farah Ingram et al. 2023 (ICWL)",
-    "link": ""
+    "link": "",
+    "efficacite": "Validee"
   },
   {
     "id": "I13",
@@ -737,7 +773,8 @@
     "robustness_num": 2,
     "function": "F",
     "sources": "E32 (test)",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "I14",
@@ -757,7 +794,8 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "E11",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "I15",
@@ -777,7 +815,8 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "E26 (auteur)",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "I16",
@@ -797,7 +836,8 @@
     "robustness_num": 3,
     "function": "FS",
     "sources": "E32 (auteure)",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "A01",
@@ -817,7 +857,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E02 · E05 · Karpathy 2026",
-    "link": "https://www.cursor.com"
+    "link": "https://www.cursor.com",
+    "efficacite": "Emergente"
   },
   {
     "id": "A02",
@@ -837,7 +878,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E39",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "A03",
@@ -857,7 +899,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E01 · E05 · E15 · E11 · Anthropic 2026",
-    "link": "https://claude.ai/code"
+    "link": "https://claude.ai/code",
+    "efficacite": "Emergente"
   },
   {
     "id": "A04",
@@ -877,7 +920,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "E05",
-    "link": ""
+    "link": "",
+    "efficacite": "Emergente"
   },
   {
     "id": "A05",
@@ -897,7 +941,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "Enquete HES-SO/UniFR 2025",
-    "link": "https://github.com/features/copilot"
+    "link": "https://github.com/features/copilot",
+    "efficacite": "Emergente"
   },
   {
     "id": "A06",
@@ -917,7 +962,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "Tous (mention quasi unanime) · Anthropic 2025a",
-    "link": "https://chatgpt.com"
+    "link": "https://chatgpt.com",
+    "efficacite": "Emergente"
   },
   {
     "id": "A07",
@@ -937,7 +983,8 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "Enquete HES-SO/UniFR 2025",
-    "link": "https://gemini.google.com"
+    "link": "https://gemini.google.com",
+    "efficacite": "Emergente"
   },
   {
     "id": "A08",
@@ -957,6 +1004,7 @@
     "robustness_num": 0,
     "function": "F",
     "sources": "HES-SO catalogue SI-Enseignement",
-    "link": "https://copilot.microsoft.com"
+    "link": "https://copilot.microsoft.com",
+    "efficacite": "Emergente"
   }
 ]

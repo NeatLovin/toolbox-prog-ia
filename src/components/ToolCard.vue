@@ -17,6 +17,11 @@
         :class="robustnessClass"
         :title="'Robustesse IA : ' + tool.robustness_ai"
       >{{ robustnessShort }}</span>
+      <span
+        v-if="tool.efficacite"
+        class="ui-badge"
+        :class="efficaciteClass"
+      >{{ tool.efficacite }}</span>
     </div>
 
     <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="card-fils">
@@ -102,6 +107,12 @@ const robustnessClass = computed(() => {
   if (n === 3) return 'ui-badge--rob-high'
   return 'ui-badge--rob-max'
 })
+
+const efficaciteClass = computed(() => ({
+  'ui-badge--efficacite-validee':   props.tool.efficacite === 'Validee',
+  'ui-badge--efficacite-etablie':   props.tool.efficacite === 'Etablie',
+  'ui-badge--efficacite-emergente': props.tool.efficacite === 'Emergente'
+}))
 </script>
 
 <style scoped>
