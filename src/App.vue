@@ -10,7 +10,6 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
         <ul class="nav-links">
           <li><router-link to="/catalogue">Catalogue</router-link></li>
           <li><router-link to="/concepts">Concepts</router-link></li>
-          <li><router-link to="/arbre">Arbre de decision</router-link></li>
           <li><router-link to="/methodologie">Methodologie</router-link></li>
           <li v-if="isLocal"><router-link to="/audit" class="nav-audit">Audit PDF</router-link></li>
         </ul>

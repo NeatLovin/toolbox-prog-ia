@@ -1,9 +1,15 @@
 <template>
   <div class="arbre">
-    <div class="ui-page-header">
-      <h1>Arbre de décision</h1>
-      <p>Trois étapes pour une recommandation d'outils adaptée à votre contexte pédagogique.</p>
-    </div>
+    <header class="home-header">
+      <h1>Obtenir une recommandation</h1>
+      <p class="home-subtitle">
+        Un catalogue d'outils pédagogiques et un arbre de décision pour enseigner la programmation
+        à l'ère de l'intelligence artificielle générative.
+      </p>
+      <p class="trust-line">
+        Recommandations déterministes et traçables — aucun texte généré par l'IA.
+      </p>
+    </header>
 
     <!-- Fil d'Ariane (masque a l'etape zone) -->
     <nav v-if="step !== 'zone'" class="breadcrumb" aria-label="Etapes">
@@ -354,6 +360,44 @@ function restart() {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+}
+
+/* En-tête d'accueil */
+.home-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.home-header h1 {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.home-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  max-width: 620px;
+  line-height: 1.65;
+}
+
+.trust-line {
+  font-size: var(--text-sm);
+  color: var(--color-text-placeholder);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.trust-line::before {
+  content: '▶';
+  font-size: 0.5rem;
+  color: var(--color-accent);
+  flex-shrink: 0;
 }
 
 /* Fil d'Ariane */
