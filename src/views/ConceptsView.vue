@@ -37,7 +37,7 @@
       <button v-if="hasFilters" class="ui-reset-btn" @click="resetFilters">Réinitialiser</button>
     </div>
 
-    <!-- Legende explicative -->
+    <!-- Légende explicative -->
     <details class="ui-collapsible">
       <summary>Comprendre les indicateurs : Bloom, Risque IA, Fuller</summary>
 
@@ -145,66 +145,88 @@
           <p class="family-description">{{ fam.description }}</p>
         </div>
 
-        <div class="concepts-grid">
-          <article v-for="concept in fam.concepts" :key="concept.id" class="concept-card">
-            <div class="concept-header">
-              <span class="concept-id">{{ concept.id }}</span>
-              <span class="ui-badge ui-badge--level">{{ concept.level }}</span>
-              <span class="ui-badge" :class="riskClass(fam.risk_ai)" style="margin-left:auto;">{{ fam.risk_ai }}</span>
-            </div>
+        <!-- Pile de DisclosureCard, une par concept -->
+        <div class="concepts-list">
+          <DisclosureCard
+            v-for="concept in fam.concepts"
+            :key="concept.id"
+            details-label="Indicateurs et description"
+            deep-label="Références et cadre"
+          >
+            <!-- Niveau 1 : identité + description -->
+            <template #summary>
+              <div class="cs-meta-row">
+                <span class="cs-id">{{ concept.id }}</span>
+                <span class="ui-badge ui-badge--level">{{ concept.level }}</span>
+                <span class="ui-badge" :class="riskClass(fam.risk_ai)" style="margin-left:auto;">{{ fam.risk_ai }}</span>
+              </div>
+              <p class="cs-name">{{ concept.name }}</p>
+              <p class="cs-desc">{{ concept.description }}</p>
+            </template>
 
-            <h3 class="concept-name">{{ concept.name }}</h3>
-            <p class="concept-desc">{{ concept.description }}</p>
+            <!-- Niveau 2 : Bloom, outils idéaux, patrons -->
+            <template #details>
+              <div class="cs-details-body">
 
-            <!-- Bloom, Fuller, outils, patrons : repliables -->
-            <details class="ui-collapsible ui-collapsible--compact concept-detail">
-              <summary>Bloom, Fuller, outils et patrons</summary>
-              <div class="ui-collapsible-body concept-detail-body">
-
-                <div class="concept-bloom">
-                  <span
-                    v-for="b in concept.bloom"
-                    :key="b"
-                    class="ui-badge"
-                    :class="bloomClass(b)"
-                    :title="bloomDesc[b]"
-                  >{{ b }}</span>
-                </div>
-
-                <div class="concept-fuller">
-                  <span class="fuller-label">Fuller :</span>
-                  <span class="fuller-value">{{ concept.fuller }}</span>
-                  <span class="fuller-hint" :title="fullerHint(concept.fuller)">&#9432;</span>
-                </div>
-
-                <div v-if="topTools(concept.id).length" class="concept-tools">
-                  <span class="tools-label">Outils de référence</span>
-                  <div class="tools-list">
+                <div class="cs-block">
+                  <span class="cs-block-label">Niveaux Bloom</span>
+                  <div class="cs-badge-row">
                     <span
-                      v-for="entry in topTools(concept.id)"
-                      :key="entry.toolId"
+                      v-for="b in concept.bloom"
+                      :key="b"
                       class="ui-badge"
-                      :class="entry.score === 3 ? 'ui-badge--score-ideal' : 'ui-badge--score-utile'"
-                      :title="toolName(entry.toolId) + (entry.score === 3 ? ' - Idéal' : ' - Utile')"
-                      style="font-family: monospace;"
+                      :class="bloomClass(b)"
+                      :title="bloomDesc[b]"
+                    >{{ b }}</span>
+                  </div>
+                </div>
+
+                <div v-if="idealTools(concept.id).length" class="cs-block">
+                  <span class="cs-block-label">Outils idéaux (score 3)</span>
+                  <div class="cs-badge-row">
+                    <span
+                      v-for="entry in idealTools(concept.id)"
+                      :key="entry.toolId"
+                      class="ui-badge ui-badge--score-ideal cs-tool-id"
+                      :title="toolName(entry.toolId)"
                     >{{ entry.toolId }}</span>
                   </div>
                 </div>
 
-                <div v-if="concept.references" class="concept-refs">{{ concept.references }}</div>
+                <div v-if="getPatronsByConcept(concept.id).length" class="cs-block">
+                  <span class="cs-block-label">
+                    {{ getPatronsByConcept(concept.id).length > 1 ? 'Patrons' : 'Patron' }}
+                    pédagogique{{ getPatronsByConcept(concept.id).length > 1 ? 's' : '' }}
+                  </span>
+                  <div class="cs-patrons">
+                    <PatronBlock
+                      v-for="patron in getPatronsByConcept(concept.id)"
+                      :key="patron.id"
+                      :patron="patron"
+                    />
+                  </div>
+                </div>
 
-                <div v-if="getPatronsByConcept(concept.id).length" class="patrons-stack">
-                  <PatronBlock
-                    v-for="patron in getPatronsByConcept(concept.id)"
-                    :key="patron.id"
-                    :patron="patron"
-                    class="patron-in-card"
-                  />
+              </div>
+            </template>
+
+            <!-- Niveau 3 : Fuller + références -->
+            <template #deep>
+              <div class="cs-deep-body">
+                <div class="cs-deep-block">
+                  <span class="cs-block-label">Dimension Fuller</span>
+                  <p class="cs-deep-strong">{{ concept.fuller }}</p>
+                  <p class="cs-deep-hint">{{ fullerHint(concept.fuller) }}</p>
+                </div>
+                <div v-if="concept.references" class="cs-deep-block">
+                  <span class="cs-block-label">Références</span>
+                  <p class="cs-deep-refs">{{ concept.references }}</p>
                 </div>
               </div>
-            </details>
-          </article>
+            </template>
+          </DisclosureCard>
         </div>
+
       </section>
     </template>
 
@@ -217,6 +239,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
+import DisclosureCard from '../components/DisclosureCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 
 const { concepts, tools, matrix, getPatronsByConcept } = useData()
@@ -237,19 +260,19 @@ const bloomDesc = {
 }
 
 const bloomEntries = [
-  { key: 'remember',  label: 'Remember',  strong: 'Mémoriser, reconnaître',    desc: bloomDesc.Remember  },
-  { key: 'understand',label: 'Understand', strong: 'Expliquer, prédire',        desc: bloomDesc.Understand},
-  { key: 'apply',     label: 'Apply',      strong: 'Exécuter, implémenter',     desc: bloomDesc.Apply     },
-  { key: 'analyze',   label: 'Analyze',    strong: 'Décomposer, différencier',  desc: bloomDesc.Analyze   },
-  { key: 'evaluate',  label: 'Evaluate',   strong: 'Juger, critiquer',          desc: bloomDesc.Evaluate  },
-  { key: 'create',    label: 'Create',     strong: 'Concevoir, produire',       desc: bloomDesc.Create    }
+  { key: 'remember',   label: 'Remember',  strong: 'Mémoriser, reconnaître',    desc: bloomDesc.Remember   },
+  { key: 'understand', label: 'Understand', strong: 'Expliquer, prédire',        desc: bloomDesc.Understand },
+  { key: 'apply',      label: 'Apply',      strong: 'Exécuter, implémenter',     desc: bloomDesc.Apply      },
+  { key: 'analyze',    label: 'Analyze',    strong: 'Décomposer, différencier',  desc: bloomDesc.Analyze    },
+  { key: 'evaluate',   label: 'Evaluate',   strong: 'Juger, critiquer',          desc: bloomDesc.Evaluate   },
+  { key: 'create',     label: 'Create',     strong: 'Concevoir, produire',       desc: bloomDesc.Create     }
 ]
 
 function fullerHint(fuller) {
   if (fuller?.includes('Produce') && fuller?.includes('Interpret'))
     return 'Produce (écrire du code) et Interpret (lire/tracer du code) sont tous les deux mobilisés.'
-  if (fuller?.includes('Produce'))  return 'Principalement Produce : l\'étudiant doit produire du code ou un algorithme.'
-  if (fuller?.includes('Interpret'))return 'Principalement Interpret : l\'étudiant doit lire, tracer et expliquer du code existant.'
+  if (fuller?.includes('Produce'))   return 'Principalement Produce : l\'étudiant doit produire du code ou un algorithme.'
+  if (fuller?.includes('Interpret')) return 'Principalement Interpret : l\'étudiant doit lire, tracer et expliquer du code existant.'
   return fuller || ''
 }
 
@@ -271,7 +294,7 @@ const matrixMap = computed(() => {
 })
 
 const toolNameMap = Object.fromEntries(tools.map(t => [t.id, t.name]))
-function topTools(conceptId) { return (matrixMap.value[conceptId] || []).slice(0, 5) }
+function idealTools(conceptId) { return (matrixMap.value[conceptId] || []).filter(e => e.score === 3) }
 function toolName(id) { return toolNameMap[id] || id }
 
 const families = computed(() => {
@@ -323,8 +346,8 @@ function bloomClass(b) {
 <style scoped>
 .concepts { display: flex; flex-direction: column; gap: var(--space-8); }
 
-/* Family sections */
-.family-section { display: flex; flex-direction: column; gap: var(--space-5); }
+/* Sections par famille */
+.family-section { display: flex; flex-direction: column; gap: var(--space-4); }
 
 .family-header {
   padding: var(--space-5) var(--space-6);
@@ -352,96 +375,95 @@ function bloomClass(b) {
 .family-section--f3 .family-title-row h2 { color: var(--zone-architecture-text); }
 
 .concept-count { font-size: 0.8rem; color: var(--color-text-faint); margin-left: auto; }
-
 .family-description { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; }
 
-/* Concept cards */
-.concepts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-4);
-}
+/* Pile de DisclosureCard */
+.concepts-list { display: flex; flex-direction: column; gap: var(--space-3); }
 
-.concept-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  transition: box-shadow 0.15s;
-}
-.concept-card:hover { box-shadow: var(--shadow-sm); }
-
-.concept-header {
+/* Contenu du slot summary */
+.cs-meta-row {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
 }
 
-.concept-id {
+.cs-id {
   font-size: var(--text-xs);
   font-weight: 700;
   color: var(--color-text-placeholder);
   font-family: monospace;
 }
 
-.concept-name { font-size: var(--text-md); font-weight: 700; color: var(--color-text); line-height: 1.3; }
-.concept-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
-
-/* Repliable interne */
-.concept-detail {
-  border-color: var(--patron-border);
-}
-.concept-detail-body { display: flex; flex-direction: column; gap: var(--space-3); }
-
-.concept-bloom { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-
-.concept-fuller {
-  display: flex;
-  gap: 0.35rem;
-  align-items: center;
-  font-size: var(--text-xs);
-}
-.fuller-label { font-weight: 600; color: var(--color-text-faint); }
-.fuller-value { color: var(--color-text-muted); }
-.fuller-hint  { font-size: var(--text-xs); color: var(--color-text-placeholder); cursor: help; }
-
-.concept-tools { display: flex; flex-direction: column; gap: 0.35rem; }
-.tools-label {
-  font-size: var(--text-2xs);
+.cs-name {
+  font-size: var(--text-md);
   font-weight: 700;
-  color: var(--color-text-placeholder);
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.cs-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* Contenu du slot details */
+.cs-details-body { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.cs-block { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.cs-block-label {
+  font-size: var(--text-2xs);
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  color: var(--color-text-faint);
 }
-.tools-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
-.concept-refs {
-  font-size: 0.72rem;
+.cs-badge-row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+.cs-tool-id { font-family: monospace; }
+
+.cs-patrons { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* Contenu du slot deep */
+.cs-deep-body { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.cs-deep-block { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.cs-deep-strong {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.cs-deep-hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.cs-deep-refs {
+  font-size: var(--text-sm);
   color: var(--color-text-placeholder);
   font-style: italic;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-.patrons-stack { display: flex; flex-direction: column; gap: var(--space-2); }
-.patron-in-card { margin-top: var(--space-1); }
-
-/* Legende */
+/* Légende */
 .legend-body { display: flex; flex-direction: column; gap: var(--space-8); }
 
 .legend-section { display: flex; flex-direction: column; gap: var(--space-3); }
 .legend-section h3 { font-size: var(--text-base); font-weight: 800; color: var(--color-text); }
 .legend-intro { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.65; }
 
-/* Bloom entries */
 .bloom-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--space-3);
 }
+
 .bloom-entry {
   display: flex;
   align-items: flex-start;
@@ -450,6 +472,7 @@ function bloomClass(b) {
   border-radius: var(--radius-lg);
   border: 1px solid transparent;
 }
+
 .bloom-entry--remember  { background: var(--bloom-remember-bg);  border-color: rgba(0,0,0,0.08); }
 .bloom-entry--understand { background: var(--bloom-understand-bg); border-color: rgba(0,0,0,0.08); }
 .bloom-entry--apply     { background: var(--bloom-apply-bg);      border-color: rgba(0,0,0,0.08); }
@@ -460,7 +483,6 @@ function bloomClass(b) {
 .bloom-entry strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.2rem; }
 .bloom-entry p      { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5; }
 
-/* Risk entries */
 .risk-grid { display: flex; flex-direction: column; gap: var(--space-3); }
 .risk-entry {
   display: flex;
@@ -477,12 +499,12 @@ function bloomClass(b) {
 .risk-entry strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.2rem; }
 .risk-entry p      { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.55; }
 
-/* Fuller entries */
 .fuller-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-3);
 }
+
 .fuller-entry {
   display: flex;
   align-items: flex-start;
@@ -492,6 +514,7 @@ function bloomClass(b) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
 }
+
 .fe-tag {
   font-size: 0.72rem;
   font-weight: 800;
@@ -502,10 +525,10 @@ function bloomClass(b) {
   flex-shrink: 0;
   margin-top: 2px;
 }
+
 .fuller-entry strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.2rem; }
 .fuller-entry p      { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5; }
 
-/* Matrix legend */
 .matrix-legend {
   display: flex;
   align-items: center;
@@ -516,12 +539,12 @@ function bloomClass(b) {
   border-radius: var(--radius-md);
   font-size: var(--text-xs);
 }
+
 .ml-title { font-weight: 700; color: var(--color-text-muted); }
 .ml-sep   { color: var(--color-text-placeholder); }
 
 @media (max-width: 640px) {
-  .concepts-grid { grid-template-columns: 1fr; }
-  .bloom-grid    { grid-template-columns: 1fr; }
-  .fuller-grid   { grid-template-columns: 1fr; }
+  .bloom-grid  { grid-template-columns: 1fr; }
+  .fuller-grid { grid-template-columns: 1fr; }
 }
 </style>
