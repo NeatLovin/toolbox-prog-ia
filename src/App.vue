@@ -8,6 +8,7 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       <nav class="nav-container" aria-label="Navigation principale">
         <router-link to="/" class="site-title">Toolbox Prog IA</router-link>
         <ul class="nav-links">
+          <li><router-link to="/arbre">Arbre</router-link></li>
           <li><router-link to="/catalogue">Catalogue</router-link></li>
           <li><router-link to="/concepts">Concepts</router-link></li>
           <li><router-link to="/methodologie">Methodologie</router-link></li>

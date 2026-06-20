@@ -1,187 +1,119 @@
 <template>
   <div class="home">
-    <section class="hero">
-      <h1>Toolbox Prog IA</h1>
-      <p class="subtitle">
-        Un catalogue d'outils pedagogiques et un arbre de decision pour enseigner la programmation
-        a l'heure de l'intelligence artificielle generative.
-      </p>
-      <p class="context">
-        Proof of concept, Travail de Bachelor, HEG Arc, HES-SO
-      </p>
-    </section>
 
-    <section class="cards-grid">
-      <router-link to="/arbre" class="feature-card feature-card--primary">
-        <div class="card-icon">&#128270;</div>
+    <div class="ui-page-header">
+      <h1>Toolbox Prog IA</h1>
+      <p>
+        Catalogue d'outils pédagogiques et arbre de décision pour enseigner la programmation
+        à l'ère de l'intelligence artificielle générative.
+        Proof of concept, Travail de Bachelor, HEG Arc, HES-SO.
+      </p>
+    </div>
+
+    <p class="trust-line">
+      Recommandations déterministes et traçables, aucun texte généré par l'IA.
+    </p>
+
+    <div class="hub-grid">
+
+      <router-link to="/audit" class="hub-card hub-card--audit ui-card">
+        <h2>Auditer un cours</h2>
+        <p>
+          Importez le PDF de votre cours pour analyser les concepts couverts
+          et obtenir des recommandations d'outils ciblées par section.
+        </p>
+        <span class="hub-cta">Démarrer l'audit →</span>
+      </router-link>
+
+      <router-link to="/arbre" class="hub-card ui-card">
         <h2>Obtenir une recommandation</h2>
         <p>
-          Choisissez une zone conceptuelle (Syntaxe, Logique, Architecture),
-          precisez le concept vise et le contexte d'usage : vous obtenez
-          les outils adaptes et un patron d'activite pedagogique.
+          Parcours guidé en trois étapes : zone conceptuelle, concept précis, contexte d'usage.
+          Résultat avec patron pédagogique et outils adaptés.
         </p>
-        <span class="card-cta">Demarrer l'arbre &rarr;</span>
+        <span class="hub-cta">Démarrer →</span>
       </router-link>
 
-      <router-link to="/catalogue" class="feature-card">
-        <div class="card-icon">&#128218;</div>
-        <h2>Explorer les outils</h2>
-        <p>
-          Parcourez les {{ toolCount }} outils repertories. Filtrez par famille
-          pedagogique, robustesse face a l'IA, cout de mise en oeuvre ou fil rouge.
-        </p>
-        <span class="card-cta">Voir le catalogue &rarr;</span>
-      </router-link>
+    </div>
 
-      <router-link to="/methodologie" class="feature-card">
-        <div class="card-icon">&#128196;</div>
-        <h2>Comprendre la demarche</h2>
-        <p>
-          Contexte du Travail de Bachelor, modele de donnees et logique
-          de recommandation. Tout est tracable jusqu'a la cartographie source.
-        </p>
-        <span class="card-cta">Voir la methodologie &rarr;</span>
-      </router-link>
-    </section>
-
-    <section class="value-banner">
-      <div class="value-item">
-        <span class="value-icon">&#9654;</span>
-        <p>Chaque recommandation est deterministe et tracable : aucun texte genere.</p>
-      </div>
-      <div class="value-item">
-        <span class="value-icon">&#9654;</span>
-        <p>{{ toolCount }} outils couvrant {{ conceptCount }} sous-concepts de programmation.</p>
-      </div>
-      <div class="value-item">
-        <span class="value-icon">&#9654;</span>
-        <p>Patrons pedagogiques ancres dans l'alignement constructif (Biggs 1996).</p>
-      </div>
-    </section>
   </div>
 </template>
 
 <script setup>
-import { useData } from '../composables/useData.js'
-
-const { tools, concepts } = useData()
-const toolCount    = tools.length
-const conceptCount = concepts.length
+// Ce composant n'est rendu qu'en local.
+// Le guard router (beforeEach) redirige '/' vers '/arbre' hors localhost.
 </script>
 
 <style scoped>
 .home {
   display: flex;
   flex-direction: column;
-  gap: var(--space-10);
-}
-
-.hero {
-  text-align: center;
-  padding: var(--space-10) var(--space-4);
-}
-
-.hero h1 {
-  font-size: var(--text-4xl);
-  font-weight: 800;
-  color: var(--color-text);
-  margin-bottom: var(--space-4);
-}
-
-.subtitle {
-  font-size: 1.1rem;
-  color: var(--color-text-muted);
-  max-width: 600px;
-  margin: 0 auto var(--space-3);
-  line-height: 1.65;
-}
-
-.context {
-  font-size: 0.85rem;
-  color: var(--color-text-placeholder);
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: var(--space-6);
+  max-width: 740px;
 }
 
-.feature-card {
+.trust-line {
+  font-size: var(--text-sm);
+  color: var(--color-text-placeholder);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.trust-line::before {
+  content: '▶';
+  font-size: 0.5rem;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.hub-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-  padding: 1.75rem;
-  transition: box-shadow 0.15s, transform 0.15s;
-  cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
 }
 
-.feature-card:hover {
+.hub-card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
+  border-color: var(--color-accent);
 }
 
-.feature-card--primary {
+.hub-card--audit {
   border-color: var(--color-accent);
   background: var(--color-accent-subtle);
 }
 
-.card-icon { font-size: 2rem; }
-
-.feature-card h2 {
+.hub-card h2 {
   font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-text);
 }
 
-.feature-card p {
+.hub-card p {
   font-size: var(--text-base);
   color: var(--color-text-muted);
   flex: 1;
   line-height: 1.6;
 }
 
-.card-cta {
+.hub-cta {
   font-size: var(--text-base);
   font-weight: 600;
   color: var(--color-accent);
   margin-top: auto;
 }
 
-.feature-card--primary .card-cta { color: var(--color-accent-hover); }
-
-/* Banniere valeur */
-.value-banner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-6);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-}
-
-.value-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  line-height: 1.55;
-}
-
-.value-icon {
-  color: var(--color-accent);
-  font-size: 0.6rem;
-  margin-top: 0.45rem;
-  flex-shrink: 0;
-}
-
-@media (max-width: 640px) {
-  .cards-grid { grid-template-columns: 1fr; }
-  .hero h1    { font-size: var(--text-3xl); }
+@media (max-width: 600px) {
+  .home      { max-width: 100%; }
+  .hub-grid  { grid-template-columns: 1fr; }
 }
 </style>
