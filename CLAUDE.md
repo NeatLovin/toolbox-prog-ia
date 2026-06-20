@@ -46,17 +46,17 @@ references     : sources academiques
 - `getPatronsByConceptAndContext(conceptId, contexte)` : retourne `{ exact, others, all, hasExact }`. `exact` = patrons dont le contexte correspond. Utilise pour le filtrage dans l'arbre et l'audit.
 
 **Points d'affichage et logique de filtrage :**
-- `ConceptsView` : `<details>` collapsible, affiche tous les patrons en pile avec badge contexte sur chacun. Si plusieurs patrons : summary indique le nombre de contextes.
-- `ArboreView` : le concept est selectionne directement par l'utilisateur (pas de regex sur combo.concept_example). Appelle `getPatronsByConceptAndContext(selectedConcept.id, selectedContext)`. Si patron exact : banniere verte. Si pas de match exact : banniere orange et affiche toutes les variantes. Si "toute la zone" selectionne (selectedConcept === null) : pas de PatronBlock, invite a choisir un concept precis.
+- `ConceptsView` : slot "details" du DisclosureCard concept (niveau 2 « Indicateurs et description »). Affiche tous les patrons en pile via PatronBlock, avec leur badge contexte.
+- `ArboreView` : le concept est selectionne directement par l'utilisateur (pas de regex sur combo.concept_example). Appelle `getPatronsByConceptAndContext(selectedConcept.id, selectedContext)`. Si patron exact : banniere verte. Si pas de match exact : banniere orange et affiche toutes les variantes. Si "toute la zone" selectionne (selectedConcept === null) : pas de PatronBlock, invite a choisir un concept precis. Le patron est dans le slot "details" du DisclosureCard résultat.
 - `CourseAudit` : par section, appelle `getPatronsByConceptAndContext(cid, section.context)`. Si exact, affiche uniquement les patrons matchants. Sinon, affiche tous avec note "Variantes".
 
 **Composant partage :** `PatronBlock.vue` - prend `:patron` en prop, affiche badge contexte en tete, gere son propre `ToolDetailModal` en interne. Les outils du patron sont cliquables.
 
 ## Deux modes d'execution
 
-**Mode statique (GitHub Pages)** : catalogue + concepts + arbre de decision + methodologie. Aucun appel reseau. Le lien "Audit PDF" est invisible (detection localhost au runtime).
+**Mode statique (GitHub Pages)** : la route / redirige vers /arbre (guard router beforeEach). Catalogue, concepts, arbre et methodologie accessibles. Aucun appel reseau. Hub et audit PDF masques.
 
-**Mode local (dev)** : toutes les vues, y compris Audit PDF. Lancer avec `npm run dev:full` (Vite + proxy Anthropic en parallele via concurrently).
+**Mode local (dev)** : la route / affiche le hub (deux cartes : Auditer un cours + Obtenir une recommandation). Toutes les vues accessibles, y compris Audit PDF. Lancer avec `npm run dev:full` (Vite + proxy Anthropic en parallele via concurrently).
 
 ## Modele de donnees
 
@@ -84,11 +84,12 @@ src/composables/useRecommendation.js : re-exporte getRecommendation pour compati
 
 ## Fonctionnalites
 
-1. **Catalogue** (/catalogue) : liste filtrable des 49 outils. Filtres : famille, fonction, cout, robustesse, fil rouge. Clic sur une carte ouvre ToolDetailModal.
-2. **Concepts** (/concepts) : 21 sous-concepts groupes par famille avec risque IA, niveaux Bloom, outils de reference de la matrice.
-3. **Arbre de decision** (/arbre) : wizard zone → concept → contexte → objectif cognitif (facultatif). Pas de question semestre ni de question fonction (Formative par defaut). Resultat : banniere principe IA de la zone (ZONE_PRINCIPLES) + 2-4 outils + patron pedagogique PatronBlock (repliable). Mode "toute la zone" disponible : montre les outils de la famille sans patron, invite a selectionner un concept.
-4. **Methodologie** (/methodologie) : contexte TB, modele de donnees, familles d'outils.
-5. **Audit PDF** (/audit, LOCAL UNIQUEMENT) : voir section ci-dessous.
+1. **Accueil / hub** (/, LOCAL UNIQUEMENT) : deux cartes de choix — « Auditer un cours » (/audit) et « Obtenir une recommandation » (/arbre). En dehors de localhost, la route / redirige automatiquement vers /arbre via un guard router beforeEach dans router/index.js. HomeView.vue reste dans le depot mais n'est rendu qu'en local.
+2. **Catalogue** (/catalogue) : liste filtrable des 48 outils. Filtres : famille, fonction, cout, robustesse, fil rouge. Chaque outil en DisclosureCard sur trois niveaux : résumé (id, famille, nom, description, efficacité), « Détails et usage » (detail, attributs, scénarios, fils rouges, lien externe), « Sources et littérature ». ToolDetailModal n'est plus utilisé dans CatalogueView ; il reste actif dans PatronBlock pour le détail des outils du patron.
+3. **Concepts** (/concepts) : 21 sous-concepts groupés par famille (sections par zone avec en-tête coloré). Chaque concept en DisclosureCard sur trois niveaux : résumé (id, level, risque, nom, description), « Indicateurs et description » (Bloom, outils idéaux score 3 issus de la matrice, patrons via PatronBlock), « Références et cadre » (Fuller, bibliographie).
+4. **Arbre de decision** (/arbre) : wizard zone → concept → contexte → objectif cognitif (facultatif). Pas de question semestre ni de question fonction (Formative par defaut). Résultat en DisclosureCard sur trois niveaux : principe IA de la zone + badge de provenance + pills des premiers outils (niveau 1), « Patron et outils » (PatronBlock + liste complète des ToolCard) (niveau 2), « Justification et sources » (niveau 3). Mode "toute la zone" disponible.
+5. **Methodologie** (/methodologie) : contexte TB, modele de donnees, familles d'outils.
+6. **Audit PDF** (/audit, LOCAL UNIQUEMENT) : voir section ci-dessous.
 
 ## Audit PDF (mode local)
 
@@ -112,11 +113,13 @@ src/
   assets/         tokens.css (design tokens), base.css (reset + primitives ui-)
   data/           tools.json, concepts.json, matrix.json, combos.json, meta.json
                   fixtures/cours-exemple.json
-  lib/            recommendation.js (moteur factorise)
+  lib/            recommendation.js (moteur factorise), glossary.js (12 definitions InfoTooltip)
   composables/    useData.js, useRecommendation.js, useAudit.js
-  views/          HomeView, CatalogueView, ConceptsView, ArboreView, MethodologieView, AuditView
-  components/     ToolCard, ToolDetailModal, PdfDropzone, SectionReview, CourseAudit, PatronBlock
-  router/         index.js
+  views/          HomeView (hub local, non rendu en statique), ArboreView, CatalogueView,
+                  ConceptsView, MethodologieView, AuditView
+  components/     DisclosureCard (primitive 3 niveaux), PatronBlock, ToolCard, ToolDetailModal,
+                  InfoTooltip, PdfDropzone, SectionReview, CourseAudit
+  router/         index.js (guard beforeEach : '/' -> /arbre hors localhost)
   App.vue, main.js
 proxy/
   server.js       (Express, Node >= 18, non bundle par Vite)
@@ -136,13 +139,15 @@ proxy/
 
 **Repliables** : `<details class="ui-collapsible">` + `<div class="ui-collapsible-body">`. Variante compacte : ajouter `ui-collapsible--compact`.
 
+**DisclosureCard** : `src/components/DisclosureCard.vue`. Primitive generique a trois niveaux, construite sur `.ui-card` + `.ui-collapsible`. Props : `title` (String, optionnel), `detailsLabel` (String, defaut "Détails"), `deepLabel` (String, defaut "Creuser"). Slots nommes : `summary` (toujours visible), `details` (replié, rendu uniquement si slot rempli), `deep` (replié, rendu uniquement si slot rempli). La presence du slot est detectée via `useSlots()`. Utilisee dans ArboreView (résultat), CatalogueView (chaque outil) et ConceptsView (chaque concept). ToolCard (ArboreView niveau 2) et ToolDetailModal (PatronBlock) restent des composants independants.
+
 **Regles de migration** : aucune couleur hex (#rrggbb) dans les fichiers `.vue` hors tokens.css et base.css. Seule exception admise : `rgba(255,255,255,0.7)` et `rgba(0,0,0,0.08)` pour des superpositions translucides sans equivalent en token.
 
 ## Composant InfoTooltip
 
 `src/components/InfoTooltip.vue` : infobulle declenchee au survol (desktop) ET au tap (tablette). Prop unique : `content` (String, texte de la definition). Le declencheur est un bouton `?` accessible (aria-label, aria-expanded).
 
-**Glossaire centralise** : `src/lib/glossary.js` exporte un objet `GLOSSARY` avec 11 entrees. Chaque entree a `term` (intitule) et `short` (definition courte passee au composant). Termes couverts : robustesse IA, fil rouge, scenario, fonction pedagogique, famille d'outils, combinatoire, patron pedagogique, Bloom, contexte d'usage, alignement constructif, cout enseignant.
+**Glossaire centralise** : `src/lib/glossary.js` exporte un objet `GLOSSARY` avec 12 entrees. Chaque entree a `term` (intitule) et `short` (definition courte passee au composant). Termes couverts : robustesse IA, fil rouge, scenario, fonction pedagogique, famille d'outils, combinatoire, patron pedagogique, Bloom, contexte d'usage, alignement constructif, cout enseignant, efficacite documentee.
 
 **Points d'integration** : labels des filtres avances de CatalogueView (Fonction, Cout, Robustesse IA, Fil rouge), etape contexte et etape Bloom de ArboreView, badge source du resultat de l'arbre.
 
