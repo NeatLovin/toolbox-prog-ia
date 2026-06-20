@@ -88,7 +88,6 @@
         Quel est l'objectif cognitif visé ?
         <InfoTooltip :content="GLOSSARY.bloom.short" />
         <span class="optional-tag">Facultatif</span>
-
       </h2>
       <p class="step-hint">
         Si vous passez, l'objectif retenu sera "{{ dominantBloom }}"
@@ -112,67 +111,109 @@
     <!-- Resultat -->
     <section v-else-if="step === 'result' && result" class="result-section">
 
-      <!-- Principe IA de la zone -->
-      <div class="zone-principle" :class="`zone-principle--${zoneKey}`">
-        <span class="zp-label">Principe IA - {{ selectedZone }}</span>
-        <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
-      </div>
+      <DisclosureCard details-label="Patron et outils" deep-label="Justification et sources">
 
-      <!-- En-tete et outils -->
-      <div class="result-header">
-        <h2 class="result-title">Outils recommandés</h2>
-        <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
-        <InfoTooltip :content="GLOSSARY.combinatoire.short" />
-      </div>
-      <div class="result-tools">
-        <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
-      </div>
+        <!-- ── Niveau 1 : l'essentiel ── -->
+        <template #summary>
 
-      <!-- Invitation si "toute la zone" (pas de patron) -->
-      <p v-if="!selectedConcept" class="zone-invite">
-        Choisissez un concept précis (étape 2) pour obtenir un patron d'activité pédagogique adapté.
-      </p>
-
-      <!-- Justification (repliable) -->
-      <details v-if="result.justification" class="ui-collapsible">
-        <summary>Justification de la recommandation</summary>
-        <div class="ui-collapsible-body detail-content">{{ result.justification }}</div>
-      </details>
-
-      <!-- Patron pedagogique (repliable, seulement si concept selectionne) -->
-      <details v-if="selectedConcept && patronForResult?.all.length" class="ui-collapsible">
-        <summary>
-          Patron pedagogique
-          <span
-            v-if="patronForResult.hasExact"
-            class="ui-badge ui-badge--source-exact patron-ctx-tag"
-          >Pour "{{ selectedContext }}"</span>
-          <span v-else class="ui-badge ui-badge--source-approche patron-ctx-tag">Variantes disponibles</span>
-        </summary>
-        <div class="ui-collapsible-body">
-          <div
-            class="patron-match-banner"
-            :class="patronForResult.hasExact ? 'patron-match-banner--exact' : 'patron-match-banner--fallback'"
-          >
-            {{ patronForResult.hasExact
-              ? `Patron pour le contexte "${selectedContext}"`
-              : `Pas de patron pour "${selectedContext}" - variantes disponibles` }}
+          <!-- Principe IA de la zone -->
+          <div class="zone-principle" :class="`zone-principle--${zoneKey}`">
+            <span class="zp-label">Principe IA — {{ selectedZone }}</span>
+            <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
           </div>
-          <PatronBlock
-            v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
-            :key="p.id"
-            :patron="p"
-            class="result-patron"
-          />
-        </div>
-      </details>
+
+          <!-- Approche : provenance + noms des outils -->
+          <div class="result-approach">
+            <div class="approach-top">
+              <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
+              <InfoTooltip :content="GLOSSARY.combinatoire.short" />
+            </div>
+            <ul class="result-tool-pills" aria-label="Outils recommandés">
+              <li v-for="tool in result.tools.slice(0, 3)" :key="tool.id" class="tool-pill">
+                <span class="ui-badge" :class="toolFamilyClass(tool)">{{ toolFamilyShort(tool) }}</span>
+                {{ tool.name }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Invitation si "toute la zone" -->
+          <p v-if="!selectedConcept" class="zone-invite">
+            Choisissez un concept précis (étape 2) pour obtenir un patron d'activité pédagogique adapté.
+          </p>
+
+        </template>
+
+        <!-- ── Niveau 2 : patron + outils complets ── -->
+        <template #details>
+
+          <!-- Patron pédagogique -->
+          <template v-if="selectedConcept && patronForResult?.all.length">
+            <div
+              class="patron-match-banner"
+              :class="patronForResult.hasExact ? 'patron-match-banner--exact' : 'patron-match-banner--fallback'"
+            >
+              <span
+                class="ui-badge"
+                :class="patronForResult.hasExact ? 'ui-badge--source-exact' : 'ui-badge--source-approche'"
+              >{{ patronForResult.hasExact ? `Pour "${selectedContext}"` : 'Variantes disponibles' }}</span>
+              {{ patronForResult.hasExact
+                ? `Patron pour le contexte "${selectedContext}"`
+                : `Pas de patron pour "${selectedContext}" — variantes disponibles` }}
+            </div>
+            <PatronBlock
+              v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
+              :key="p.id"
+              :patron="p"
+              class="result-patron"
+            />
+            <hr class="details-sep" />
+          </template>
+
+          <!-- Liste complète des outils -->
+          <div class="result-tools">
+            <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
+          </div>
+
+        </template>
+
+        <!-- ── Niveau 3 : justification + sources ── -->
+        <template #deep>
+          <div class="deep-section">
+
+            <div v-if="result.justification" class="deep-block">
+              <span class="deep-label">Justification</span>
+              <p class="deep-text">{{ result.justification }}</p>
+            </div>
+
+            <div class="deep-block">
+              <span class="deep-label">Provenance</span>
+              <p class="deep-text">{{ sourceDescription }}</p>
+            </div>
+
+            <div class="deep-block">
+              <span class="deep-label">Sources et littérature</span>
+              <ul v-if="resultSources.length" class="deep-sources-list">
+                <li v-for="s in resultSources" :key="s.id" class="deep-source-item">
+                  <span class="deep-source-name">{{ s.name }}</span>
+                  <span class="deep-source-ref"> — {{ s.sources }}</span>
+                </li>
+              </ul>
+              <p v-else class="deep-text">
+                Consultez les fiches détaillées des outils dans le catalogue pour les références académiques associées.
+              </p>
+            </div>
+
+          </div>
+        </template>
+
+      </DisclosureCard>
 
       <!-- Actions -->
       <div class="result-actions">
         <button class="ui-btn ui-btn-primary" @click="restart">Nouvelle recherche</button>
         <router-link to="/catalogue" class="ui-btn ui-btn-secondary">Voir le catalogue complet</router-link>
-
       </div>
+
     </section>
   </div>
 </template>
@@ -181,6 +222,7 @@
 import { ref, computed } from 'vue'
 import { getRecommendation, ZONE_PRINCIPLES } from '../lib/recommendation.js'
 import { useData } from '../composables/useData.js'
+import DisclosureCard from '../components/DisclosureCard.vue'
 import ToolCard from '../components/ToolCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
@@ -247,6 +289,38 @@ const sourceLabel = computed(() => {
   if (s === 'combo-approche') return 'Combinatoire approchée'
   return 'Score matriciel'
 })
+
+const sourceDescription = computed(() => {
+  const s = result.value?.source
+  const c = result.value?.combo
+  if (s === 'combo') {
+    const detail = [c?.year, c?.bloom, c?.context].filter(Boolean).join(', ')
+    return `Correspondance exacte avec la combinatoire ${c?.id || ''}${detail ? ` (${detail})` : ''}.`
+  }
+  if (s === 'combo-approche')
+    return `Correspondance approchée avec la combinatoire ${c?.id || ''}. La fonction pédagogique ou le niveau Bloom ont été assouplis pour trouver la meilleure correspondance.`
+  return "Aucune combinatoire n'a correspondu aux paramètres exacts. Les outils sont classés par score agrégé dans la matrice de pertinence pour la zone sélectionnée."
+})
+
+const resultSources = computed(() =>
+  (result.value?.tools || [])
+    .filter(t => t.sources)
+    .map(t => ({ id: t.id, name: t.name, sources: t.sources }))
+)
+
+function toolFamilyShort(tool) {
+  const labels = { FM1: 'Traditionnel', FM2: 'Outillé', FM3: 'Tuteur IA', FM4: 'IA généraliste' }
+  return labels[tool.family] || tool.family_label
+}
+
+function toolFamilyClass(tool) {
+  return {
+    'ui-badge--family-m': tool.family === 'FM1',
+    'ui-badge--family-t': tool.family === 'FM2',
+    'ui-badge--family-i': tool.family === 'FM3',
+    'ui-badge--family-a': tool.family === 'FM4'
+  }
+}
 
 function chooseZone(family)   { selectedZone.value = family; step.value = 'concept' }
 function chooseConcept(c)     { selectedConcept.value = c; step.value = 'context' }
@@ -463,16 +537,38 @@ function restart() {
 
 .zp-text { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
 
-/* Resultat */
-.result-header { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
-.result-title  { font-size: var(--text-xl); font-weight: 800; color: var(--color-text); }
-
-.result-tools {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--space-4);
+/* Niveau 1 — approche conseillée */
+.result-approach {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
+.approach-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.result-tool-pills {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* Invitation zone entière */
 .zone-invite {
   font-size: var(--text-base);
   color: var(--color-text-faint);
@@ -482,29 +578,75 @@ function restart() {
   border-radius: var(--radius-lg);
 }
 
-.detail-content {
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  border-left: 3px solid var(--color-accent);
-  padding-left: var(--space-4);
-  line-height: 1.65;
-}
-
+/* Niveau 2 — patron + outils */
 .patron-match-banner {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  padding: 0.35rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
   margin-bottom: var(--space-3);
   border-radius: var(--radius-sm);
 }
 .patron-match-banner--exact    { background: var(--color-success-bg); color: var(--color-success-text); }
 .patron-match-banner--fallback { background: var(--color-warning-bg); color: var(--color-warning-text); }
 
-.patron-ctx-tag { margin-left: auto; }
-
 .result-patron { margin-top: var(--space-3); }
 .result-patron + .result-patron { margin-top: var(--space-2); }
 
+.details-sep {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-4) 0;
+}
+
+.result-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Niveau 3 — justification + sources */
+.deep-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.deep-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.deep-label {
+  font-size: var(--text-2xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+}
+
+.deep-text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+.deep-sources-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.deep-source-item { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
+.deep-source-name { font-weight: 600; color: var(--color-text); }
+.deep-source-ref  { color: var(--color-text-faint); }
+
+/* Actions */
 .result-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 
 /* Responsive */
@@ -513,5 +655,6 @@ function restart() {
   .context-grid { grid-template-columns: 1fr; }
   .bloom-grid   { grid-template-columns: 1fr; }
   .bloom-btn--skip { grid-column: auto; }
+  .result-tools { grid-template-columns: 1fr; }
 }
 </style>
