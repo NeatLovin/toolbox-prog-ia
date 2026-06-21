@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="catalogue">
     <div class="ui-page-header">
       <h1>Catalogue des outils</h1>
@@ -63,7 +63,7 @@
           <label>Fil rouge <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></label>
           <select v-model="selectedFil" class="ui-filter-select">
             <option value="">Tous</option>
-            <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.id }} — {{ f.label }}</option>
+            <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.id }} : {{ f.label }}</option>
           </select>
         </div>
       </div>
@@ -235,7 +235,7 @@ function resetFilters() {
   selectedCost.value = ''; selectedRobustness.value = ''; selectedFil.value = ''
 }
 
-/* Helpers display — même logique que ToolCard/ToolDetailModal */
+/* Helpers display - même logique que ToolCard/ToolDetailModal */
 function familyShort(tool) {
   const labels = { FM1: 'Traditionnel', FM2: 'Outillé', FM3: 'Tuteur IA', FM4: 'IA généraliste' }
   return labels[tool.family] || tool.family_label
@@ -343,9 +343,10 @@ function linkDomain(tool) {
 
 .ts-id {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-placeholder);
-  font-family: monospace;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
 }
 
 .ts-name {

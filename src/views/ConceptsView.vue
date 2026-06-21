@@ -390,9 +390,10 @@ function bloomClass(b) {
 
 .cs-id {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-placeholder);
-  font-family: monospace;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
 }
 
 .cs-name {
@@ -423,7 +424,7 @@ function bloomClass(b) {
 
 .cs-badge-row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
-.cs-tool-id { font-family: monospace; }
+.cs-tool-id { font-family: var(--font-mono); letter-spacing: 0.03em; }
 
 .cs-patrons { display: flex; flex-direction: column; gap: var(--space-3); }
 
@@ -473,12 +474,12 @@ function bloomClass(b) {
   border: 1px solid transparent;
 }
 
-.bloom-entry--remember  { background: var(--bloom-remember-bg);  border-color: rgba(0,0,0,0.08); }
-.bloom-entry--understand { background: var(--bloom-understand-bg); border-color: rgba(0,0,0,0.08); }
-.bloom-entry--apply     { background: var(--bloom-apply-bg);      border-color: rgba(0,0,0,0.08); }
-.bloom-entry--analyze   { background: var(--bloom-analyze-bg);    border-color: rgba(0,0,0,0.08); }
-.bloom-entry--evaluate  { background: var(--bloom-evaluate-bg);   border-color: rgba(0,0,0,0.08); }
-.bloom-entry--create    { background: var(--bloom-create-bg);     border-color: rgba(0,0,0,0.08); }
+.bloom-entry--remember  { background: var(--bloom-remember-bg);  border-color: var(--color-border); }
+.bloom-entry--understand { background: var(--bloom-understand-bg); border-color: var(--color-border); }
+.bloom-entry--apply     { background: var(--bloom-apply-bg);      border-color: var(--color-border); }
+.bloom-entry--analyze   { background: var(--bloom-analyze-bg);    border-color: var(--color-border); }
+.bloom-entry--evaluate  { background: var(--bloom-evaluate-bg);   border-color: var(--color-border); }
+.bloom-entry--create    { background: var(--bloom-create-bg);     border-color: var(--color-border); }
 
 .bloom-entry strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.2rem; }
 .bloom-entry p      { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5; }

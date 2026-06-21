@@ -119,19 +119,20 @@ const efficaciteClass = computed(() => ({
 .tool-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow var(--dur-2) var(--ease), border-color var(--dur-1) var(--ease);
+  box-shadow: var(--shadow-sm);
 }
 
 .tool-card--clickable { cursor: pointer; }
 
 .tool-card--clickable:hover {
   box-shadow: var(--shadow-md);
-  border-color: var(--color-accent);
+  border-color: var(--color-border-strong);
 }
 
 .card-header {
@@ -143,9 +144,10 @@ const efficaciteClass = computed(() => ({
 
 .tool-id {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-placeholder);
-  font-family: monospace;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
 }
 
 .tool-name {

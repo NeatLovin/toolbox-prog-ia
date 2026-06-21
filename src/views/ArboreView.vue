@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="arbre">
     <header class="home-header">
       <h1>Obtenir une recommandation</h1>
@@ -7,7 +7,7 @@
         à l'ère de l'intelligence artificielle générative.
       </p>
       <p class="trust-line">
-        Recommandations déterministes et traçables — aucun texte généré par l'IA.
+        Recommandations déterministes et traçables, aucun texte généré par l'IA.
       </p>
     </header>
 
@@ -124,7 +124,7 @@
 
           <!-- Principe IA de la zone -->
           <div class="zone-principle" :class="`zone-principle--${zoneKey}`">
-            <span class="zp-label">Principe IA — {{ selectedZone }}</span>
+            <span class="zp-label">Principe IA : {{ selectedZone }}</span>
             <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
           </div>
 
@@ -164,7 +164,7 @@
               >{{ patronForResult.hasExact ? `Pour "${selectedContext}"` : 'Variantes disponibles' }}</span>
               {{ patronForResult.hasExact
                 ? `Patron pour le contexte "${selectedContext}"`
-                : `Pas de patron pour "${selectedContext}" — variantes disponibles` }}
+                : `Pas de patron pour "${selectedContext}", variantes disponibles` }}
             </div>
             <PatronBlock
               v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
@@ -201,7 +201,7 @@
               <ul v-if="resultSources.length" class="deep-sources-list">
                 <li v-for="s in resultSources" :key="s.id" class="deep-source-item">
                   <span class="deep-source-name">{{ s.name }}</span>
-                  <span class="deep-source-ref"> — {{ s.sources }}</span>
+                  <span class="deep-source-ref"> · {{ s.sources }}</span>
                 </li>
               </ul>
               <p v-else class="deep-text">
@@ -506,7 +506,7 @@ function restart() {
 .concept-btn--all:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
 
 .cb-header { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-.cb-id { font-size: var(--text-2xs); font-weight: 700; font-family: monospace; color: var(--color-text-placeholder); flex-shrink: 0; }
+.cb-id { font-size: var(--text-2xs); font-weight: 600; font-family: var(--font-mono); color: var(--color-text-placeholder); flex-shrink: 0; letter-spacing: 0.03em; }
 .cb-name { font-size: var(--text-base); font-weight: 700; color: var(--color-text); }
 .cb-desc { font-size: 0.78rem; color: var(--color-text-faint); line-height: 1.4; }
 
@@ -581,7 +581,7 @@ function restart() {
 
 .zp-text { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
 
-/* Niveau 1 — approche conseillée */
+/* Niveau 1 - approche conseillée */
 .result-approach {
   display: flex;
   flex-direction: column;
@@ -622,7 +622,7 @@ function restart() {
   border-radius: var(--radius-lg);
 }
 
-/* Niveau 2 — patron + outils */
+/* Niveau 2 - patron + outils */
 .patron-match-banner {
   display: flex;
   align-items: center;
@@ -652,7 +652,7 @@ function restart() {
   gap: var(--space-4);
 }
 
-/* Niveau 3 — justification + sources */
+/* Niveau 3 - justification + sources */
 .deep-section {
   display: flex;
   flex-direction: column;

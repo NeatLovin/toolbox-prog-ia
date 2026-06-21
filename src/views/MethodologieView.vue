@@ -172,7 +172,7 @@ const comboCount   = combos.length
   font-size: var(--text-base);
   font-weight: 700;
   color: var(--color-text);
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 .data-card p { font-size: var(--text-sm); color: var(--color-text-muted); }

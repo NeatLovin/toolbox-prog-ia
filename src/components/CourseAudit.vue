@@ -330,7 +330,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .qi-id {
   font-size: var(--text-xs);
   font-weight: 700;
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--color-text-muted);
 }
 
@@ -351,7 +351,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-weight: 700;
   padding: 0.1rem 0.35rem;
   border-radius: var(--radius-sm);
-  font-family: monospace;
+  font-family: var(--font-mono);
   background: var(--color-border);
   color: var(--color-text-muted);
 }
@@ -452,7 +452,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .rtc-id {
   font-size: var(--text-2xs);
   font-weight: 700;
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--color-text-placeholder);
 }
 
@@ -592,7 +592,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .gr-lever-id {
   font-size: var(--text-xs);
   font-weight: 700;
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--color-text-muted);
 }
 

@@ -212,9 +212,10 @@ const efficaciteClass = computed(() => ({
 
 .tool-id {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-placeholder);
-  font-family: monospace;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
 }
 
 .modal-title {

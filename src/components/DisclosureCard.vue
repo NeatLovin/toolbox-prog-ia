@@ -1,13 +1,13 @@
-<template>
+﻿<template>
   <div class="dc-root ui-card">
     <div v-if="title" class="dc-title" role="heading" aria-level="2">{{ title }}</div>
 
-    <!-- Niveau 1 — toujours visible -->
+    <!-- Niveau 1 - toujours visible -->
     <div class="dc-summary">
       <slot name="summary" />
     </div>
 
-    <!-- Niveau 2 — tiroir Détails -->
+    <!-- Niveau 2 - tiroir Détails -->
     <details v-if="hasDetails" class="ui-collapsible">
       <summary>{{ detailsLabel }}</summary>
       <div class="ui-collapsible-body">
@@ -15,7 +15,7 @@
       </div>
     </details>
 
-    <!-- Niveau 3 — tiroir Creuser -->
+    <!-- Niveau 3 - tiroir Creuser -->
     <details v-if="hasDeep" class="ui-collapsible">
       <summary>{{ deepLabel }}</summary>
       <div class="ui-collapsible-body">
@@ -43,14 +43,13 @@ const hasDeep    = computed(() => !!slots.deep)
 .dc-root {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .dc-title {
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--color-text);
 }
-
-/* Le summary hérite du gap de la card : aucun style propre requis */
 </style>

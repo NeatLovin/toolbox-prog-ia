@@ -95,11 +95,11 @@ function contexteClass(ctx) {
 .patron-block {
   background: var(--patron-bg);
   border: 1px solid var(--patron-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) 1.1rem;
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-5);
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.75rem;
 }
 
 .patron-header {
@@ -112,8 +112,9 @@ function contexteClass(ctx) {
 .patron-id {
   margin-left: auto;
   font-size: var(--text-2xs);
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--color-text-placeholder);
+  letter-spacing: 0.03em;
 }
 
 .patron-titre {
@@ -176,7 +177,7 @@ function contexteClass(ctx) {
 }
 .patron-tool-btn:hover { background: var(--color-accent-hover); }
 
-.ptb-id { font-family: monospace; font-weight: 700; }
+.ptb-id { font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.03em; }
 .ptb-name { font-weight: 400; color: var(--color-text-placeholder); }
 
 .patron-refs {

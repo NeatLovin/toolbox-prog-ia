@@ -159,7 +159,7 @@ function loadFixture() {
 .error-msg {
   font-size: var(--text-sm);
   color: var(--color-danger-text);
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 .error-hints {

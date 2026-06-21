@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+﻿import { ref } from 'vue'
 import conceptsData from '../data/concepts.json'
 import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER } from '../lib/recommendation.js'
 
@@ -8,7 +8,7 @@ const CONCEPT_LIST = conceptsData.map(c => `${c.id} : ${c.name}`).join('\n')
 // Set to true locally to log detected section titles (never commit as true)
 const DEBUG_SEGMENTATION = false
 
-// Programming keyword pattern — used for excerpt scoring and section ranking
+// Programming keyword pattern - used for excerpt scoring and section ranking
 const PROG_KW_SRC = '\\b(boucle|condition|variable|fonction|r[eé]cursion|tableau|objet|classe|h[eé]ritage|pointeur|complexit[eé]|exception|param[eè]tre|type|scope|d[eé]claration|algorithme|it[eé]ration|d[eé]bogage|test|assertion|module|interface|polymorphisme|encapsulation|abstraction|structure|arbre|graphe|pile|file|liste|loop|function|array|object|class|inheritance|pointer|complexity|parameter|algorithm|debug)\\b'
 
 function countProgKeywords(text) {
@@ -97,7 +97,7 @@ async function classifySection(section) {
 }
 
 function segmentSections(pages) {
-  // ─── Thresholds — edit here to tune ──────────────────────────────────────
+  // ─── Thresholds - edit here to tune ──────────────────────────────────────
   const LINE_Y_TOL_FACTOR  = 0.50  // fraction of page median height for same-line grouping
   const WORD_GAP_FACTOR    = 0.30  // fraction of line height to insert a space between runs
   const HEADER_BAND        = 0.12  // top/bottom band as fraction of page height (HF detection)
@@ -108,7 +108,7 @@ function segmentSections(pages) {
   const GAP_RATIO          = 1.80  // gap/medianSpacing ≥ this → large-gap signal
   const TITLE_THRESHOLD    = 2.50  // minimum score to classify a line as a title
   const MIN_SECTION_BODY   = 200   // merge sections with body shorter than this (chars)
-  const MAX_SECTIONS       = 50    // hard safety cap (pathological detection only — normal docs stay well below)
+  const MAX_SECTIONS       = 50    // hard safety cap (pathological detection only - normal docs stay well below)
   const EXCERPT_MAX        = 1200  // max length of text_excerpt
   const EXCERPT_KW_SAMPLE  = 400   // keyword-dense chunk appended to excerpt
   // ─────────────────────────────────────────────────────────────────────────
@@ -253,7 +253,7 @@ function segmentSections(pages) {
     return [{ index: 0, title: 'Document complet', text_excerpt: buildExcerpt(fallback, EXCERPT_MAX, EXCERPT_KW_SAMPLE), page_start: 1 }]
   }
 
-  // ── Title scoring — multi-signal weighted sum ───────────────────────────
+  // ── Title scoring - multi-signal weighted sum ───────────────────────────
   const allH  = lines.map(l => l.height).filter(h => h > 0).sort((a, b) => a - b)
   const medH  = allH[Math.floor(allH.length / 2)] || 12
   const gaps  = lines.map(l => l.gapBefore).filter(g => g > 0).sort((a, b) => a - b)
@@ -332,7 +332,7 @@ function segmentSections(pages) {
     }
   }
 
-  // ── Safety cap — only triggers on pathological documents (heuristic runaway) ─
+  // ── Safety cap - only triggers on pathological documents (heuristic runaway) ─
   // Normal documents: the section count reflects the actual structure.
   // If the detector fires on nearly every line (e.g. a scanned slide deck with
   // identical font sizes and no body text), trim to the MAX_SECTIONS most

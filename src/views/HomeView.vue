@@ -11,7 +11,7 @@
     </div>
 
     <p class="trust-line">
-      Recommandations déterministes et traçables, aucun texte généré par l'IA.
+      Recommandations déterministes et traçables.
     </p>
 
     <div class="hub-grid">

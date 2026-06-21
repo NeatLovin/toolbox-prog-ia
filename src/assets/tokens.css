@@ -1,122 +1,144 @@
-/* =============================================
-   DESIGN TOKENS — Toolbox Prog IA
+﻿/* =============================================
+   DESIGN TOKENS - Toolbox Prog IA
    Importé une seule fois dans main.js
    ============================================= */
 :root {
 
+  /* --- Fontes --- */
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
   /* --- Neutrals --- */
-  --color-bg:               #f8fafc;
-  --color-surface:          #ffffff;
-  --color-border:           #e2e8f0;
-  --color-border-strong:    #cbd5e1;
-  --color-text:             #1e293b;
-  --color-text-muted:       #475569;
-  --color-text-faint:       #64748b;
-  --color-text-placeholder: #94a3b8;
+  --color-bg:               #FAFAFB;
+  --color-surface:          #FFFFFF;
+  --color-surface-2:        #F4F5F7;
+  --color-border:           #ECECF0;
+  --color-border-strong:    #DADCE3;
+  --color-text:             #15171C;
+  --color-text-muted:       #565B66;
+  --color-text-faint:       #868C97;
+  --color-text-placeholder: #A8AEB8;
 
-  /* --- Accent (actions, boutons, focus, liens) ---
-     Distincte des trois teintes de zone (bleu/vert/violet).
-     Neutre encré : ne concurrence aucune zone. */
-  --color-accent:        #334155;
-  --color-accent-hover:  #1e293b;
-  --color-accent-subtle: #f1f5f9;
-  --color-accent-ring:   #475569;
+  /* --- Accent (encre quasi monochrome - jamais confondu avec les zones)
+     Neutre presque-noir en clair, presque-blanc en sombre via dark mode. --- */
+  --color-accent:        #15171C;
+  --color-accent-hover:  #000000;
+  --color-accent-subtle: #F2F3F5;
+  --color-accent-ring:   rgba(21, 23, 28, .18);
 
-  /* --- Couleurs de zone (identité poster) ---
-     Bleu = Syntaxe / Vert = Logique / Violet = Architecture */
-  --zone-syntaxe-bg:          #eff6ff;
-  --zone-syntaxe-border:      #93c5fd;
-  --zone-syntaxe-text:        #1d4ed8;
-  --zone-syntaxe-tag:         #dbeafe;
+  /* --- Couleurs de zone (base - dérivées avec color-mix ci-dessous)
+     Bleu = Syntaxe / Sarcelle = Logique / Violet = Architecture.
+     L'audace chromatique est ici ; tout le reste reste neutre. --- */
+  --zone-syntaxe:      #2563EB;
+  --zone-logique:      #0D9488;
+  --zone-architecture: #7C3AED;
 
-  --zone-logique-bg:          #f0fdf4;
-  --zone-logique-border:      #86efac;
-  --zone-logique-text:        #15803d;
-  --zone-logique-tag:         #dcfce7;
+  /* --- Zone derived - color-mix s'adapte seul au mode sombre
+     car var(--color-surface) est surchargé dans le @media dark. --- */
+  --zone-syntaxe-bg:          color-mix(in srgb, var(--zone-syntaxe)      9%,  var(--color-surface));
+  --zone-syntaxe-border:      color-mix(in srgb, var(--zone-syntaxe)      28%, var(--color-surface));
+  --zone-syntaxe-text:        var(--zone-syntaxe);
+  --zone-syntaxe-tag:         color-mix(in srgb, var(--zone-syntaxe)      13%, var(--color-surface));
 
-  --zone-architecture-bg:     #f5f3ff;
-  --zone-architecture-border: #c4b5fd;
-  --zone-architecture-text:   #6d28d9;
-  --zone-architecture-tag:    #ede9fe;
+  --zone-logique-bg:          color-mix(in srgb, var(--zone-logique)      9%,  var(--color-surface));
+  --zone-logique-border:      color-mix(in srgb, var(--zone-logique)      28%, var(--color-surface));
+  --zone-logique-text:        var(--zone-logique);
+  --zone-logique-tag:         color-mix(in srgb, var(--zone-logique)      13%, var(--color-surface));
 
-  /* --- Sémantique --- */
-  --color-success-bg:     #f0fdf4;
-  --color-success-border: #bbf7d0;
+  --zone-architecture-bg:     color-mix(in srgb, var(--zone-architecture) 9%,  var(--color-surface));
+  --zone-architecture-border: color-mix(in srgb, var(--zone-architecture) 28%, var(--color-surface));
+  --zone-architecture-text:   var(--zone-architecture);
+  --zone-architecture-tag:    color-mix(in srgb, var(--zone-architecture) 13%, var(--color-surface));
+
+  /* --- Sémantique (bg/border auto-adaptés via color-mix) --- */
+  --color-success-bg:     color-mix(in srgb, #16A34A 8%,  var(--color-surface));
+  --color-success-border: color-mix(in srgb, #16A34A 22%, var(--color-surface));
   --color-success-text:   #15803d;
-  --color-warning-bg:     #fff7ed;
-  --color-warning-border: #fed7aa;
-  --color-warning-text:   #9a3412;
-  --color-danger-bg:      #fef2f2;
-  --color-danger-border:  #fecaca;
+  --color-warning-bg:     color-mix(in srgb, #D97706 8%,  var(--color-surface));
+  --color-warning-border: color-mix(in srgb, #D97706 22%, var(--color-surface));
+  --color-warning-text:   #92400e;
+  --color-danger-bg:      color-mix(in srgb, #DC2626 8%,  var(--color-surface));
+  --color-danger-border:  color-mix(in srgb, #DC2626 22%, var(--color-surface));
   --color-danger-text:    #991b1b;
-  --color-info-bg:        #ecfeff;
-  --color-info-border:    #a5f3fc;
+  --color-info-bg:        color-mix(in srgb, #0E7490 8%,  var(--color-surface));
+  --color-info-border:    color-mix(in srgb, #0E7490 22%, var(--color-surface));
   --color-info-text:      #0e7490;
 
-  /* --- Famille d'outils --- */
-  --family-m-bg:   #dbeafe; --family-m-text:   #1e40af;
-  --family-t-bg:   #d1fae5; --family-t-text:   #065f46;
-  --family-i-bg:   #fef3c7; --family-i-text:   #92400e;
-  --family-a-bg:   #fce7f3; --family-a-text:   #9d174d;
+  /* --- Palette neutre partagée pour les badges de métadonnées
+     (famille, fonction, coût, séquencement, robustesse, bloom, fils, contexte, phase).
+     La couleur est RÉSERVÉE aux zones, à l'efficacité et au risque. --- */
+  --badge-meta-bg:     var(--color-surface-2);
+  --badge-meta-text:   var(--color-text-muted);
+  --badge-meta-border: var(--color-border);
 
-  /* --- Fonction pédagogique --- */
-  --fn-f-bg:  #ecfdf5; --fn-f-border:  #bbf7d0; --fn-f-text:  #166534;
-  --fn-s-bg:  #fef2f2; --fn-s-border:  #fecaca; --fn-s-text:  #991b1b;
-  --fn-fs-bg: #f0fdf4; --fn-fs-border: #86efac; --fn-fs-text: #14532d;
+  /* --- Famille d'outils (neutre) --- */
+  --family-m-bg:   var(--badge-meta-bg); --family-m-text:   var(--badge-meta-text);
+  --family-t-bg:   var(--badge-meta-bg); --family-t-text:   var(--badge-meta-text);
+  --family-i-bg:   var(--badge-meta-bg); --family-i-text:   var(--badge-meta-text);
+  --family-a-bg:   var(--badge-meta-bg); --family-a-text:   var(--badge-meta-text);
 
-  /* --- Robustesse IA --- */
-  --rob-low-bg:  #fef2f2; --rob-low-border:  #fecaca; --rob-low-text:  #991b1b;
-  --rob-mid-bg:  #fff7ed; --rob-mid-border:  #fed7aa; --rob-mid-text:  #9a3412;
-  --rob-high-bg: #f0fdf4; --rob-high-border: #bbf7d0; --rob-high-text: #166534;
-  --rob-max-bg:  #dcfce7; --rob-max-border:  #86efac; --rob-max-text:  #14532d;
+  /* --- Fonction pédagogique (neutre) --- */
+  --fn-f-bg:  var(--badge-meta-bg); --fn-f-border:  var(--badge-meta-border); --fn-f-text:  var(--badge-meta-text);
+  --fn-s-bg:  var(--badge-meta-bg); --fn-s-border:  var(--badge-meta-border); --fn-s-text:  var(--badge-meta-text);
+  --fn-fs-bg: var(--badge-meta-bg); --fn-fs-border: var(--badge-meta-border); --fn-fs-text: var(--badge-meta-text);
 
-  /* --- Risque IA --- */
-  --risk-max-bg:  #fee2e2; --risk-max-border:  #fca5a5; --risk-max-text:  #b91c1c;
-  --risk-high-bg: #ffedd5; --risk-high-border: #fdba74; --risk-high-text: #c2410c;
-  --risk-mod-bg:  #dcfce7; --risk-mod-border:  #86efac; --risk-mod-text:  #15803d;
+  /* --- Robustesse IA (neutre - métadonnée) --- */
+  --rob-low-bg:  var(--badge-meta-bg); --rob-low-border:  var(--badge-meta-border); --rob-low-text:  var(--badge-meta-text);
+  --rob-mid-bg:  var(--badge-meta-bg); --rob-mid-border:  var(--badge-meta-border); --rob-mid-text:  var(--badge-meta-text);
+  --rob-high-bg: var(--badge-meta-bg); --rob-high-border: var(--badge-meta-border); --rob-high-text: var(--badge-meta-text);
+  --rob-max-bg:  var(--badge-meta-bg); --rob-max-border:  var(--badge-meta-border); --rob-max-text:  var(--badge-meta-text);
 
-  /* --- Bloom --- */
-  --bloom-remember-bg:   #dbeafe; --bloom-remember-text:   #1e40af;
-  --bloom-understand-bg: #ede9fe; --bloom-understand-text: #5b21b6;
-  --bloom-apply-bg:      #d1fae5; --bloom-apply-text:      #065f46;
-  --bloom-analyze-bg:    #fef3c7; --bloom-analyze-text:    #92400e;
-  --bloom-evaluate-bg:   #ffedd5; --bloom-evaluate-text:   #9a3412;
-  --bloom-create-bg:     #fce7f3; --bloom-create-text:     #9d174d;
+  /* --- Risque IA (coloré - sémantique) --- */
+  --risk-max-bg:  color-mix(in srgb, #DC2626 10%, var(--color-surface)); --risk-max-border:  color-mix(in srgb, #DC2626 26%, var(--color-surface)); --risk-max-text:  #b91c1c;
+  --risk-high-bg: color-mix(in srgb, #D97706 10%, var(--color-surface)); --risk-high-border: color-mix(in srgb, #D97706 26%, var(--color-surface)); --risk-high-text: #c2410c;
+  --risk-mod-bg:  color-mix(in srgb, #16A34A 10%, var(--color-surface)); --risk-mod-border:  color-mix(in srgb, #16A34A 26%, var(--color-surface)); --risk-mod-text:  #15803d;
 
-  /* --- Fils rouges --- */
-  --fil-a-bg: #dcfce7; --fil-a-text: #15803d;
-  --fil-b-bg: #fee2e2; --fil-b-text: #b91c1c;
-  --fil-c-bg: #ede9fe; --fil-c-text: #6d28d9;
-  --fil-d-bg: #ffedd5; --fil-d-text: #c2410c;
+  /* --- Bloom (neutre) --- */
+  --bloom-remember-bg:   var(--badge-meta-bg); --bloom-remember-text:   var(--badge-meta-text);
+  --bloom-understand-bg: var(--badge-meta-bg); --bloom-understand-text: var(--badge-meta-text);
+  --bloom-apply-bg:      var(--badge-meta-bg); --bloom-apply-text:      var(--badge-meta-text);
+  --bloom-analyze-bg:    var(--badge-meta-bg); --bloom-analyze-text:    var(--badge-meta-text);
+  --bloom-evaluate-bg:   var(--badge-meta-bg); --bloom-evaluate-text:   var(--badge-meta-text);
+  --bloom-create-bg:     var(--badge-meta-bg); --bloom-create-text:     var(--badge-meta-text);
 
-  /* --- Contexte pédagogique --- */
-  --ctx-presentiel-bg:  #dbeafe; --ctx-presentiel-text:  #1e40af;
-  --ctx-autonomie-bg:   #d1fae5; --ctx-autonomie-text:   #065f46;
-  --ctx-projet-bg:      #ede9fe; --ctx-projet-text:      #5b21b6;
-  --ctx-diagnostic-bg:  #ffedd5; --ctx-diagnostic-text:  #9a3412;
+  /* --- Fils rouges (neutre) --- */
+  --fil-a-bg: var(--badge-meta-bg); --fil-a-text: var(--badge-meta-text);
+  --fil-b-bg: var(--badge-meta-bg); --fil-b-text: var(--badge-meta-text);
+  --fil-c-bg: var(--badge-meta-bg); --fil-c-text: var(--badge-meta-text);
+  --fil-d-bg: var(--badge-meta-bg); --fil-d-text: var(--badge-meta-text);
 
-  /* --- Phase pédagogique --- */
-  --phase-apprendre-bg:  #dbeafe; --phase-apprendre-text: #1e40af;
-  --phase-exercer-bg:    #d1fae5; --phase-exercer-text:   #065f46;
-  --phase-evaluer-bg:    #fce7f3; --phase-evaluer-text:   #9d174d;
+  /* --- Contexte pédagogique (neutre) --- */
+  --ctx-presentiel-bg: var(--badge-meta-bg); --ctx-presentiel-text: var(--badge-meta-text);
+  --ctx-autonomie-bg:  var(--badge-meta-bg); --ctx-autonomie-text:  var(--badge-meta-text);
+  --ctx-projet-bg:     var(--badge-meta-bg); --ctx-projet-text:     var(--badge-meta-text);
+  --ctx-diagnostic-bg: var(--badge-meta-bg); --ctx-diagnostic-text: var(--badge-meta-text);
 
-  /* --- Source de recommandation --- */
-  --source-exact-bg:    #dcfce7; --source-exact-text:    #14532d;
-  --source-approche-bg: #fef9c3; --source-approche-text: #854d0e;
-  --source-matrix-bg:   #fef3c7; --source-matrix-text:   #78350f;
+  /* --- Phase pédagogique (neutre) --- */
+  --phase-apprendre-bg: var(--badge-meta-bg); --phase-apprendre-text: var(--badge-meta-text);
+  --phase-exercer-bg:   var(--badge-meta-bg); --phase-exercer-text:   var(--badge-meta-text);
+  --phase-evaluer-bg:   var(--badge-meta-bg); --phase-evaluer-text:   var(--badge-meta-text);
 
-  /* --- Patron pédagogique --- */
-  --patron-bg:      #fffbeb;
-  --patron-border:  #fde68a;
-  --patron-text:    #92400e;
-  --patron-title:   #78350f;
-  --patron-tag-bg:  #fef3c7;
+  /* --- Source de recommandation (signal sémantique conservé, sobre) --- */
+  --source-exact-bg:    color-mix(in srgb, #16A34A 9%,  var(--color-surface)); --source-exact-text:    #15803d;
+  --source-approche-bg: color-mix(in srgb, #D97706 8%,  var(--color-surface)); --source-approche-text: #92400e;
+  --source-matrix-bg:   var(--badge-meta-bg);                                  --source-matrix-text:   var(--badge-meta-text);
+
+  /* --- Patron pédagogique (ambre chaud, auto-adapté) --- */
+  --patron-bg:        color-mix(in srgb, #D97706 6%,  var(--color-surface));
+  --patron-border:    color-mix(in srgb, #D97706 20%, var(--color-surface));
+  --patron-text:      #92400e;
+  --patron-title:     #78350f;
+  --patron-tag-bg:    color-mix(in srgb, #D97706 10%, var(--color-surface));
   --patron-risk-text: #b91c1c;
 
-  /* --- Scores matrice --- */
-  --score-ideal-bg:  #1e293b; --score-ideal-text: #f8fafc;
-  --score-utile-bg:  #e2e8f0; --score-utile-text: #475569;
-  --score-ctx-bg:    #f1f5f9; --score-ctx-text:   #94a3b8;
+  /* --- Scores matrice - inversés automatiquement en mode sombre
+     via les tokens color-text/surface qui s'inversent. --- */
+  --score-ideal-bg:  var(--color-text);
+  --score-ideal-text: var(--color-surface);
+  --score-utile-bg:  var(--color-surface-2);
+  --score-utile-text: var(--color-text-muted);
+  --score-ctx-bg:    var(--color-surface);
+  --score-ctx-text:  var(--color-text-faint);
 
   /* --- Espacement --- */
   --space-1:  0.25rem;
@@ -142,15 +164,162 @@
   --text-4xl: 2.25rem;
 
   /* --- Rayons --- */
-  --radius-sm:  4px;
-  --radius-md:  6px;
-  --radius-lg:  8px;
-  --radius-xl:  10px;
-  --radius-2xl: 12px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   16px;   /* alias compat */
+  --radius-2xl:  20px;   /* modals, cartes de zone */
+  --radius-pill: 999px;
 
-  /* --- Elevation --- */
-  --shadow-sm:    0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md:    0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg:    0 4px 16px rgba(0,0,0,0.12);
-  --shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
+  /* --- Ombres (douces, en couches) --- */
+  --shadow-sm:    0 1px 2px rgba(16, 18, 22, .05);
+  --shadow-md:    0 2px 4px rgba(16, 18, 22, .04), 0 10px 28px rgba(16, 18, 22, .07);
+  --shadow-lg:    0 8px 40px rgba(16, 18, 22, .10);
+  --shadow-modal: 0 4px 6px rgba(16, 18, 22, .04), 0 24px 64px rgba(16, 18, 22, .15);
+
+  /* --- Mouvement --- */
+  --ease:  cubic-bezier(.2, .7, .2, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+}
+
+/* =============================================
+   MODE SOMBRE - surcharge des tokens neutres.
+   Les valeurs dérivées via color-mix s'adaptent
+   automatiquement sans aucune règle ici.
+   ============================================= */
+
+/* Sélecteur d'attribut : priorité sur le @media (spécificité 0,1,0 vs 0,0,1).
+   Permet la bascule manuelle indépendamment de la préférence système. */
+:root[data-theme="dark"] {
+  /* Neutrals */
+  --color-bg:               #0B0C0F;
+  --color-surface:          #15171C;
+  --color-surface-2:        #1B1E24;
+  --color-border:           #262A31;
+  --color-border-strong:    #333842;
+  --color-text:             #E9EAEE;
+  --color-text-muted:       #A9AEB8;
+  --color-text-faint:       #7C828E;
+  --color-text-placeholder: #4E5460;
+  /* Accent inverse */
+  --color-accent:        #E9EAEE;
+  --color-accent-hover:  #FFFFFF;
+  --color-accent-subtle: #1B1E24;
+  --color-accent-ring:   rgba(233, 234, 238, .22);
+  /* Zones éclaircies */
+  --zone-syntaxe:      #60A5FA;
+  --zone-logique:      #2DD4BF;
+  --zone-architecture: #A78BFA;
+  /* Textes sémantiques éclaircis */
+  --color-success-text: #4ADE80;
+  --color-warning-text: #FCD34D;
+  --color-danger-text:  #F87171;
+  --color-info-text:    #22D3EE;
+  /* Risque IA */
+  --risk-max-text:  #F87171;
+  --risk-high-text: #FB923C;
+  --risk-mod-text:  #4ADE80;
+  /* Source */
+  --source-exact-text:    #4ADE80;
+  --source-approche-text: #FCD34D;
+  /* Patron */
+  --patron-text:      #FCD34D;
+  --patron-title:     #F59E0B;
+  --patron-risk-text: #F87171;
+  /* Ombres */
+  --shadow-sm:    0 0 0 1px var(--color-border);
+  --shadow-md:    0 0 0 1px var(--color-border), 0 8px 24px rgba(0, 0, 0, .45);
+  --shadow-lg:    0 0 0 1px var(--color-border-strong), 0 16px 48px rgba(0, 0, 0, .55);
+  --shadow-modal: 0 0 0 1px var(--color-border-strong), 0 24px 64px rgba(0, 0, 0, .70);
+}
+
+/* Force le mode clair même si l'OS est en sombre */
+:root[data-theme="light"] {
+  --color-bg:               #FAFAFB;
+  --color-surface:          #FFFFFF;
+  --color-surface-2:        #F4F5F7;
+  --color-border:           #ECECF0;
+  --color-border-strong:    #DADCE3;
+  --color-text:             #15171C;
+  --color-text-muted:       #565B66;
+  --color-text-faint:       #868C97;
+  --color-text-placeholder: #A8AEB8;
+  --color-accent:           #15171C;
+  --color-accent-hover:     #000000;
+  --color-accent-subtle:    #F2F3F5;
+  --color-accent-ring:      rgba(21, 23, 28, .18);
+  --zone-syntaxe:           #2563EB;
+  --zone-logique:           #0D9488;
+  --zone-architecture:      #7C3AED;
+  --color-success-text:     #15803d;
+  --color-warning-text:     #92400e;
+  --color-danger-text:      #991b1b;
+  --color-info-text:        #0e7490;
+  --risk-max-text:          #b91c1c;
+  --risk-high-text:         #c2410c;
+  --risk-mod-text:          #15803d;
+  --source-exact-text:      #15803d;
+  --source-approche-text:   #92400e;
+  --patron-text:            #92400e;
+  --patron-title:           #78350f;
+  --patron-risk-text:       #b91c1c;
+  --shadow-sm:              0 1px 2px rgba(16, 18, 22, .05);
+  --shadow-md:              0 2px 4px rgba(16, 18, 22, .04), 0 10px 28px rgba(16, 18, 22, .07);
+  --shadow-lg:              0 8px 40px rgba(16, 18, 22, .10);
+  --shadow-modal:           0 4px 6px rgba(16, 18, 22, .04), 0 24px 64px rgba(16, 18, 22, .15);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutrals */
+    --color-bg:               #0B0C0F;
+    --color-surface:          #15171C;
+    --color-surface-2:        #1B1E24;
+    --color-border:           #262A31;
+    --color-border-strong:    #333842;
+    --color-text:             #E9EAEE;
+    --color-text-muted:       #A9AEB8;
+    --color-text-faint:       #7C828E;
+    --color-text-placeholder: #4E5460;
+
+    /* Accent inverse */
+    --color-accent:        #E9EAEE;
+    --color-accent-hover:  #FFFFFF;
+    --color-accent-subtle: #1B1E24;
+    --color-accent-ring:   rgba(233, 234, 238, .22);
+
+    /* Zones - éclaircies pour fonds sombres ;
+       bg/border/tag s'adaptent seuls via color-mix. */
+    --zone-syntaxe:      #60A5FA;
+    --zone-logique:      #2DD4BF;
+    --zone-architecture: #A78BFA;
+
+    /* Textes sémantiques - éclaircis pour contraste AA */
+    --color-success-text: #4ADE80;
+    --color-warning-text: #FCD34D;
+    --color-danger-text:  #F87171;
+    --color-info-text:    #22D3EE;
+
+    /* Risque IA - textes éclaircis */
+    --risk-max-text:  #F87171;
+    --risk-high-text: #FB923C;
+    --risk-mod-text:  #4ADE80;
+
+    /* Source - textes éclaircis */
+    --source-exact-text:    #4ADE80;
+    --source-approche-text: #FCD34D;
+
+    /* Patron - textes éclaircis */
+    --patron-text:      #FCD34D;
+    --patron-title:     #F59E0B;
+    --patron-risk-text: #F87171;
+
+    /* Ombres - profondeur portée par les bordures en mode sombre */
+    --shadow-sm:    0 0 0 1px var(--color-border);
+    --shadow-md:    0 0 0 1px var(--color-border), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-lg:    0 0 0 1px var(--color-border-strong), 0 16px 48px rgba(0, 0, 0, .55);
+    --shadow-modal: 0 0 0 1px var(--color-border-strong), 0 24px 64px rgba(0, 0, 0, .70);
+  }
 }

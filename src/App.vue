@@ -1,5 +1,24 @@
-<script setup>
+﻿<script setup>
+import { ref } from 'vue'
+
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+// Theme toggle - initialise depuis localStorage, sinon suit la préférence OS
+const saved = localStorage.getItem('theme')
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+const isDark = ref(saved ? saved === 'dark' : prefersDark)
+
+function applyTheme(dark) {
+  isDark.value = dark
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+  localStorage.setItem('theme', dark ? 'dark' : 'light')
+}
+
+applyTheme(isDark.value)
+
+function toggleTheme() {
+  applyTheme(!isDark.value)
+}
 </script>
 
 <template>
@@ -14,6 +33,12 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
           <li><router-link to="/methodologie">Methodologie</router-link></li>
           <li v-if="isLocal"><router-link to="/audit" class="nav-audit">Audit PDF</router-link></li>
         </ul>
+        <button
+          class="theme-toggle"
+          @click="toggleTheme"
+          :aria-label="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+          :title="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+        >{{ isDark ? '☀' : '☾' }}</button>
       </nav>
     </header>
     <main class="main-content">
@@ -33,13 +58,12 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 }
 
 .site-header {
-  background: var(--color-text);
-  color: var(--color-bg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   padding: 0 var(--space-6);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .nav-container {
@@ -48,15 +72,16 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  min-height: 56px;
+  min-height: 52px;
   flex-wrap: wrap;
-  padding: 0.4rem 0;
+  padding: 0.35rem 0;
 }
 
 .site-title {
   font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--color-bg);
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -64,30 +89,40 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 0.25rem;
+  gap: 0.15rem;
   margin-left: auto;
   flex-wrap: wrap;
 }
 
 .nav-links a {
-  color: var(--color-text-placeholder);
-  padding: 0.4rem 0.75rem;
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  transition: color 0.15s, background 0.15s;
+  color: var(--color-text-muted);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
   display: block;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease), text-decoration-color var(--dur-1) var(--ease);
 }
 
-.nav-links a:hover,
+.nav-links a:hover {
+  color: var(--color-text);
+  background: var(--color-accent-subtle);
+}
+
 .nav-links a.router-link-active {
-  color: var(--color-bg);
-  background: var(--color-accent);
+  color: var(--color-text);
+  background: transparent;
+  text-decoration-color: var(--color-accent);
 }
 
-.nav-audit { color: var(--patron-border) !important; }
-.nav-audit:hover,
-.nav-audit.router-link-active {
-  background: var(--patron-title) !important;
+.nav-audit {
+  font-style: italic;
+  opacity: 0.8;
 }
 
 .main-content {
@@ -99,11 +134,41 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 }
 
 .site-footer {
-  background: var(--color-text);
+  background: var(--color-surface-2);
+  border-top: 1px solid var(--color-border);
   color: var(--color-text-faint);
   text-align: center;
   padding: var(--space-4) var(--space-6);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+
+.theme-toggle:hover {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-ring);
 }
 
 @media (max-width: 640px) {
@@ -114,12 +179,12 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   .nav-links {
     margin-left: 0;
     width: 100%;
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
   }
 
   .nav-links a {
     font-size: 0.82rem;
-    padding: 0.3rem 0.55rem;
+    padding: 0.3rem 0.5rem;
   }
 
   .main-content {
