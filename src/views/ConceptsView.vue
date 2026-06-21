@@ -357,9 +357,21 @@ function bloomClass(b) {
   gap: var(--space-2);
 }
 
-.family-section--f1 .family-header { background: var(--zone-syntaxe-bg);      border: 1px solid var(--zone-syntaxe-border); }
-.family-section--f2 .family-header { background: var(--zone-logique-bg);       border: 1px solid var(--zone-logique-border); }
-.family-section--f3 .family-header { background: var(--zone-architecture-bg);  border: 1px solid var(--zone-architecture-border); }
+.family-section--f1 .family-header {
+  background: var(--zone-syntaxe-bg);
+  border: 1px solid var(--zone-syntaxe-border);
+  border-left: 3px solid var(--zone-syntaxe-text);
+}
+.family-section--f2 .family-header {
+  background: var(--zone-logique-bg);
+  border: 1px solid var(--zone-logique-border);
+  border-left: 3px solid var(--zone-logique-text);
+}
+.family-section--f3 .family-header {
+  background: var(--zone-architecture-bg);
+  border: 1px solid var(--zone-architecture-border);
+  border-left: 3px solid var(--zone-architecture-text);
+}
 
 .family-title-row {
   display: flex;

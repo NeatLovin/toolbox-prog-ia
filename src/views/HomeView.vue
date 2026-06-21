@@ -16,7 +16,7 @@
 
     <div class="hub-grid">
 
-      <router-link to="/audit" class="hub-card hub-card--audit ui-card">
+      <router-link to="/audit" class="hub-card hub-card--audit ui-card reveal reveal--stagger" style="--i:0">
         <h2>Auditer un cours</h2>
         <p>
           Importez le PDF de votre cours pour analyser les concepts couverts
@@ -25,7 +25,7 @@
         <span class="hub-cta">Démarrer l'audit →</span>
       </router-link>
 
-      <router-link to="/arbre" class="hub-card ui-card">
+      <router-link to="/arbre" class="hub-card ui-card reveal reveal--stagger" style="--i:1">
         <h2>Obtenir une recommandation</h2>
         <p>
           Parcours guidé en trois étapes : zone conceptuelle, concept précis, contexte d'usage.
@@ -78,11 +78,11 @@
   flex-direction: column;
   gap: var(--space-3);
   text-decoration: none;
-  transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
+  transition: box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
 
 .hub-card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
   border-color: var(--color-accent);
 }

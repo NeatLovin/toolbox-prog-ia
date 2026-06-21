@@ -36,12 +36,14 @@
 
       <div class="zone-grid">
         <button
-          v-for="z in ZONES"
+          v-for="(z, i) in ZONES"
           :key="z.family"
-          class="zone-card"
+          class="zone-card reveal reveal--stagger"
           :class="`zone-card--${z.key}`"
+          :style="`--i:${i}`"
           @click="chooseZone(z.family)"
         >
+          <span v-if="z.key === 'logique'" class="u-eyebrow logique-eyebrow">zone centrale</span>
           <span class="zone-name">{{ z.family }}</span>
           <span class="zone-sub">{{ z.sub }}</span>
           <span class="ui-badge" :class="`ui-badge--zone-${z.key}`">Risque IA : {{ z.risk }}</span>
@@ -115,7 +117,7 @@
     </section>
 
     <!-- Resultat -->
-    <section v-else-if="step === 'result' && result" class="result-section">
+    <section v-else-if="step === 'result' && result" class="result-section reveal">
 
       <DisclosureCard details-label="Patron et outils" deep-label="Justification et sources">
 
@@ -470,18 +472,38 @@ function restart() {
   border: 2px solid transparent;
   cursor: pointer;
   text-align: left;
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
-.zone-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.zone-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-.zone-card--syntaxe      { background: var(--zone-syntaxe-bg);      border-color: var(--zone-syntaxe-border); }
-.zone-card--logique      { background: var(--zone-logique-bg);       border-color: var(--zone-logique-border); }
-.zone-card--architecture { background: var(--zone-architecture-bg);  border-color: var(--zone-architecture-border); }
+.zone-card--syntaxe {
+  background: var(--zone-syntaxe-bg);
+  border-color: var(--zone-syntaxe-border);
+  border-left-color: var(--zone-syntaxe-text);
+  border-left-width: 3px;
+}
+.zone-card--logique {
+  background: var(--zone-logique-bg);
+  border-color: var(--zone-logique-border);
+  border-left-color: var(--zone-logique-text);
+  border-left-width: 4px;
+}
+.zone-card--architecture {
+  background: var(--zone-architecture-bg);
+  border-color: var(--zone-architecture-border);
+  border-left-color: var(--zone-architecture-text);
+  border-left-width: 3px;
+}
 
 .zone-name { font-size: 1.15rem; font-weight: 800; }
 .zone-card--syntaxe      .zone-name { color: var(--zone-syntaxe-text); }
 .zone-card--logique      .zone-name { color: var(--zone-logique-text); }
 .zone-card--architecture .zone-name { color: var(--zone-architecture-text); }
+
+.logique-eyebrow {
+  color: var(--zone-logique-text);
+  margin-bottom: -0.1rem;
+}
 
 .zone-sub { font-size: 0.8rem; color: var(--color-text-faint); line-height: 1.4; }
 
@@ -565,9 +587,21 @@ function restart() {
   flex-direction: column;
   gap: 0.4rem;
 }
-.zone-principle--syntaxe      { background: var(--zone-syntaxe-bg);     border: 1px solid var(--zone-syntaxe-border); }
-.zone-principle--logique      { background: var(--zone-logique-bg);      border: 1px solid var(--zone-logique-border); }
-.zone-principle--architecture { background: var(--zone-architecture-bg); border: 1px solid var(--zone-architecture-border); }
+.zone-principle--syntaxe {
+  background: var(--zone-syntaxe-bg);
+  border: 1px solid var(--zone-syntaxe-border);
+  border-left: 3px solid var(--zone-syntaxe-text);
+}
+.zone-principle--logique {
+  background: var(--zone-logique-bg);
+  border: 1px solid var(--zone-logique-border);
+  border-left: 3px solid var(--zone-logique-text);
+}
+.zone-principle--architecture {
+  background: var(--zone-architecture-bg);
+  border: 1px solid var(--zone-architecture-border);
+  border-left: 3px solid var(--zone-architecture-text);
+}
 
 .zp-label {
   font-size: var(--text-2xs);

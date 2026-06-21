@@ -44,6 +44,12 @@ const hasDeep    = computed(() => !!slots.deep)
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+  transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
+}
+
+.dc-root:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .dc-title {

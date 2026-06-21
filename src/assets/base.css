@@ -39,6 +39,23 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =============================================
+   REVEAL - animation d'entrée en cascade
+   Une seule vague par vue, pas d'ambiance permanente.
+   ============================================= */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.reveal {
+  animation: reveal-up var(--dur-3) var(--ease) both;
+}
+
+.reveal--stagger {
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* =============================================
    CARTE
    ============================================= */
 .ui-card {
@@ -370,7 +387,14 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 1ms !important;
-    animation-duration: 1ms !important;
+    animation-duration:  1ms !important;
+    animation-delay:     0ms !important;
+  }
+  .reveal,
+  .reveal--stagger {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
