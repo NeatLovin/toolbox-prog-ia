@@ -34,10 +34,6 @@
       >{{ fil }}</span>
     </div>
 
-    <div v-if="tool.cyberlearn && tool.cyberlearn !== 'Non applicable'" class="card-cyberlearn">
-      <span class="cyberlearn-label">Cyberlearn :</span>
-      <span class="cyberlearn-value">{{ tool.cyberlearn }}</span>
-    </div>
   </article>
 </template>
 

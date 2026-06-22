@@ -119,7 +119,7 @@
     <!-- Resultat -->
     <section v-else-if="step === 'result' && result" class="result-section reveal">
 
-      <DisclosureCard details-label="Patron et outils" deep-label="Justification et sources">
+      <DisclosureCard details-label="Patron et outils" deep-label="Sources">
 
         <!-- ── Niveau 1 : l'essentiel ── -->
         <template #summary>
@@ -130,15 +130,20 @@
             <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
           </div>
 
-          <!-- Profil visuel de la zone : jauges risque IA + exigence cognitive -->
-          <ZoneProfile :zone="selectedZone" :show-posture="false" class="result-zone-profile" />
+          <!-- Profil de zone : risque IA uniquement, sans exigence cognitive -->
+          <ZoneProfile :zone="selectedZone" :show-posture="false" :show-cognitive="false" class="result-zone-profile" />
 
-          <!-- Approche : provenance + noms des outils -->
+          <!-- Proposition pédagogique (si concept choisi et patron disponible) -->
+          <div v-if="selectedConcept && patronForResult?.all?.length" class="result-proposal">
+            <span class="u-eyebrow">Ce qu'on vous propose</span>
+            <p class="proposal-name">
+              {{ patronForResult.hasExact ? patronForResult.exact[0]?.titre : patronForResult.all[0]?.titre }}
+            </p>
+          </div>
+
+          <!-- Outils conseillés -->
           <div class="result-approach">
-            <div class="approach-top">
-              <span class="ui-badge" :class="sourceBadgeClass">{{ sourceLabel }}</span>
-              <InfoTooltip :content="GLOSSARY.combinatoire.short" />
-            </div>
+            <span class="u-eyebrow">Outils conseillés</span>
             <ul class="result-tool-pills" aria-label="Outils recommandés">
               <li v-for="tool in result.tools.slice(0, 3)" :key="tool.id" class="tool-pill">
                 <span class="ui-badge" :class="toolFamilyClass(tool)">{{ toolFamilyShort(tool) }}</span>
@@ -154,22 +159,21 @@
 
         </template>
 
-        <!-- ── Niveau 2 : patron + outils complets ── -->
+        <!-- ── Niveau 2 : patron + outils complets + justification ── -->
         <template #details>
 
           <!-- Patron pédagogique -->
-          <template v-if="selectedConcept && patronForResult?.all.length">
+          <template v-if="selectedConcept && patronForResult?.all?.length">
             <div
               class="patron-match-banner"
               :class="patronForResult.hasExact ? 'patron-match-banner--exact' : 'patron-match-banner--fallback'"
             >
-              <span
-                class="ui-badge"
-                :class="patronForResult.hasExact ? 'ui-badge--source-exact' : 'ui-badge--source-approche'"
-              >{{ patronForResult.hasExact ? `Pour "${selectedContext}"` : 'Variantes disponibles' }}</span>
+              <span class="ui-badge ui-badge--neutral">
+                {{ patronForResult.hasExact ? `Contexte : ${selectedContext}` : 'Autre contexte' }}
+              </span>
               {{ patronForResult.hasExact
-                ? `Patron pour le contexte "${selectedContext}"`
-                : `Pas de patron pour "${selectedContext}", variantes disponibles` }}
+                ? `Ce patron correspond à votre contexte d'usage.`
+                : `Aucun patron disponible pour « ${selectedContext} ». Voici les variantes pour d'autres contextes :` }}
             </div>
             <PatronBlock
               v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
@@ -185,22 +189,26 @@
             <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
           </div>
 
+          <!-- Justification et provenance (remontées depuis niveau 3) -->
+          <template v-if="result.justification || sourceDescription">
+            <hr class="details-sep" />
+            <div class="details-justif">
+              <div v-if="result.justification" class="deep-block">
+                <span class="deep-label">Justification</span>
+                <p class="deep-text">{{ result.justification }}</p>
+              </div>
+              <div class="deep-block">
+                <span class="deep-label">Provenance</span>
+                <p class="deep-text">{{ sourceDescription }}</p>
+              </div>
+            </div>
+          </template>
+
         </template>
 
-        <!-- ── Niveau 3 : justification + sources ── -->
+        <!-- ── Niveau 3 : sources ── -->
         <template #deep>
           <div class="deep-section">
-
-            <div v-if="result.justification" class="deep-block">
-              <span class="deep-label">Justification</span>
-              <p class="deep-text">{{ result.justification }}</p>
-            </div>
-
-            <div class="deep-block">
-              <span class="deep-label">Provenance</span>
-              <p class="deep-text">{{ sourceDescription }}</p>
-            </div>
-
             <div class="deep-block">
               <span class="deep-label">Sources et littérature</span>
               <ul v-if="resultSources.length" class="deep-sources-list">
@@ -213,7 +221,6 @@
                 Consultez les fiches détaillées des outils dans le catalogue pour les références académiques associées.
               </p>
             </div>
-
           </div>
         </template>
 
@@ -585,7 +592,7 @@ function restart() {
 
 /* Profil de zone dans le résultat : colonne unique, largeur contrainte */
 .result-zone-profile {
-  max-width: 320px;
+  max-width: 280px;
 }
 
 /* Zone principle */
@@ -624,18 +631,24 @@ function restart() {
 
 .zp-text { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
 
-/* Niveau 1 - approche conseillée */
+/* Niveau 1 - proposition + outils */
+.result-proposal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.proposal-name {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+
 .result-approach {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-}
-
-.approach-top {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
 }
 
 .result-tool-pills {
@@ -672,13 +685,24 @@ function restart() {
   gap: var(--space-2);
   flex-wrap: wrap;
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.5rem 0.75rem;
   margin-bottom: var(--space-3);
   border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
 }
-.patron-match-banner--exact    { background: var(--color-success-bg); color: var(--color-success-text); }
-.patron-match-banner--fallback { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.patron-match-banner--exact {
+  border-left: 3px solid var(--color-success-text);
+  color: var(--color-text);
+}
+
+.details-justif {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
 .result-patron { margin-top: var(--space-3); }
 .result-patron + .result-patron { margin-top: var(--space-2); }

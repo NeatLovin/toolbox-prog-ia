@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div class="gauge-block">
+      <div v-if="showCognitive" class="gauge-block">
         <span class="u-eyebrow gauge-title">Exigence cognitive</span>
         <div class="gauge-row">
           <div
@@ -76,9 +76,10 @@ const BLOOM_RANK = { Remember: 1, Understand: 2, Apply: 3, Analyze: 4, Evaluate:
 const RISK_LEVEL = { 'Maximal': 3, 'Élevé': 2, 'Modéré': 1 }
 
 const props = defineProps({
-  zone:        { type: String,  default: null },
-  zones:       { type: Array,   default: null },
-  showPosture: { type: Boolean, default: true }
+  zone:          { type: String,  default: null },
+  zones:         { type: Array,   default: null },
+  showPosture:   { type: Boolean, default: true },
+  showCognitive: { type: Boolean, default: true }
 })
 
 function bloomMean(zoneName) {
