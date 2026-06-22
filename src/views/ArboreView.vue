@@ -130,6 +130,9 @@
             <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
           </div>
 
+          <!-- Profil visuel de la zone : jauges risque IA + exigence cognitive -->
+          <ZoneProfile :zone="selectedZone" :show-posture="false" class="result-zone-profile" />
+
           <!-- Approche : provenance + noms des outils -->
           <div class="result-approach">
             <div class="approach-top">
@@ -234,6 +237,7 @@ import DisclosureCard from '../components/DisclosureCard.vue'
 import ToolCard from '../components/ToolCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
+import ZoneProfile from '../components/ZoneProfile.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 
 const { concepts, getPatronsByConceptAndContext } = useData()
@@ -578,6 +582,11 @@ function restart() {
 .bloom-btn--skip:hover { border-color: var(--color-text-faint); background: var(--color-bg); }
 
 .skip-note { font-weight: 400; color: var(--color-text-placeholder); }
+
+/* Profil de zone dans le résultat : colonne unique, largeur contrainte */
+.result-zone-profile {
+  max-width: 320px;
+}
 
 /* Zone principle */
 .zone-principle {

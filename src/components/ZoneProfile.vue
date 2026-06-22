@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="zone-posture">
+      <div v-if="showPosture" class="zone-posture">
         <span class="u-eyebrow gauge-title">Posture conseillée</span>
         <p class="zone-posture-text">{{ z.posture }}</p>
       </div>
@@ -73,7 +73,8 @@ const BLOOM_RANK = { Remember: 1, Understand: 2, Apply: 3, Analyze: 4, Evaluate:
 const RISK_LEVEL = { 'Maximal': 3, 'Élevé': 2, 'Modéré': 1 }
 
 const props = defineProps({
-  zone: { type: String, default: null }
+  zone:        { type: String,  default: null },
+  showPosture: { type: Boolean, default: true }
 })
 
 function bloomMean(zoneName) {
