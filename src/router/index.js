@@ -6,7 +6,8 @@ const routes = [
   { path: '/arbre',       component: () => import('../views/ArboreView.vue') },
   { path: '/catalogue',   component: () => import('../views/CatalogueView.vue') },
   { path: '/concepts',    component: () => import('../views/ConceptsView.vue') },
-  { path: '/methodologie',component: () => import('../views/MethodologieView.vue') },
+  { path: '/methodologie',  component: () => import('../views/MethodologieView.vue') },
+  { path: '/cartographie', component: () => import('../views/CartographieView.vue') },
   { path: '/audit',       component: () => import('../views/AuditView.vue') }
 ]
 
