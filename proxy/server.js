@@ -24,6 +24,7 @@ app.post('/api/classify', async (req, res) => {
       headers: {
         'x-api-key': key,
         'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31',
         'content-type': 'application/json'
       },
       body: JSON.stringify(req.body)

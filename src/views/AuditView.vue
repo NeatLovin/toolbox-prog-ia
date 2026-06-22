@@ -25,8 +25,8 @@
     <!-- Classification en cours -->
     <div v-else-if="audit.phase.value === 'classifying'" class="loading-state">
       <div class="spinner"></div>
-      <p>Classification des sections via le modele ({{ audit.sections.value.length }} sections)...</p>
-      <p class="loading-sub">Un seul appel API par section. Cela peut prendre quelques secondes.</p>
+      <p>Analyse du document en cours...</p>
+      <p class="loading-sub">Segmentation et classification en un seul appel. Cela peut prendre quelques secondes.</p>
     </div>
 
     <!-- Validation humaine -->
