@@ -100,7 +100,7 @@
     "robustness_ai": "Élevée",
     "robustness_num": 3,
     "function": "FS",
-    "sources": "E35 (UNIGE) · Chi & Wylie 2014",
+    "sources": "E35 · Chi & Wylie 2014",
     "link": "",
     "efficacite": "Validée"
   },
@@ -142,7 +142,7 @@
     "robustness_ai": "Élevée",
     "robustness_num": 3,
     "function": "F",
-    "sources": "Atkinson et al. 2000 · Sweller 1988 · E35 (classe inversée)",
+    "sources": "Atkinson et al. 2000 · Sweller 1988 · E35",
     "link": "",
     "efficacite": "Validée"
   },
@@ -205,7 +205,7 @@
     "robustness_ai": "Très élevée",
     "robustness_num": 4,
     "function": "F",
-    "sources": "E27 (refonte HEG-GE) · E33 · Lister 2004 · Wing 2006",
+    "sources": "E27 · E33 · Lister 2004 · Wing 2006",
     "link": "",
     "efficacite": "Établie"
   },
@@ -226,7 +226,7 @@
     "robustness_ai": "Élevée",
     "robustness_num": 3,
     "function": "S",
-    "sources": "E09 (Digital Team Academy)",
+    "sources": "E09",
     "link": "",
     "efficacite": "Établie"
   },
@@ -247,7 +247,7 @@
     "robustness_ai": "Modérée",
     "robustness_num": 2,
     "function": "S",
-    "sources": "E09 (DTA)",
+    "sources": "E09",
     "link": "",
     "efficacite": "Établie"
   },
@@ -268,7 +268,7 @@
     "robustness_ai": "Faible si pas d'encadrement",
     "robustness_num": 1,
     "function": "FS",
-    "sources": "E01 (30 %)",
+    "sources": "E01",
     "link": "",
     "efficacite": "Établie"
   },
@@ -295,7 +295,7 @@
   },
   {
     "id": "T02",
-    "name": "Dashboard regex-based Fritscher",
+    "name": "Tableau de bord de suivi des commits (regex)",
     "description": "Tableau de bord visualisant l'activité Git des étudiants via regex, sans IA.",
     "detail": "",
     "scenarios": ["S2"],
@@ -310,7 +310,7 @@
     "robustness_ai": "Modérée",
     "robustness_num": 2,
     "function": "FS",
-    "sources": "Directeur TB",
+    "sources": "Outil interne",
     "link": "",
     "efficacite": "Émergente"
   },
@@ -373,7 +373,7 @@
     "robustness_ai": "Modérée",
     "robustness_num": 2,
     "function": "FS",
-    "sources": "E06 (HEIG-VD) · E28 (envisagé)",
+    "sources": "E06 · E28",
     "link": "https://classroom.github.com",
     "efficacite": "Établie"
   },
@@ -394,7 +394,7 @@
     "robustness_ai": "Très élevée",
     "robustness_num": 4,
     "function": "S",
-    "sources": "E06 (co-développeur)",
+    "sources": "E06",
     "link": "",
     "efficacite": "Établie"
   },
@@ -499,7 +499,7 @@
     "robustness_ai": "Modérée",
     "robustness_num": 2,
     "function": "F",
-    "sources": "E05 (auteur) · E11 · E26",
+    "sources": "E05 · E11 · E26",
     "link": "",
     "efficacite": "Établie"
   },
@@ -772,7 +772,7 @@
     "robustness_ai": "Modérée",
     "robustness_num": 2,
     "function": "F",
-    "sources": "E32 (test)",
+    "sources": "E32",
     "link": "https://www.eduaide.ai",
     "efficacite": "Émergente"
   },
@@ -814,7 +814,7 @@
     "robustness_ai": "Élevée (cadrage explicite)",
     "robustness_num": 3,
     "function": "F",
-    "sources": "E26 (auteur)",
+    "sources": "E26",
     "link": "",
     "efficacite": "Émergente"
   },
@@ -835,7 +835,7 @@
     "robustness_ai": "Élevée",
     "robustness_num": 3,
     "function": "FS",
-    "sources": "E32 (auteure)",
+    "sources": "E32",
     "link": "",
     "efficacite": "Émergente"
   },
