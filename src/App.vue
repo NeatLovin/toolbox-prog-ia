@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref } from 'vue'
 
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="catalogue">
     <div class="ui-page-header">
       <h1>Catalogue des outils</h1>
@@ -103,7 +103,7 @@
                 label="Niveau de preuve"
                 :value="EFFICACITE_VALUE[tool.efficacite] ?? 0"
                 :max="3"
-                :value-label="tool.efficacite ?? '—'"
+                :value-label="tool.efficacite ?? 'N/A'"
                 variant="ramp"
               />
               <MetricGauge

@@ -12,7 +12,7 @@
           class="agg-cell"
           :style="{ background: aggBg(z, fam) }"
           :title="`${FAMILY_LABELS[fam]} × ${z} : ${AGG_SCORES[fam][z].toFixed(2)} / 3`"
-        >{{ AGG_SCORES[fam][z] > 0 ? AGG_SCORES[fam][z].toFixed(1) : '—' }}</div>
+        >{{ AGG_SCORES[fam][z] > 0 ? AGG_SCORES[fam][z].toFixed(1) : '-' }}</div>
       </template>
     </div>
   </section>
@@ -20,7 +20,7 @@
   <!-- 2. Légende -->
   <section class="legend-wrap">
     <p class="legend-note">
-      Le score encode la valeur pédagogique de l'outil pour ce concept — pas la capacité de l'IA à le maîtriser.
+      Le score encode la valeur pédagogique de l'outil pour ce concept, non la capacité de l'IA à le maîtriser.
     </p>
     <div class="legend-items">
       <span class="leg-label u-eyebrow">Intensité :</span>
@@ -82,7 +82,7 @@
             scope="col"
             class="hm-th-concept"
             :class="{ 'hm-th--zone-last': zoneLastIds.has(concept.id) }"
-            :title="`${concept.id} — ${concept.name}`"
+            :title="`${concept.id} : ${concept.name}`"
             :style="{ background: `color-mix(in srgb, var(--zone-${ZONE_KEYS[concept.family]}) 9%, var(--color-surface))` }"
           >
             <span class="hm-concept-id">{{ concept.id }}</span>
@@ -232,8 +232,8 @@ const zoneLastIds = computed(() => {
 function cellBg(zoneKey, score) {
   if (!score) return ''
   if (score === 3) return `color-mix(in srgb, var(--zone-${zoneKey}) 62%, var(--color-surface))`
-  if (score === 2) return `color-mix(in srgb, var(--zone-${zoneKey}) 30%, var(--color-surface))`
-  return `color-mix(in srgb, var(--zone-${zoneKey}) 13%, var(--color-surface))`
+  if (score === 2) return `color-mix(in srgb, var(--zone-${zoneKey}) 35%, var(--color-surface))`
+  return `color-mix(in srgb, var(--zone-${zoneKey}) 22%, var(--color-surface))`
 }
 
 function swatchBg(score) { return cellBg('logique', score) }
@@ -260,7 +260,7 @@ function tdStyle(toolId, concept) {
 
 function tdLabel(tool, concept) {
   const score = SCORE_MAP[tool.id]?.[concept.id] ?? 0
-  return `${tool.name} — ${concept.name} : ${SCORE_LABEL[score]}`
+  return `${tool.name}, ${concept.name} : ${SCORE_LABEL[score]}`
 }
 
 function showTip(e, text) {

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="arbre">
     <header class="home-header">
       <h1>Obtenir une recommandation</h1>

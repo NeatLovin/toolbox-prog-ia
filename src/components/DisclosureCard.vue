@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dc-root ui-card">
     <div v-if="title" class="dc-title" role="heading" aria-level="2">{{ title }}</div>
 
