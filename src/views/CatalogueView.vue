@@ -97,6 +97,29 @@
         <template #details>
           <div class="td-body">
 
+            <!-- Profil visuel : 3 jauges (niveau de preuve, robustesse IA, coût enseignant) -->
+            <div class="metric-profile">
+              <MetricGauge
+                label="Niveau de preuve"
+                :value="EFFICACITE_VALUE[tool.efficacite] ?? 0"
+                :max="3"
+                :value-label="tool.efficacite ?? '—'"
+                variant="ramp"
+              />
+              <MetricGauge
+                label="Robustesse aux dérives IA"
+                :value="tool.robustness_num ?? 0"
+                :max="4"
+                :value-label="baseName(tool.robustness_ai)"
+              />
+              <MetricGauge
+                label="Coût enseignant (magnitude)"
+                :value="tool.cost_num ?? 0"
+                :max="3"
+                :value-label="baseName(tool.cost_teacher)"
+              />
+            </div>
+
             <div v-if="tool.detail" class="td-detail">
               <p>{{ tool.detail }}</p>
             </div>
@@ -111,28 +134,12 @@
                 <span class="td-val">{{ tool.cursus }}</span>
               </div>
               <div class="td-row">
-                <span class="td-label">Coût enseignant</span>
-                <span class="td-val">{{ tool.cost_teacher }} ({{ tool.cost_num }}/3)</span>
-              </div>
-              <div class="td-row">
                 <span class="td-label">Coût étudiant</span>
                 <span class="td-val">{{ tool.cost_student }}</span>
-              </div>
-              <div class="td-row">
-                <span class="td-label">Robustesse IA</span>
-                <span
-                  class="ui-badge"
-                  :class="robustnessClass(tool)"
-                  :title="tool.robustness_ai"
-                >{{ robustnessShort(tool) }}</span>
               </div>
               <div v-if="tool.cyberlearn && tool.cyberlearn !== 'Non applicable'" class="td-row">
                 <span class="td-label">Cyberlearn</span>
                 <span class="td-val">{{ tool.cyberlearn }}</span>
-              </div>
-              <div v-if="tool.efficacite" class="td-row">
-                <span class="td-label">Efficacité <InfoTooltip :content="GLOSSARY.efficacite.short" /></span>
-                <span class="ui-badge" :class="efficaciteClass(tool)">{{ tool.efficacite }}</span>
               </div>
             </div>
 
@@ -190,7 +197,10 @@ import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
+import MetricGauge from '../components/MetricGauge.vue'
 import { GLOSSARY } from '../lib/glossary.js'
+
+const EFFICACITE_VALUE = { 'Validée': 3, 'Établie': 2, 'Émergente': 1 }
 
 const { tools, meta } = useData()
 
@@ -309,6 +319,10 @@ function resolvedScenarios(tool) {
 function linkDomain(tool) {
   try { return new URL(tool.link || '').hostname.replace('www.', '') } catch { return '' }
 }
+
+function baseName(str) {
+  return (str || '').split('(')[0].trim()
+}
 </script>
 
 <style scoped>
@@ -363,6 +377,18 @@ function linkDomain(tool) {
 }
 
 /* ── Niveau 2 : details ── */
+
+/* Profil visuel à 3 jauges */
+.metric-profile {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
 .td-body {
   display: flex;
   flex-direction: column;
@@ -465,5 +491,6 @@ function linkDomain(tool) {
 
 @media (max-width: 640px) {
   .td-label { min-width: 120px; }
+  .metric-profile { flex-direction: column; gap: var(--space-3); }
 }
 </style>
