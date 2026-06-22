@@ -10,7 +10,12 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') })
 const app = express()
 const PORT = process.env.PROXY_PORT || 3001
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173'] }))
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true)
+    cb(new Error('Origine non autorisee'))
+  }
+}))
 app.use(express.json({ limit: '1mb' }))
 
 app.post('/api/classify', async (req, res) => {
