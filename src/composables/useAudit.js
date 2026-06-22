@@ -390,12 +390,12 @@ function computeSwot(classifs, allSections) {
     })
     .filter(Boolean)
 
-  // Concepts attendus en S1 mais absents du cours
-  const expectedForYear = conceptsData.filter(c => c.level === 'Novice')
+  // Concepts attendus en S1 (debut de cursus) mais absents du cours
+  const expectedForYear = conceptsData.filter(c => c.level.includes('S1'))
   const missingExpected = expectedForYear
     .filter(c => !allConceptIds.includes(c.id))
     .slice(0, 3)
-    .map(concept => ({ concept, reason: `Concept de niveau ${concept.level} non détecté dans le cours.` }))
+    .map(concept => ({ concept, reason: `Concept de debut de cursus (${concept.level}) non détecté dans le cours.` }))
 
   const faiblesses = [...poorlyCovered, ...missingExpected]
 

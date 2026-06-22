@@ -305,7 +305,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-size: var(--text-2xs);
   color: var(--color-text-faint);
   line-height: 1.5;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.5rem;
 }
 
@@ -316,7 +316,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.6rem 0.75rem;
-  background: rgba(255,255,255,0.7);
+  background: var(--color-surface);
   border-radius: var(--radius-md);
 }
 
@@ -537,7 +537,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  background: rgba(255,255,255,0.7);
+  background: var(--color-surface);
   border: 1px solid var(--patron-border);
   border-radius: var(--radius-md);
   padding: 0.55rem 0.85rem;
@@ -582,7 +582,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255,255,255,0.7);
+  background: var(--color-surface);
   border: 1px solid var(--patron-border);
   border-radius: var(--radius-md);
   padding: 0.4rem 0.75rem;
