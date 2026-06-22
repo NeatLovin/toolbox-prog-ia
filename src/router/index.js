@@ -16,11 +16,4 @@ const router = createRouter({
   routes
 })
 
-// En dehors de localhost, '/' redirige vers l'arbre (pas de carte audit inaccessible)
-router.beforeEach((to, from, next) => {
-  const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  if (to.path === '/' && !isLocal) next('/arbre')
-  else next()
-})
-
 export default router
