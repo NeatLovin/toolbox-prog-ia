@@ -6,7 +6,10 @@
       <div class="agg-corner"></div>
       <div v-for="z in ZONES" :key="z" class="agg-zone-head" :style="{ color: `var(--zone-${ZONE_KEYS[z]})` }">{{ z }}</div>
       <template v-for="fam in FAMILIES" :key="fam">
-        <div class="agg-fam-head u-eyebrow" :title="FAMILY_LABELS[fam]">{{ fam }}</div>
+        <div class="agg-fam-head" :title="FAMILY_LABELS[fam]">
+          <span class="u-eyebrow">{{ fam }}</span>
+          <span class="agg-fam-label">{{ FAMILY_LABELS_SHORT[fam] }}</span>
+        </div>
         <div
           v-for="z in ZONES" :key="z"
           class="agg-cell"
@@ -84,9 +87,7 @@
             :class="{ 'hm-th--zone-last': zoneLastIds.has(concept.id) }"
             :title="`${concept.id} : ${concept.name}`"
             :style="{ background: `color-mix(in srgb, var(--zone-${ZONE_KEYS[concept.family]}) 9%, var(--color-surface))` }"
-          >
-            <span class="hm-concept-id">{{ concept.id }}</span>
-          </th>
+          ><span class="hm-concept-id">{{ concept.id }}</span><span class="hm-concept-name">{{ truncateName(concept.name) }}</span></th>
         </tr>
       </thead>
       <tbody>
@@ -101,8 +102,10 @@
           </tr>
           <tr v-for="tool in filteredToolsByFamily[fam]" :key="tool.id" class="hm-tr-tool">
             <th scope="row" class="hm-th-tool">
-              <span class="hm-tool-id">{{ tool.id }}</span>
-              <span class="hm-tool-name">{{ tool.name }}</span>
+              <div class="hm-tool-inner">
+                <span class="hm-tool-name">{{ tool.name }}</span>
+                <span class="hm-tool-id">{{ tool.id }}</span>
+              </div>
             </th>
             <td
               v-for="concept in filteredConcepts"
@@ -114,7 +117,7 @@
               :aria-label="tdLabel(tool, concept)"
               @mousemove="showTip($event, tdLabel(tool, concept))"
               @mouseleave="hideTip()"
-            ></td>
+            >{{ SCORE_MAP[tool.id]?.[concept.id] || '' }}</td>
           </tr>
         </template>
       </tbody>
@@ -146,7 +149,12 @@ const FAMILY_LABELS = {
   FM4: 'Outils agentiques et IA généraliste'
 }
 const FAMILY_BADGE  = { FM1: 'ui-badge--family-m', FM2: 'ui-badge--family-t', FM3: 'ui-badge--family-i', FM4: 'ui-badge--family-a' }
+const FAMILY_LABELS_SHORT = { FM1: 'Méthodes', FM2: 'Outillés', FM3: 'Tuteurs IA', FM4: 'Agentique' }
 const SCORE_LABEL   = { 0: 'Non évalué', 1: 'Contextuel', 2: 'Utile', 3: 'Idéal' }
+
+function truncateName(name, n = 14) {
+  return name.length > n ? name.slice(0, n) + '…' : name
+}
 
 // ─── Pré-calcul statique ──────────────────────────────────────────────────────
 const SCORE_MAP = {}
@@ -297,8 +305,16 @@ function hideTip() { tip.value.show = false }
   font-size: var(--text-2xs);
   color: var(--color-text-faint);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
   cursor: default;
+}
+.agg-fam-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  line-height: 1.2;
 }
 .agg-cell {
   font-family: var(--font-mono);
@@ -412,26 +428,40 @@ function hideTip() { tip.value.show = false }
   position: sticky;
   top: 2.1rem;
   z-index: 2;
-  padding: 0.4rem 3px;
+  padding: 0.4rem 0;
   border-bottom: 2px solid var(--color-border-strong);
   border-right: 1px solid var(--color-border);
   vertical-align: bottom;
   text-align: center;
-  width: 30px;
-  min-width: 30px;
+  width: 34px;
+  min-width: 34px;
 }
 .hm-th-concept.hm-th--zone-last {
   border-right: 2px solid var(--color-border-strong);
 }
 
 .hm-concept-id {
-  display: block;
+  display: inline-block;
+  vertical-align: bottom;
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 700;
   color: var(--color-text-muted);
+  white-space: nowrap;
+  padding: 0.35rem 0;
+  cursor: default;
+}
+
+.hm-concept-name {
+  display: inline-block;
+  vertical-align: bottom;
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--color-text-faint);
   white-space: nowrap;
   padding: 0.35rem 0;
   cursor: default;
@@ -471,28 +501,43 @@ function hideTip() { tip.value.show = false }
 }
 .hm-tr-tool:hover .hm-th-tool { background: var(--color-accent-subtle); }
 
+.hm-tool-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+.hm-tool-name {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 190px;
+}
 .hm-tool-id {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   color: var(--color-text-placeholder);
-  margin-right: 0.4rem;
-}
-.hm-tool-name {
-  font-size: var(--text-xs);
-  color: var(--color-text);
-  font-weight: 500;
 }
 
 /* Cellules de données */
 .hm-sc {
-  width: 30px;
-  min-width: 30px;
+  width: 34px;
+  min-width: 34px;
   height: 26px;
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
   border-right: 1px solid var(--color-border);
   cursor: default;
   transition: filter var(--dur-1) var(--ease);
+  text-align: center;
+  vertical-align: middle;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
 }
 .hm-sc:hover { filter: brightness(0.82) saturate(1.15); }
 .hm-sc.hm-sc--zone-last { border-right: 2px solid var(--color-border-strong); }
