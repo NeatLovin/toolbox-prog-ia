@@ -14,26 +14,34 @@ const DEBUG_SEGMENTATION = false
 
 // Bloc system mis en cache : taxonomie + schéma de sortie.
 // Transmis une seule fois ; les morceaux suivants le lisent depuis le cache Anthropic.
-const SYSTEM_TEXT = `Tu analyses un document de cours de programmation pour en extraire la structure pédagogique, section par section.
+const SYSTEM_TEXT = `Tu analyses un document pour déterminer s'il porte sur l'enseignement de la programmation ou de l'informatique, puis en extraire la structure pédagogique si applicable.
 
+ÉTAPE 1 — ÉVALUER si le document traite de programmation ou d'informatique (algorithmique, bases de données, réseaux, systèmes, génie logiciel…).
+Si le contenu porte sur autre chose (droit, médecine, histoire, langues, gestion, etc.) : renvoie immédiatement { "is_programming": false, "sections": [] } sans analyser davantage.
+Si le contenu porte sur la programmation ou l'informatique : passe à l'étape 2.
+
+ÉTAPE 2 — Analyser la structure pédagogique section par section.
 Concepts disponibles — retourne UNIQUEMENT des IDs de cette liste :
 ${CONCEPT_LIST}
 
 Niveaux Bloom acceptés : Remember, Understand, Apply, Analyze, Evaluate, Create
 Contextes acceptés : Présentiel encadré, Autonomie supervisée, Projet long, Diagnostic
 
-Détecte les titres de sections et classe leur contenu pédagogique.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ni après :
-[
-  {
-    "title": "Titre de la section",
-    "concept_ids": ["C1.1"],
-    "bloom": "Apply",
-    "context": "Présentiel encadré"
-  }
-]
+Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ni après :
+{
+  "is_programming": true,
+  "sections": [
+    {
+      "title": "Titre de la section",
+      "concept_ids": ["C1.1"],
+      "bloom": "Apply",
+      "context": "Présentiel encadré"
+    }
+  ]
+}
 
 Règles strictes :
+- Ne jamais forcer des concepts de programmation sur un contenu non informatique
 - concept_ids : 0 à 3 IDs parmi la liste ci-dessus, tableau vide si aucun concept identifiable
 - N'invente jamais un ID hors de la liste fournie
 - bloom : une valeur parmi les niveaux Bloom acceptés, ou null si incertain
@@ -162,18 +170,23 @@ async function analyzeDocument(cleanText) {
 
   const data = await response.json()
   const text = data.content?.[0]?.text || ''
-  const jsonMatch = text.match(/\[[\s\S]*\]/)
-  if (!jsonMatch) throw new Error('Réponse du modèle invalide : pas de tableau JSON.')
+  const jsonMatch = text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) throw new Error('Réponse du modèle invalide : pas d\'objet JSON.')
 
   const raw = JSON.parse(jsonMatch[0])
-  return raw.slice(0, 30).map(entry => ({
-    title:       typeof entry.title === 'string' ? entry.title.slice(0, 200) : 'Section',
-    concept_ids: Array.isArray(entry.concept_ids)
-      ? entry.concept_ids.filter(id => VALID_IDS.has(id)).slice(0, 3)
-      : [],
-    bloom:   BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null,
-    context: VALID_CONTEXTS.includes(entry.context) ? entry.context : 'Présentiel encadré'
-  }))
+  const isProg      = raw.is_programming === true
+  const rawSections = Array.isArray(raw.sections) ? raw.sections : []
+  return {
+    is_programming: isProg,
+    sections: rawSections.slice(0, 30).map(entry => ({
+      title:       typeof entry.title === 'string' ? entry.title.slice(0, 200) : 'Section',
+      concept_ids: Array.isArray(entry.concept_ids)
+        ? entry.concept_ids.filter(id => VALID_IDS.has(id)).slice(0, 3)
+        : [],
+      bloom:   BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null,
+      context: VALID_CONTEXTS.includes(entry.context) ? entry.context : 'Présentiel encadré'
+    }))
+  }
 }
 
 // Découpe le texte en morceaux si nécessaire ; le bloc system est mis en cache
@@ -185,12 +198,17 @@ async function analyzeWithChunking(cleanText) {
   for (let i = 0; i < cleanText.length && chunks.length < CHUNK_LIMIT; i += CHUNK_MAX) {
     chunks.push(cleanText.slice(i, i + CHUNK_MAX))
   }
-  const all = []
+  let globalProg = false
+  const allSections = []
   for (const chunk of chunks) {
-    const sections = await analyzeDocument(chunk)
-    all.push(...sections)
+    const result = await analyzeDocument(chunk)
+    if (result.is_programming) globalProg = true
+    allSections.push(...result.sections)
   }
-  return all.slice(0, 30)
+  return {
+    is_programming: globalProg,
+    sections: globalProg ? allSections.slice(0, 30) : []
+  }
 }
 
 // ── SWOT + recommandations déterministes (inchangés) ─────────────────────────
@@ -280,6 +298,7 @@ export function useAudit() {
   const recommendations = ref([])
   const error           = ref(null)
   const isDemo          = ref(false)
+  const isProgramming   = ref(true)
 
   function loadFixture(fixture) {
     isDemo.value          = true
@@ -317,7 +336,17 @@ export function useAudit() {
       }
 
       phase.value = 'classifying'
-      const detected = await analyzeWithChunking(cleanText)
+      const result = await analyzeWithChunking(cleanText)
+
+      if (!result.is_programming) {
+        isProgramming.value   = false
+        sections.value        = []
+        classifications.value = []
+        phase.value           = 'done'
+        return
+      }
+
+      const detected = result.sections
 
       if (DEBUG_SEGMENTATION) {
         // eslint-disable-next-line no-console
@@ -357,7 +386,8 @@ export function useAudit() {
     recommendations.value = []
     error.value           = null
     isDemo.value          = false
+    isProgramming.value   = true
   }
 
-  return { phase, sections, classifications, validated, swot, recommendations, error, isDemo, loadFixture, extractAndClassify, confirmReview, reset }
+  return { phase, sections, classifications, validated, swot, recommendations, error, isDemo, isProgramming, loadFixture, extractAndClassify, confirmReview, reset }
 }

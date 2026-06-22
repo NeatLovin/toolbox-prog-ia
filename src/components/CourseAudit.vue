@@ -1,5 +1,13 @@
 <template>
-  <div class="audit">
+  <!-- Document hors programmation -->
+  <div v-if="!isProgramming" class="not-prog ui-card">
+    <h2 class="np-title">Ce document ne semble pas porter sur la programmation.</h2>
+    <p class="np-text">L'audit est conçu pour analyser des cours de programmation ou d'informatique. Déposez un syllabus, un plan de cours ou un support de cours en lien avec ces disciplines.</p>
+    <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Recommencer</button>
+  </div>
+
+  <!-- Résultat normal -->
+  <div v-else class="audit">
 
     <!-- En-tête -->
     <div class="audit-header">
@@ -215,10 +223,11 @@ import { computeCourseGlobalRec } from '../lib/recommendation.js'
 const { getPatronsByConceptAndContext } = useData()
 
 const props = defineProps({
-  swot:            { type: Object, required: true },
-  recommendations: { type: Array,  required: true },
-  sections:        { type: Array,  required: true },
-  validated:       { type: Array,  required: true }
+  isProgramming:   { type: Boolean, default: true },
+  swot:            { type: Object,  default: () => null },
+  recommendations: { type: Array,   default: () => [] },
+  sections:        { type: Array,   default: () => [] },
+  validated:       { type: Array,   default: () => [] }
 })
 
 defineEmits(['reset'])
@@ -228,7 +237,7 @@ defineEmits(['reset'])
 const validatedCount = computed(() => props.validated.length)
 const allConceptIds  = computed(() => [...new Set(props.validated.flatMap(s => s.concept_ids))])
 const globalRec      = computed(() => computeCourseGlobalRec(props.validated))
-const detectedZones  = computed(() => props.swot.meta?.families || [])
+const detectedZones  = computed(() => props.swot?.meta?.families || [])
 
 const validatedBySection = computed(() =>
   Object.fromEntries(props.validated.map(v => [v.section_index, v]))
@@ -243,7 +252,7 @@ const BLOOM_FR = {
 
 function bloomFr(b) { return BLOOM_FR[b] || b || '' }
 
-const bloomLabel = computed(() => bloomFr(props.swot.meta?.bloom))
+const bloomLabel = computed(() => bloomFr(props.swot?.meta?.bloom))
 
 function familyLabel(fam) {
   return { FM1: 'Méthodes', FM2: 'Dispositifs outillés', FM3: 'Tuteur IA', FM4: 'IA généraliste' }[fam] || fam
@@ -267,7 +276,7 @@ function efficaciteNum(tool) {
 
 const summaryText = computed(() => {
   const zones = detectedZones.value
-  const bloom = props.swot.meta?.bloom
+  const bloom = props.swot?.meta?.bloom
   const r     = globalRec.value
 
   if (!zones.length) {
@@ -331,6 +340,24 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 </script>
 
 <style scoped>
+/* === Document hors programmation === */
+.not-prog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 560px;
+}
+.np-title {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--color-text);
+}
+.np-text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
 /* === Conteneur principal === */
 .audit {
   display: flex;

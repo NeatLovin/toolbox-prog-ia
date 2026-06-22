@@ -51,6 +51,7 @@
     <!-- Resultats -->
     <template v-else-if="audit.phase.value === 'done'">
       <CourseAudit
+        :is-programming="audit.isProgramming.value"
         :swot="audit.swot.value"
         :recommendations="audit.recommendations.value"
         :sections="audit.sections.value"
