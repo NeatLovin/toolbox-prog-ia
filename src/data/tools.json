@@ -485,7 +485,7 @@
   {
     "id": "T11",
     "name": "Argos (HE-Arc Ingénierie)",
-    "description": "Plateforme d'apprentissage de la programmation développée par E05. Citée par 3 entretiens.",
+    "description": "Plateforme d'apprentissage de la programmation. Citée par 3 entretiens.",
     "detail": "",
     "scenarios": ["S3"],
     "family": "FM2",
@@ -800,7 +800,7 @@
   {
     "id": "I15",
     "name": "Wiki GenAI HE-Arc Ingénierie",
-    "description": "Wiki interne maintenu par E26 (HE-Arc Ingénierie) pour former les étudiants à l'usage de GenAI.",
+    "description": "Wiki interne pour former les étudiants à l'usage de GenAI.",
     "detail": "",
     "scenarios": ["S1", "S3"],
     "family": "FM3",
@@ -821,7 +821,7 @@
   {
     "id": "I16",
     "name": "Student Learning Compass (HES-SO)",
-    "description": "Cartographie compétences étudiantes co-conçue par E32 avec Cyberlearn. Refondation IA envisagée.",
+    "description": "Cartographie compétences étudiantes co-conçue avec Cyberlearn. Refondation IA envisagée.",
     "detail": "",
     "scenarios": ["S3"],
     "family": "FM3",
