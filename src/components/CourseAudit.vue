@@ -1,127 +1,155 @@
 <template>
   <div class="audit">
-    <!-- Entete -->
+
+    <!-- En-tête -->
     <div class="audit-header">
       <div>
         <h2>Analyse du cours</h2>
         <p class="audit-meta">
-          {{ validatedCount }} section{{ validatedCount > 1 ? 's' : '' }} analysee{{ validatedCount > 1 ? 's' : '' }} &middot;
-          {{ allConceptIds.length }} concept{{ allConceptIds.length > 1 ? 's' : '' }} detecte{{ allConceptIds.length > 1 ? 's' : '' }}
+          {{ validatedCount }} section{{ validatedCount > 1 ? 's' : '' }} ·
+          {{ allConceptIds.length }} notion{{ allConceptIds.length > 1 ? 's' : '' }} repérée{{ allConceptIds.length > 1 ? 's' : '' }}
         </p>
       </div>
       <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Nouvelle analyse</button>
     </div>
 
-    <!-- Banniere methodologique -->
-    <div class="generic-rec-banner">
-      <span class="grb-label">Methodologie</span>
-      <p class="grb-text">{{ GENERIC_RECOMMENDATION }}</p>
-    </div>
+    <!-- 1. EN BREF (toujours visible) -->
+    <section class="brief ui-card">
+      <h3 class="brief-title">En bref</h3>
+      <p class="brief-text">{{ summaryText }}</p>
 
-    <!-- Recommandation globale -->
-    <section v-if="globalRec.dominantFamily" class="global-rec">
-      <h2 class="gr-title">Recommandation globale du cours</h2>
-      <div class="gr-stats">
-        <div class="gr-stat">
-          <span class="gr-stat-label">Famille dominante</span>
-          <span class="gr-stat-value">{{ globalRec.dominantFamily }}</span>
-        </div>
-        <div class="gr-stat">
-          <span class="gr-stat-label">Risque IA global</span>
-          <span class="ui-badge" :class="riskClass(globalRec.risk)">{{ globalRec.risk }}</span>
-        </div>
-        <div v-if="globalRec.dominantBloom" class="gr-stat">
-          <span class="gr-stat-label">Bloom dominant</span>
-          <span class="gr-stat-value">{{ globalRec.dominantBloom }}</span>
-        </div>
-        <div class="gr-stat">
-          <span class="gr-stat-label">Concepts detectes</span>
-          <span class="gr-stat-value">{{ globalRec.conceptCount }}</span>
-        </div>
-      </div>
-      <div v-if="globalRec.levers.length" class="gr-levers">
-        <span class="gr-levers-label">Leviers prioritaires (robustesse elevee, score matriciel fort)</span>
-        <div class="gr-levers-list">
-          <div v-for="t in globalRec.levers" :key="t.id" class="gr-lever">
-            <span class="gr-lever-id">{{ t.id }}</span>
-            <span class="gr-lever-name">{{ t.name }}</span>
-            <span class="gr-lever-rob">Robustesse {{ t.robustness_ai }}</span>
+      <template v-if="keyTools.length">
+        <p class="brief-subtitle">Ce qu'on vous conseille</p>
+        <div class="brief-levers">
+          <div v-for="t in keyTools" :key="t.id" class="brief-lever">
+            <span class="bl-name">{{ t.name }}</span>
+            <MetricGauge
+              label="Niveau de preuve"
+              :value="efficaciteNum(t)"
+              :max="3"
+              :value-label="t.efficacite || 'Émergente'"
+              variant="ramp"
+            />
           </div>
         </div>
-      </div>
+      </template>
     </section>
 
-    <!-- SWOT -->
-    <section class="swot-grid">
-      <!-- Forces -->
-      <div class="swot-quadrant swot-quadrant--forces">
-        <h3 class="quad-title">&#9650; Forces</h3>
-        <p class="quad-desc">Concepts bien couverts avec des outils a la fois ideaux et robustes face a l'IA.</p>
-        <div v-if="swot.forces.length === 0" class="quad-empty">Aucune force identifiee.</div>
-        <div v-for="item in swot.forces" :key="item.concept.id" class="quad-item">
-          <div class="qi-concept">
-            <span class="qi-id">{{ item.concept.id }}</span>
-            <span class="qi-name">{{ item.concept.name }}</span>
-          </div>
-          <div class="qi-tools">
-            <span v-for="t in item.tools" :key="t.id" class="qi-tool qi-tool--strong" :title="t.name">
-              {{ t.id }} &#9733;&#9733;&#9733;
-            </span>
-          </div>
-          <p class="qi-trace">Source : matrice, score 3, robustesse {{ item.tools[0]?.robustness_ai }}</p>
+    <!-- 2. APERÇU VISUEL (toujours visible) -->
+    <section class="overview">
+      <div class="overview-chips" role="list" aria-label="Repères du cours">
+        <div class="ov-chip" role="listitem">
+          <span class="ov-chip-num">{{ validatedCount }}</span>
+          <span class="ov-chip-label">section{{ validatedCount > 1 ? 's' : '' }} analysée{{ validatedCount > 1 ? 's' : '' }}</span>
+        </div>
+        <div class="ov-chip" role="listitem">
+          <span class="ov-chip-num">{{ detectedZones.join(', ') || 'Non déterminé' }}</span>
+          <span class="ov-chip-label">zone{{ detectedZones.length > 1 ? 's' : '' }} détectée{{ detectedZones.length > 1 ? 's' : '' }}</span>
+        </div>
+        <div v-if="bloomLabel" class="ov-chip" role="listitem">
+          <span class="ov-chip-num">{{ bloomLabel }}</span>
+          <span class="ov-chip-label">niveau cognitif dominant</span>
+        </div>
+        <div class="ov-chip" role="listitem">
+          <span class="ov-chip-num">{{ allConceptIds.length }}</span>
+          <span class="ov-chip-label">notion{{ allConceptIds.length > 1 ? 's' : '' }} couverte{{ allConceptIds.length > 1 ? 's' : '' }}</span>
         </div>
       </div>
 
-      <!-- Faiblesses -->
-      <div class="swot-quadrant swot-quadrant--faiblesses">
-        <h3 class="quad-title">&#9660; Faiblesses</h3>
-        <p class="quad-desc">Concepts peu ou pas instrumentes dans la matrice, ou attendus mais absents du cours.</p>
-        <div v-if="swot.faiblesses.length === 0" class="quad-empty">Aucune faiblesse identifiee.</div>
-        <div v-for="item in swot.faiblesses" :key="item.concept.id" class="quad-item">
-          <div class="qi-concept">
-            <span class="qi-id">{{ item.concept.id }}</span>
-            <span class="qi-name">{{ item.concept.name }}</span>
-          </div>
-          <p class="qi-trace">{{ item.reason }}</p>
-        </div>
-      </div>
-
-      <!-- Risques -->
-      <div class="swot-quadrant swot-quadrant--risques">
-        <h3 class="quad-title">&#9888; Risques</h3>
-        <p class="quad-desc">Concepts de syntaxe (risque IA Maximal) ou outils disponibles a robustesse nulle.</p>
-        <div v-if="swot.risques.length === 0" class="quad-empty">Aucun risque identifie.</div>
-        <div v-for="item in swot.risques" :key="item.concept.id" class="quad-item">
-          <div class="qi-concept">
-            <span class="qi-id">{{ item.concept.id }}</span>
-            <span class="qi-name">{{ item.concept.name }}</span>
-            <span class="ui-badge" :class="riskClass(item.concept.risk_ai)">Risque {{ item.concept.risk_ai }}</span>
-          </div>
-          <p class="qi-trace">{{ item.reason }}</p>
-        </div>
-      </div>
-
-      <!-- Opportunites -->
-      <div class="swot-quadrant swot-quadrant--opportunites">
-        <h3 class="quad-title">&#128270; Opportunites</h3>
-        <p class="quad-desc">Combinatoires preconfigures de combos.json correspondant aux parametres detectes.</p>
-        <div v-if="swot.opportunites.length === 0" class="quad-empty">Aucune combinatoire correspondante trouvee.</div>
-        <div v-for="combo in swot.opportunites" :key="combo.id" class="quad-item">
-          <p class="qi-combo-label">{{ combo.recommended_label }}</p>
-          <p class="qi-trace qi-trace--info">{{ combo.justification }}</p>
-          <div class="qi-tools">
-            <span v-for="t in combo.tools" :key="t.id" class="qi-tool" :title="t.name">{{ t.id }}</span>
-          </div>
-        </div>
-      </div>
+      <ZoneProfile
+        v-if="detectedZones.length"
+        :zones="detectedZones"
+        :show-posture="true"
+      />
     </section>
 
-    <!-- Recommandations par section -->
+    <!-- 3. ANALYSE DÉTAILLÉE (repliée) -->
+    <DisclosureCard details-label="Voir l'analyse détaillée">
+      <template #summary>
+        <div class="swot-teaser">
+          <p class="swot-teaser-text">
+            Forces, points de vigilance et approches pédagogiques conseillées, basés sur les notions détectées.
+          </p>
+          <div class="swot-counts">
+            <span class="swot-count swot-count--force">{{ swot.forces.length }} force{{ swot.forces.length !== 1 ? 's' : '' }}</span>
+            <span class="swot-count swot-count--faiblesse">{{ swot.faiblesses.length }} faiblesse{{ swot.faiblesses.length !== 1 ? 's' : '' }}</span>
+            <span class="swot-count swot-count--risque">{{ swot.risques.length }} vigilance{{ swot.risques.length !== 1 ? 's' : '' }}</span>
+            <span class="swot-count swot-count--opportunite">{{ swot.opportunites.length }} approche{{ swot.opportunites.length !== 1 ? 's' : '' }}</span>
+          </div>
+        </div>
+      </template>
+
+      <template #details>
+        <div class="swot-grid">
+
+          <!-- Forces -->
+          <div class="swot-quadrant swot-quadrant--forces">
+            <h3 class="quad-title">Points bien outillés</h3>
+            <p class="quad-desc">Ces notions disposent de solutions éprouvées, fiables face aux pratiques IA des étudiants.</p>
+            <div v-if="swot.forces.length === 0" class="quad-empty">Aucun point bien outillé identifié.</div>
+            <div v-for="item in swot.forces" :key="item.concept.id" class="quad-item">
+              <div class="qi-concept">
+                <span class="qi-id">{{ item.concept.id }}</span>
+                <span class="qi-name">{{ item.concept.name }}</span>
+              </div>
+              <div class="qi-tools">
+                <span v-for="t in item.tools" :key="t.id" class="qi-tool" :title="t.name">{{ t.name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Faiblesses -->
+          <div class="swot-quadrant swot-quadrant--faiblesses">
+            <h3 class="quad-title">Points moins bien couverts</h3>
+            <p class="quad-desc">Ces notions sont plus difficiles à instrumenter ou n'ont pas été détectées dans ce cours.</p>
+            <div v-if="swot.faiblesses.length === 0" class="quad-empty">Aucun point de faiblesse identifié.</div>
+            <div v-for="item in swot.faiblesses" :key="item.concept.id" class="quad-item">
+              <div class="qi-concept">
+                <span class="qi-id">{{ item.concept.id }}</span>
+                <span class="qi-name">{{ item.concept.name }}</span>
+              </div>
+              <p class="qi-trace">{{ item.reason }}</p>
+            </div>
+          </div>
+
+          <!-- Risques -->
+          <div class="swot-quadrant swot-quadrant--risques">
+            <h3 class="quad-title">Points de vigilance IA</h3>
+            <p class="quad-desc">Pour ces notions, l'IA peut facilement produire le travail à la place de l'étudiant.</p>
+            <div v-if="swot.risques.length === 0" class="quad-empty">Aucun point de vigilance identifié.</div>
+            <div v-for="item in swot.risques" :key="item.concept.id" class="quad-item">
+              <div class="qi-concept">
+                <span class="qi-id">{{ item.concept.id }}</span>
+                <span class="qi-name">{{ item.concept.name }}</span>
+              </div>
+              <p class="qi-trace">{{ item.reason }}</p>
+            </div>
+          </div>
+
+          <!-- Opportunités -->
+          <div class="swot-quadrant swot-quadrant--opportunites">
+            <h3 class="quad-title">Approches conseillées</h3>
+            <p class="quad-desc">Ces combinaisons d'outils correspondent au profil pédagogique détecté dans ce cours.</p>
+            <div v-if="swot.opportunites.length === 0" class="quad-empty">Aucune approche correspondante trouvée.</div>
+            <div v-for="combo in swot.opportunites" :key="combo.id" class="quad-item">
+              <p class="qi-combo-label">{{ combo.recommended_label }}</p>
+              <p class="qi-trace qi-trace--info">{{ combo.justification }}</p>
+              <div class="qi-tools">
+                <span v-for="t in combo.tools" :key="t.id" class="qi-tool" :title="t.name">{{ t.name }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </template>
+    </DisclosureCard>
+
+    <!-- 4. RECOMMANDATIONS PAR SECTION -->
     <section class="recs-section">
       <h2>Recommandations par section</h2>
       <p class="recs-intro">
-        Pour chaque section analysee, la recommandation est calculee par le moteur deterministe
-        (combinatoires + matrice de pertinence), sans generation de texte.
+        Pour chaque section, les outils conseillés sont calculés automatiquement
+        à partir des notions et du contexte détectés, sans génération de texte libre.
       </p>
 
       <div v-for="rec in recommendations" :key="rec.section_index" class="rec-block">
@@ -138,7 +166,7 @@
           <div v-for="tool in rec.tools" :key="tool.id" class="rec-tool-card">
             <div class="rtc-header">
               <span class="rtc-id">{{ tool.id }}</span>
-              <span class="ui-badge" :class="familyClass(tool.family)">{{ tool.family }}</span>
+              <span class="ui-badge" :class="familyClass(tool.family)">{{ familyLabel(tool.family) }}</span>
               <span class="rtc-function">{{ functionLabel(tool.function) }}</span>
             </div>
             <p class="rtc-name">{{ tool.name }}</p>
@@ -156,7 +184,7 @@
           </template>
           <template v-else-if="patronsForSectionConcept(rec.section_index, cid).all.length">
             <p class="patron-ctx-note">
-              Variantes (contexte infere : {{ validatedBySection[rec.section_index]?.context || 'non precise' }}) :
+              Variantes disponibles (contexte : {{ validatedBySection[rec.section_index]?.context || 'non précisé' }}) :
             </p>
             <PatronBlock
               v-for="p in patronsForSectionConcept(rec.section_index, cid).all"
@@ -168,46 +196,112 @@
       </div>
 
       <div v-if="recommendations.length === 0" class="ui-empty-state">
-        Aucune section avec concepts et niveau Bloom identifies.
+        Aucune section avec notions et niveau cognitif identifiés.
       </div>
     </section>
+
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
-import PatronBlock from './PatronBlock.vue'
-import { GENERIC_RECOMMENDATION, computeCourseGlobalRec } from '../lib/recommendation.js'
+import PatronBlock    from './PatronBlock.vue'
+import MetricGauge   from './MetricGauge.vue'
+import ZoneProfile   from './ZoneProfile.vue'
+import DisclosureCard from './DisclosureCard.vue'
+import { computeCourseGlobalRec } from '../lib/recommendation.js'
 
 const { getPatronsByConceptAndContext } = useData()
 
 const props = defineProps({
-  swot: { type: Object, required: true },
-  recommendations: { type: Array, required: true },
-  sections: { type: Array, required: true },
-  validated: { type: Array, required: true }
+  swot:            { type: Object, required: true },
+  recommendations: { type: Array,  required: true },
+  sections:        { type: Array,  required: true },
+  validated:       { type: Array,  required: true }
 })
 
 defineEmits(['reset'])
 
-const validatedCount = computed(() => props.validated.length)
-const allConceptIds = computed(() => [...new Set(props.validated.flatMap(s => s.concept_ids))])
-const globalRec = computed(() => computeCourseGlobalRec(props.validated))
+// ── Données dérivées ─────────────────────────────────────────────────────────
 
-function riskClass(risk) {
-  if (risk === 'Maximal') return 'ui-badge--risk-max'
-  if (risk === 'Eleve') return 'ui-badge--risk-high'
-  return 'ui-badge--risk-mod'
-}
+const validatedCount = computed(() => props.validated.length)
+const allConceptIds  = computed(() => [...new Set(props.validated.flatMap(s => s.concept_ids))])
+const globalRec      = computed(() => computeCourseGlobalRec(props.validated))
+const detectedZones  = computed(() => props.swot.meta?.families || [])
 
 const validatedBySection = computed(() =>
   Object.fromEntries(props.validated.map(v => [v.section_index, v]))
 )
 
-function sectionTitle(idx) {
-  return props.sections.find(s => s.index === idx)?.title || `Section ${idx + 1}`
+// ── Labels humains ────────────────────────────────────────────────────────────
+
+const BLOOM_FR = {
+  Remember: 'Mémoriser', Understand: 'Comprendre', Apply: 'Appliquer',
+  Analyze: 'Analyser', Evaluate: 'Évaluer', Create: 'Concevoir'
 }
+
+function bloomFr(b) { return BLOOM_FR[b] || b || '' }
+
+const bloomLabel = computed(() => bloomFr(props.swot.meta?.bloom))
+
+function familyLabel(fam) {
+  return { FM1: 'Méthodes', FM2: 'Dispositifs outillés', FM3: 'Tuteur IA', FM4: 'IA généraliste' }[fam] || fam
+}
+
+function functionLabel(fn) {
+  return { F: 'Formative', S: 'Sommative', FS: 'F+S', R: 'Recherche' }[fn] || fn
+}
+
+function sourceLabel(src) {
+  if (src === 'combo')         return 'Recommandation personnalisée'
+  if (src === 'combo-approche') return 'Proche de votre profil'
+  return 'Suggestion générale'
+}
+
+function efficaciteNum(tool) {
+  return { 'Validée': 3, 'Établie': 2, 'Émergente': 1 }[tool?.efficacite] || 1
+}
+
+// ── Texte synthétique "En bref" ───────────────────────────────────────────────
+
+const summaryText = computed(() => {
+  const zones = detectedZones.value
+  const bloom = props.swot.meta?.bloom
+  const r     = globalRec.value
+
+  if (!zones.length) {
+    return "Trop peu de notions ont été identifiées pour établir un profil. Vérifiez les classifications dans l'étape précédente."
+  }
+
+  const zoneStr = zones.length > 1
+    ? zones.slice(0, -1).join(', ') + ' et ' + zones[zones.length - 1]
+    : zones[0]
+
+  let text = `Ce cours couvre principalement ${zones.length > 1 ? 'les zones' : 'la zone'} ${zoneStr}`
+  if (bloom) text += `, avec un accent cognitif sur « ${bloomFr(bloom)} »`
+  text += '.'
+
+  const riskLower = (r.risk || '').toLowerCase()
+  if (riskLower === 'maximal') {
+    text += " La syntaxe est une zone à fort risque de délégation à l'IA : prévoyez des évaluations qui vérifient la compréhension réelle de chaque étudiant."
+  } else if (riskLower.includes('elev') || riskLower.includes('éle')) {
+    text += " Certaines notions présentent un risque notable de délégation à l'IA : une vigilance pédagogique est recommandée."
+  } else if (r.risk) {
+    text += " Le profil de risque IA est modéré et maîtrisable avec de bonnes pratiques d'évaluation."
+  }
+
+  return text
+})
+
+// Outils phares : levers de globalRec en priorité, sinon premier combo
+const keyTools = computed(() => {
+  const levers = globalRec.value.levers || []
+  if (levers.length) return levers.slice(0, 3)
+  return (props.swot.opportunites?.[0]?.tools || []).slice(0, 3)
+})
+
+// ── Classes CSS ───────────────────────────────────────────────────────────────
 
 function familyClass(fam) {
   return {
@@ -218,20 +312,16 @@ function familyClass(fam) {
   }
 }
 
-function functionLabel(fn) {
-  return { F: 'Formative', S: 'Sommative', FS: 'F+S', R: 'Recherche' }[fn] || fn
-}
-
-function sourceLabel(src) {
-  if (src === 'combo') return 'Combinatoire exacte'
-  if (src === 'combo-approche') return 'Combinatoire approchee'
-  return 'Score matriciel'
-}
-
 function sourceBadgeClass(src) {
-  if (src === 'combo') return 'ui-badge--source-exact'
+  if (src === 'combo')         return 'ui-badge--source-exact'
   if (src === 'combo-approche') return 'ui-badge--source-approche'
   return 'ui-badge--source-matrix'
+}
+
+// ── Helpers section ───────────────────────────────────────────────────────────
+
+function sectionTitle(idx) {
+  return props.sections.find(s => s.index === idx)?.title || `Section ${idx + 1}`
 }
 
 function patronsForSectionConcept(sectionIndex, conceptId) {
@@ -241,12 +331,14 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 </script>
 
 <style scoped>
+/* === Conteneur principal === */
 .audit {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
 }
 
+/* === En-tête === */
 .audit-header {
   display: flex;
   align-items: flex-start;
@@ -267,11 +359,126 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   margin-top: 0.3rem;
 }
 
-/* SWOT grid */
+/* === En bref === */
+.brief {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.brief-title {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.brief-text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.brief-subtitle {
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+}
+
+.brief-levers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.brief-lever {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+}
+
+.bl-name {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* === Aperçu visuel === */
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.overview-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.ov-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.85rem;
+  min-width: 100px;
+}
+
+.ov-chip-num {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ov-chip-label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-faint);
+}
+
+/* === SWOT teaser (slot summary de DisclosureCard) === */
+.swot-teaser {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.swot-teaser-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.swot-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.swot-count {
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+}
+
+.swot-count--force       { background: var(--color-success-bg); color: var(--color-success-text); }
+.swot-count--faiblesse   { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.swot-count--risque      { background: var(--color-danger-bg);  color: var(--color-danger-text);  }
+.swot-count--opportunite { background: var(--color-info-bg);    color: var(--color-info-text);    }
+
+/* === SWOT grid (inside DisclosureCard details) === */
 .swot-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+  padding-top: var(--space-2);
 }
 
 @media (max-width: 700px) { .swot-grid { grid-template-columns: 1fr; } }
@@ -290,12 +497,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 .swot-quadrant--risques     { background: var(--color-danger-bg);  border-color: var(--color-danger-border);  }
 .swot-quadrant--opportunites { background: var(--color-info-bg);   border-color: var(--color-info-border);    }
 
-.quad-title {
-  font-size: var(--text-md);
-  font-weight: 800;
-  color: var(--color-text);
-}
-
+.quad-title { font-size: var(--text-md); font-weight: 800; }
 .swot-quadrant--forces .quad-title       { color: var(--color-success-text); }
 .swot-quadrant--faiblesses .quad-title   { color: var(--color-warning-text); }
 .swot-quadrant--risques .quad-title      { color: var(--color-danger-text);  }
@@ -347,18 +549,12 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 }
 
 .qi-tool {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.1rem 0.35rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
   border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
   background: var(--color-border);
   color: var(--color-text-muted);
-}
-
-.qi-tool--strong {
-  background: var(--color-accent);
-  color: var(--color-bg);
 }
 
 .qi-trace {
@@ -376,7 +572,7 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   color: var(--color-text);
 }
 
-/* Recommandations */
+/* === Recommandations par section === */
 .recs-section {
   display: flex;
   flex-direction: column;
@@ -480,135 +676,5 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   border: 1px solid var(--color-warning-border);
   border-radius: var(--radius-md);
   padding: 0.3rem 0.6rem;
-}
-
-/* Banniere methodologique */
-.generic-rec-banner {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 0.85rem 1.1rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.grb-label {
-  font-size: var(--text-2xs);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-faint);
-  white-space: nowrap;
-  padding-top: 0.1rem;
-  flex-shrink: 0;
-}
-
-.grb-text {
-  font-size: 0.8rem;
-  color: var(--color-text-faint);
-  line-height: 1.6;
-}
-
-/* Recommandation globale */
-.global-rec {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  background: var(--patron-bg);
-  border: 1px solid var(--patron-border);
-  border-radius: var(--radius-xl);
-  padding: 1.25rem;
-}
-
-.gr-title {
-  font-size: var(--text-base);
-  font-weight: 800;
-  color: var(--patron-title);
-}
-
-.gr-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.gr-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  background: var(--color-surface);
-  border: 1px solid var(--patron-border);
-  border-radius: var(--radius-md);
-  padding: 0.55rem 0.85rem;
-  min-width: 120px;
-}
-
-.gr-stat-label {
-  font-size: var(--text-2xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--patron-text);
-}
-
-.gr-stat-value {
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.gr-levers {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.gr-levers-label {
-  font-size: var(--text-2xs);
-  font-weight: 700;
-  color: var(--patron-text);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.gr-levers-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.gr-lever {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-surface);
-  border: 1px solid var(--patron-border);
-  border-radius: var(--radius-md);
-  padding: 0.4rem 0.75rem;
-  flex-wrap: wrap;
-}
-
-.gr-lever-id {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--color-text-muted);
-}
-
-.gr-lever-name {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text);
-  flex: 1;
-}
-
-.gr-lever-rob {
-  font-size: var(--text-2xs);
-  color: var(--color-success-text);
-  background: var(--color-success-bg);
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
 }
 </style>

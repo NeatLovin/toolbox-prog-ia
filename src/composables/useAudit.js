@@ -220,7 +220,7 @@ function computeSwot(classifs, allSections) {
     .map(cid => {
       const concept = conceptsData.find(c => c.id === cid)
       const t = getToolsForConcept(cid, 2)
-      return t.length === 0 ? { concept, reason: 'Aucun outil avec score de pertinence >= 2 dans la matrice.' } : null
+      return t.length === 0 ? { concept, reason: 'Peu de solutions vraiment adaptées pour enseigner ce point.' } : null
     })
     .filter(Boolean)
 
@@ -229,7 +229,7 @@ function computeSwot(classifs, allSections) {
   const missingExpected = expectedForYear
     .filter(c => !allConceptIds.includes(c.id))
     .slice(0, 3)
-    .map(concept => ({ concept, reason: `Concept de debut de cursus (${concept.level}) non détecté dans le cours.` }))
+    .map(concept => ({ concept, reason: `Notion de début de cursus absente de ce cours ; vérifiez qu'elle est couverte ailleurs.` }))
 
   const faiblesses = [...poorlyCovered, ...missingExpected]
 
@@ -242,7 +242,7 @@ function computeSwot(classifs, allSections) {
       return {
         concept,
         tools: fm4,
-        reason: "L'IA générative excelle sur la syntaxe : risque de vibe coding et de fragile knowledge si l'évaluation n'est pas robuste."
+        reason: "L'IA peut produire ce travail à la place de l'étudiant ; prévoyez une évaluation qui le vérifie."
       }
     })
     .filter(Boolean)

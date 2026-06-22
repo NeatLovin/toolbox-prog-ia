@@ -1,9 +1,12 @@
 <template>
   <div
     class="zone-profile"
-    :class="{ 'zone-profile--single': zone }"
+    :class="{
+      'zone-profile--single': visibleZones.length === 1,
+      'zone-profile--double': visibleZones.length === 2
+    }"
     role="region"
-    aria-label="Profil des trois zones pédagogiques"
+    :aria-label="visibleZones.length < 3 ? 'Profil des zones pédagogiques détectées' : 'Profil des trois zones pédagogiques'"
   >
     <div
       v-for="z in visibleZones"
@@ -74,6 +77,7 @@ const RISK_LEVEL = { 'Maximal': 3, 'Élevé': 2, 'Modéré': 1 }
 
 const props = defineProps({
   zone:        { type: String,  default: null },
+  zones:       { type: Array,   default: null },
   showPosture: { type: Boolean, default: true }
 })
 
@@ -103,9 +107,11 @@ const ALL_ZONES = [
   buildZone('Architecture', 'architecture')
 ]
 
-const visibleZones = computed(() =>
-  props.zone ? ALL_ZONES.filter(z => z.name === props.zone) : ALL_ZONES
-)
+const visibleZones = computed(() => {
+  if (props.zone)  return ALL_ZONES.filter(z => z.name === props.zone)
+  if (props.zones) return ALL_ZONES.filter(z => props.zones.includes(z.name))
+  return ALL_ZONES
+})
 </script>
 
 <style scoped>
@@ -122,6 +128,10 @@ const visibleZones = computed(() =>
 .zone-profile--single {
   grid-template-columns: 1fr;
   max-width: 280px;
+}
+
+.zone-profile--double {
+  grid-template-columns: 1fr 1fr;
 }
 
 .zone-col {
