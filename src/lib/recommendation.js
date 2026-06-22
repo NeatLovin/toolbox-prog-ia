@@ -14,6 +14,12 @@ export const ZONE_PRINCIPLES = {
   Architecture: "L'IA assiste la production mais le jugement de conception reste humain. Exigez une justification explicite des choix d'architecture : défense orale, revue par les pairs, comparaison d'alternatives."
 }
 
+export const ZONE_POSTURES = {
+  Syntaxe: 'IA libre, à vérifier',
+  Logique: 'tuteur étayé',
+  Architecture: 'justifier soi-même'
+}
+
 export function bloomCovers(comboBloom, userBloom) {
   if (comboBloom === 'Multi-niveaux') return true
   const parts = comboBloom.split('-')

@@ -10,6 +10,8 @@
       </p>
     </div>
 
+    <StatStrip class="reveal" />
+
     <p class="trust-line">
       Recommandations déterministes et traçables.
     </p>
@@ -36,10 +38,14 @@
 
     </div>
 
+    <ZoneProfile class="reveal" />
+
   </div>
 </template>
 
 <script setup>
+import StatStrip   from '../components/StatStrip.vue'
+import ZoneProfile from '../components/ZoneProfile.vue'
 // Ce composant n'est rendu qu'en local.
 // Le guard router (beforeEach) redirige '/' vers '/arbre' hors localhost.
 </script>
