@@ -144,7 +144,7 @@
           <!-- Opportunités -->
           <div class="swot-quadrant swot-quadrant--opportunites">
             <h3 class="quad-title">Approches conseillées</h3>
-            <p class="quad-desc">Ces combinaisons d'outils correspondent au profil pédagogique détecté dans ce cours.</p>
+            <p class="quad-desc">Ces combinaisons d'outils correspondent aux notions et au contexte détectés dans ce cours.</p>
             <div v-if="swot.opportunites.length === 0" class="quad-empty">Aucune approche correspondante trouvée.</div>
             <div v-for="combo in swot.opportunites" :key="combo.id" class="quad-item">
               <p class="qi-combo-label">{{ combo.recommended_label }}</p>
@@ -178,7 +178,14 @@
         <p v-if="rec.justification" class="rec-justification">{{ rec.justification }}</p>
 
         <div class="rec-tools">
-          <div v-for="tool in rec.tools" :key="tool.id" class="rec-tool-card">
+          <button
+            v-for="tool in rec.tools"
+            :key="tool.id"
+            type="button"
+            class="rec-tool-card"
+            :aria-label="`Voir l'outil ${tool.name}`"
+            @click="selectedTool = tool"
+          >
             <div class="rtc-header">
               <span class="rtc-id">{{ tool.id }}</span>
               <span class="ui-badge" :class="familyClass(tool.family)">{{ familyLabel(tool.family) }}</span>
@@ -186,7 +193,8 @@
             </div>
             <p class="rtc-name">{{ tool.name }}</p>
             <p class="rtc-desc">{{ tool.description }}</p>
-          </div>
+            <span class="rtc-open-hint" aria-hidden="true">Voir la fiche</span>
+          </button>
         </div>
 
         <template v-for="cid in (validatedBySection[rec.section_index]?.concept_ids || [])" :key="cid">
@@ -215,19 +223,24 @@
       </div>
     </section>
 
+    <ToolDetailModal :tool="selectedTool" @close="selectedTool = null" />
+
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useData } from '../composables/useData.js'
 import PatronBlock    from './PatronBlock.vue'
 import MetricGauge   from './MetricGauge.vue'
 import ZoneProfile   from './ZoneProfile.vue'
 import DisclosureCard from './DisclosureCard.vue'
+import ToolDetailModal from './ToolDetailModal.vue'
 import { computeCourseGlobalRec } from '../lib/recommendation.js'
 
 const { getPatronsByConceptAndContext } = useData()
+
+const selectedTool = ref(null)
 
 const props = defineProps({
   isProgramming:   { type: Boolean, default: true },
@@ -272,8 +285,8 @@ function functionLabel(fn) {
 }
 
 function sourceLabel(src) {
-  if (src === 'combo')         return 'Recommandation personnalisée'
-  if (src === 'combo-approche') return 'Proche de votre profil'
+  if (src === 'combo')         return 'Approche recommandée'
+  if (src === 'combo-approche') return 'Variante adaptée'
   return 'Suggestion générale'
 }
 
@@ -289,7 +302,7 @@ const summaryText = computed(() => {
   const r     = globalRec.value
 
   if (!zones.length) {
-    return "Trop peu de notions ont été identifiées pour établir un profil. Vérifiez les classifications dans l'étape précédente."
+    return "Trop peu de notions ont été identifiées pour établir un aperçu. Vérifiez les classifications dans l'étape précédente."
   }
 
   const zoneStr = zones.length > 1
@@ -330,10 +343,8 @@ function familyClass(fam) {
   }
 }
 
-function sourceBadgeClass(src) {
-  if (src === 'combo')         return 'ui-badge--source-exact'
-  if (src === 'combo-approche') return 'ui-badge--source-approche'
-  return 'ui-badge--source-matrix'
+function sourceBadgeClass() {
+  return 'ui-badge--neutral'
 }
 
 // ── Helpers section ───────────────────────────────────────────────────────────
@@ -684,6 +695,20 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  /* button reset */
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
+  transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
+}
+.rec-tool-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+.rec-tool-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .rtc-header {
@@ -715,7 +740,18 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   line-height: 1.45;
+  flex: 1;
 }
+
+.rtc-open-hint {
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-top: 0.25rem;
+  align-self: flex-end;
+  opacity: 0.75;
+}
+.rec-tool-card:hover .rtc-open-hint { opacity: 1; }
 
 .patron-ctx-note {
   font-size: var(--text-xs);
