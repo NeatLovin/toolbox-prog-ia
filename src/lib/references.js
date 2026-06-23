@@ -13,6 +13,10 @@ const DOI_MAP = {
   'sweller 1988':      'https://doi.org/10.1207/s15516709cog1202_4',
   'soloway 1984':      'https://doi.org/10.1109/TSE.1984.5010283',
   'mccracken 2001':    'https://doi.org/10.1145/572133.572137',
+  'liu 2024':          'https://doi.org/10.1145/3626252.3630938',
+  'jung 2022':         'https://doi.org/10.18653/v1/2022.emnlp-main.82',
+  'wiedenbeck 1986':   'https://doi.org/10.1016/S0020-7373(86)80083-9',
+  'brooks 1983':       'https://doi.org/10.1016/S0020-7373(83)80031-5',
 }
 
 const DENYLIST = ['anthropic', 'openai', 'google', 'hes-so', 'unifr', 'karpathy']
