@@ -12,10 +12,6 @@
 
     <StatStrip class="reveal" />
 
-    <p class="trust-line">
-      Recommandations déterministes et traçables.
-    </p>
-
     <div class="hub-grid">
 
       <router-link
@@ -76,20 +72,6 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   max-width: 740px;
 }
 
-.trust-line {
-  font-size: var(--text-sm);
-  color: var(--color-text-placeholder);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.trust-line::before {
-  content: '▶';
-  font-size: 0.5rem;
-  color: var(--color-accent);
-  flex-shrink: 0;
-}
 
 .hub-grid {
   display: grid;
