@@ -9,6 +9,10 @@ const DOI_MAP = {
   'sheese 2024':       'https://doi.org/10.1145/3636243.3636249',
   'kazemitabaar 2023': 'https://arxiv.org/abs/2309.14049',
   'zhang 2026':        'https://arxiv.org/abs/2601.20085',
+  'wing 2006':         'https://doi.org/10.1145/1118178.1118215',
+  'sweller 1988':      'https://doi.org/10.1207/s15516709cog1202_4',
+  'soloway 1984':      'https://doi.org/10.1109/TSE.1984.5010283',
+  'mccracken 2001':    'https://doi.org/10.1145/572133.572137',
 }
 
 const DENYLIST = ['anthropic', 'openai', 'google', 'hes-so', 'unifr', 'karpathy']
