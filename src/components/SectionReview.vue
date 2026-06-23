@@ -4,12 +4,12 @@
       <div>
         <h2>Validation des classifications</h2>
         <p>
-          Le modele a analyse {{ sections.length }} section{{ sections.length > 1 ? 's' : '' }}.
-          Verifiez et corrigez les classifications avant de generer l'analyse.
-          Cette etape est obligatoire : c'est vous qui validez, le modele ne fait que proposer.
+          Le modèle a analysé {{ sections.length }} section{{ sections.length > 1 ? 's' : '' }}.
+          Vérifiez et corrigez les classifications avant de générer l'analyse.
+          Cette étape est obligatoire : c'est vous qui validez, le modèle ne fait que proposer.
         </p>
         <p class="review-hint">
-          La detection assistee par IA peut comporter des erreurs. Verifiez en priorite les sections marquees "Confiance faible".
+          La détection assistée par IA peut comporter des erreurs. Vérifiez en priorité les sections marquées « Confiance faible ».
         </p>
       </div>
       <button class="ui-btn ui-btn-primary btn-confirm" @click="handleConfirm">
@@ -28,7 +28,7 @@
             {{ confidenceLabel(classif.confidence) }}
           </span>
           <button class="btn-skip" :class="{ 'btn-skip--active': classif.skipped }" @click="toggleSkip(idx)">
-            {{ classif.skipped ? 'Reinclure' : 'Exclure' }}
+            {{ classif.skipped ? 'Réinclure' : 'Exclure' }}
           </button>
         </div>
 
@@ -42,7 +42,7 @@
 
         <template v-if="!classif.skipped">
           <div class="field-row">
-            <label class="field-label">Concepts detectes</label>
+            <label class="field-label">Concepts détectés</label>
             <div class="concepts-editor">
               <span
                 v-for="cid in classif.concept_ids"
@@ -79,7 +79,7 @@
 
     <div class="review-footer">
       <button class="ui-btn ui-btn-primary btn-confirm" @click="handleConfirm">
-        Confirmer et generer l'analyse &rarr;
+        Confirmer et générer l'analyse &rarr;
       </button>
     </div>
   </div>
