@@ -17,6 +17,10 @@ const DOI_MAP = {
   'jung 2022':         'https://doi.org/10.18653/v1/2022.emnlp-main.82',
   'wiedenbeck 1986':   'https://doi.org/10.1016/S0020-7373(86)80083-9',
   'brooks 1983':       'https://doi.org/10.1016/S0020-7373(83)80031-5',
+  'soloway 1986':      'https://doi.org/10.1145/6592.6594',
+  'clancy 1999':       'https://doi.org/10.1145/299649.299673',
+  'dickey 2024':       'https://doi.org/10.1007/s42979-024-03074-y',
+  'lau 2023':          'https://doi.org/10.1145/3568813.3600138',
 }
 
 const DENYLIST = ['anthropic', 'openai', 'google', 'hes-so', 'unifr', 'karpathy']
