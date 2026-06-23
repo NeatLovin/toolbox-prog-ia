@@ -8,6 +8,9 @@
           Verifiez et corrigez les classifications avant de generer l'analyse.
           Cette etape est obligatoire : c'est vous qui validez, le modele ne fait que proposer.
         </p>
+        <p class="review-hint">
+          La detection assistee par IA peut comporter des erreurs. Verifiez en priorite les sections marquees "Confiance faible".
+        </p>
       </div>
       <button class="ui-btn ui-btn-primary btn-confirm" @click="handleConfirm">
         Confirmer et analyser &rarr;
@@ -124,15 +127,15 @@ function toggleSkip(idx) {
 }
 
 function confidenceLabel(c) {
-  if (c == null || c < 0.3) return 'Incertain'
-  if (c < 0.7) return 'Modere'
-  return 'Confiant'
+  if (c === 'low')  return 'Confiance faible'
+  if (c === 'high') return 'Confiance élevée'
+  return 'Confiance moyenne'
 }
 
 function confidenceClass(c) {
-  if (c == null || c < 0.3) return 'conf--low'
-  if (c < 0.7) return 'conf--mid'
-  return 'conf--high'
+  if (c === 'low')  return 'conf--low'
+  if (c === 'high') return 'conf--high'
+  return 'conf--mid'
 }
 
 function handleConfirm() {
@@ -175,6 +178,16 @@ function handleConfirm() {
   color: var(--color-text-muted);
   line-height: 1.6;
   max-width: 560px;
+}
+
+.review-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  padding: 0.3rem 0.65rem;
+  border-left: 2px solid var(--color-warning-border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-warning-bg);
 }
 
 .btn-confirm {

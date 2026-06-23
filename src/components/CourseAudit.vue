@@ -22,6 +22,11 @@
       <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Nouvelle analyse</button>
     </div>
 
+    <!-- Note de méthode -->
+    <p class="audit-method-note">
+      Notions détectées par IA et validées par l'enseignant. Calcul déterministe basé sur la matrice de pertinence.
+    </p>
+
     <!-- 0. RÉSUMÉ GÉNÉRÉ (si course_summary disponible) -->
     <div v-if="courseSummary" class="course-summary-card ui-card">
       <span class="u-eyebrow">Votre cours porte sur</span>
@@ -360,6 +365,12 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 
 <style scoped>
 /* === Document hors programmation === */
+.audit-method-note {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-style: italic;
+}
+
 .not-prog {
   display: flex;
   flex-direction: column;

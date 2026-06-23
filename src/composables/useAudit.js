@@ -33,7 +33,8 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ni après :
     {
       "title": "Titre de la section",
       "concept_ids": ["C1.1"],
-      "bloom": "Apply"
+      "bloom": "Apply",
+      "confidence": "high"
     }
   ]
 }
@@ -44,6 +45,7 @@ Règles strictes :
 - concept_ids : 0 à 3 IDs parmi la liste ci-dessus, tableau vide si aucun concept identifiable
 - N'invente jamais un ID hors de la liste fournie
 - bloom : une valeur parmi les niveaux Bloom acceptés, ou null si incertain
+- confidence : "low" | "medium" | "high". Honnêteté requise : "low" si la section est courte, ambiguë, ou que le concept est déduit avec peu d'indices ; "medium" si plausible mais partiel ; "high" seulement si l'evidence est claire. Ne pas surévaluer.
 - Détecte les sections à partir des titres et de la structure du texte
 - Limite à 30 sections maximum`
 
@@ -183,7 +185,8 @@ async function analyzeDocument(cleanText) {
       concept_ids: Array.isArray(entry.concept_ids)
         ? entry.concept_ids.filter(id => VALID_IDS.has(id)).slice(0, 3)
         : [],
-      bloom:   BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null
+      bloom:      BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null,
+      confidence: ['low', 'medium', 'high'].includes(entry.confidence) ? entry.confidence : 'medium'
     }))
   }
 }
@@ -336,7 +339,7 @@ export function useAudit() {
       // PDF sans texte extractible (scanné, protégé, etc.)
       if (!cleanText.trim()) {
         sections.value        = [{ index: 0, title: 'Document complet' }]
-        classifications.value = [{ section_index: 0, concept_ids: [], bloom: null, confidence: 0 }]
+        classifications.value = [{ section_index: 0, concept_ids: [], bloom: null, confidence: 'low' }]
         phase.value = 'reviewing'
         return
       }
@@ -365,7 +368,7 @@ export function useAudit() {
         section_index: i,
         concept_ids:  entry.concept_ids,
         bloom:        entry.bloom,
-        confidence:   0.85
+        confidence:   entry.confidence
       }))
       phase.value = 'reviewing'
 
