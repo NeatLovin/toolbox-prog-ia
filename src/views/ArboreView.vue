@@ -12,7 +12,7 @@
     </header>
 
     <!-- Fil d'Ariane (masque a l'etape zone) -->
-    <nav v-if="step !== 'zone'" class="breadcrumb" aria-label="Etapes">
+    <nav v-if="step !== 'zone'" class="breadcrumb" aria-label="Étapes">
       <button class="bc-link" @click="goToStep('zone')">{{ selectedZone }}</button>
       <template v-if="step !== 'concept'">
         <span class="bc-sep" aria-hidden="true">›</span>
@@ -259,7 +259,7 @@ const CONTEXTS = [
   { value: 'Présentiel encadré',   label: 'Présentiel encadré',   desc: 'En classe, supervision directe'  },
   { value: 'Autonomie supervisée', label: 'Autonomie supervisée', desc: 'Hors classe, feedback différé'   },
   { value: 'Projet long',          label: 'Projet long',          desc: 'Semestre ou année'               },
-  { value: 'Diagnostic',           label: 'Diagnostic',           desc: 'Evaluation initiale du niveau'   }
+  { value: 'Diagnostic',           label: 'Diagnostic',           desc: 'Évaluation initiale du niveau'   }
 ]
 
 const BLOOM_OBJECTIVES = [

@@ -3,8 +3,8 @@
     <div class="ui-page-header">
       <h1>Audit de cours PDF</h1>
       <p class="header-desc">
-        Extension exploratoire du PoC. Infere les parametres de votre cours section par section depuis
-        un PDF, puis genere une analyse SWOT deterministe croisee avec la matrice de pertinence.
+        Extension exploratoire du PoC. Infère les paramètres de votre cours section par section depuis
+        un PDF, puis génère une analyse SWOT déterministe croisée avec la matrice de pertinence.
       </p>
     </div>
 
@@ -82,11 +82,11 @@
       <p class="error-title">Une erreur est survenue</p>
       <p class="error-msg">{{ audit.error.value }}</p>
       <div class="error-hints">
-        <p>Verifications :</p>
+        <p>Vérifications :</p>
         <ul>
           <li>Le proxy local tourne-t-il ? Lancer <code>npm run dev:full</code> au lieu de <code>npm run dev</code>.</li>
-          <li>Le fichier <code>.env</code> existe-t-il a la racine avec une cle <code>ANTHROPIC_API_KEY</code> valide ?</li>
-          <li>En mode demo, utilisez le bouton "Charger le cours exemple" pour eviter tout appel API.</li>
+          <li>Le fichier <code>.env</code> existe-t-il à la racine avec une clé <code>ANTHROPIC_API_KEY</code> valide ?</li>
+          <li>En mode démo, utilisez le bouton "Charger le cours exemple" pour éviter tout appel API.</li>
         </ul>
       </div>
       <button class="btn-retry" @click="audit.reset">Recommencer</button>

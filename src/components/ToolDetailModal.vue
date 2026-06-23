@@ -32,11 +32,11 @@
             <span class="info-value">{{ tool.cursus }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Cout enseignant</span>
+            <span class="info-label">Coût enseignant</span>
             <span class="info-value">{{ tool.cost_teacher }} ({{ tool.cost_num }}/3)</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Cout etudiant</span>
+            <span class="info-label">Coût étudiant</span>
             <span class="info-value">{{ tool.cost_student }}</span>
           </div>
           <div class="info-row">

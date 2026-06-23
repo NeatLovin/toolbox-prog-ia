@@ -19,7 +19,7 @@
     </div>
 
     <button class="btn-demo" @click="$emit('load-fixture')">
-      &#9654; Charger le cours exemple (demo sans reseau)
+      &#9654; Charger le cours exemple (démo sans réseau)
     </button>
 
     <p class="demo-note">

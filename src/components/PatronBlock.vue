@@ -1,7 +1,7 @@
 <template>
   <div class="patron-block">
     <div class="patron-header">
-      <span class="ui-badge ui-badge--patron">Patron pedagogique</span>
+      <span class="ui-badge ui-badge--patron">Patron pédagogique</span>
       <span v-if="patron.contexte" class="ui-badge" :class="contexteClass(patron.contexte)">
         {{ patron.contexte }}
       </span>
@@ -16,7 +16,7 @@
 
     <div class="patron-fields">
       <div class="patron-field">
-        <span class="pf-label">Activite</span>
+        <span class="pf-label">Activité</span>
         <p class="pf-text">{{ patron.activite }}</p>
       </div>
       <div class="patron-field patron-field--risk">
@@ -28,7 +28,7 @@
         <p class="pf-text">{{ patron.parade }}</p>
       </div>
       <div class="patron-field">
-        <span class="pf-label">Evaluation</span>
+        <span class="pf-label">Évaluation</span>
         <p class="pf-text">{{ patron.evaluation }}</p>
       </div>
     </div>

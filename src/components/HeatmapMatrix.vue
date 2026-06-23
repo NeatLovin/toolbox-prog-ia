@@ -542,6 +542,19 @@ function hideTip() { tip.value.show = false }
 .hm-sc:hover { filter: brightness(0.82) saturate(1.15); }
 .hm-sc.hm-sc--zone-last { border-right: 2px solid var(--color-border-strong); }
 
+/* Contraste du score en mode sombre : les fonds saturés ont une luminance intermédiaire
+   (~0.16–0.23) insuffisante pour --color-text ; blanc pur + ombre subtile compensent. */
+[data-theme="dark"] .hm-sc {
+  color: #FFFFFF;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hm-sc {
+    color: #FFFFFF;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+}
+
 /* Infobulle */
 .hm-tip {
   position: fixed;
