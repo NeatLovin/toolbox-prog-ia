@@ -10,6 +10,21 @@
 
     <!-- Idle : depot PDF ou fixture -->
     <template v-if="audit.phase.value === 'idle'">
+      <div class="ctx-chooser">
+        <label class="ctx-label" for="ctx-select">Contexte du cours</label>
+        <select
+          id="ctx-select"
+          class="ctx-select"
+          :value="audit.courseContext.value"
+          @change="audit.courseContext.value = $event.target.value"
+        >
+          <option value="Présentiel encadré">Présentiel encadré</option>
+          <option value="Autonomie supervisée">Autonomie supervisée</option>
+          <option value="Projet long">Projet long</option>
+          <option value="Diagnostic">Diagnostic</option>
+        </select>
+        <p class="ctx-hint">Appliqué à toutes les sections lors de l'analyse.</p>
+      </div>
       <PdfDropzone
         @file-selected="audit.extractAndClassify"
         @load-fixture="loadFixture"
@@ -52,6 +67,8 @@
     <template v-else-if="audit.phase.value === 'done'">
       <CourseAudit
         :is-programming="audit.isProgramming.value"
+        :course-summary="audit.courseSummary.value"
+        :course-context="audit.courseContext.value"
         :swot="audit.swot.value"
         :recommendations="audit.recommendations.value"
         :sections="audit.sections.value"
@@ -96,6 +113,35 @@ function loadFixture() {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
+}
+
+/* Sélecteur de contexte global */
+.ctx-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 360px;
+}
+
+.ctx-label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ctx-select {
+  font-size: var(--text-base);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.75rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.ctx-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-placeholder);
 }
 
 .header-desc { max-width: 680px; }

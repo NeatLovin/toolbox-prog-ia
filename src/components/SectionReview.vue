@@ -68,15 +68,6 @@
             </select>
           </div>
 
-          <div class="field-row">
-            <label class="field-label">Contexte</label>
-            <select v-model="classif.context" class="field-select">
-              <option value="Presentiel encadre">Presentiel encadre</option>
-              <option value="Autonomie supervisee">Autonomie supervisee</option>
-              <option value="Projet long">Projet long</option>
-              <option value="Diagnostic">Diagnostic</option>
-            </select>
-          </div>
         </template>
 
         <p v-if="classif.note" class="section-note">{{ classif.note }}</p>

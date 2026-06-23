@@ -15,10 +15,17 @@
         <h2>Analyse du cours</h2>
         <p class="audit-meta">
           {{ validatedCount }} section{{ validatedCount > 1 ? 's' : '' }} ·
-          {{ allConceptIds.length }} notion{{ allConceptIds.length > 1 ? 's' : '' }} repérée{{ allConceptIds.length > 1 ? 's' : '' }}
+          {{ allConceptIds.length }} notion{{ allConceptIds.length > 1 ? 's' : '' }} repérée{{ allConceptIds.length > 1 ? 's' : '' }} ·
+          {{ courseContext }}
         </p>
       </div>
       <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Nouvelle analyse</button>
+    </div>
+
+    <!-- 0. RÉSUMÉ GÉNÉRÉ (si course_summary disponible) -->
+    <div v-if="courseSummary" class="course-summary-card ui-card">
+      <span class="u-eyebrow">Votre cours porte sur</span>
+      <p class="course-summary-text">{{ courseSummary }}</p>
     </div>
 
     <!-- 1. EN BREF (toujours visible) -->
@@ -156,8 +163,8 @@
     <section class="recs-section">
       <h2>Recommandations par section</h2>
       <p class="recs-intro">
-        Pour chaque section, les outils conseillés sont calculés automatiquement
-        à partir des notions et du contexte détectés, sans génération de texte libre.
+        Pour chaque section, les outils conseillés sont calculés à partir des notions et du niveau cognitif détectés,
+        avec le contexte « {{ courseContext }} » appliqué à l'ensemble du cours.
       </p>
 
       <div v-for="rec in recommendations" :key="rec.section_index" class="rec-block">
@@ -192,7 +199,7 @@
           </template>
           <template v-else-if="patronsForSectionConcept(rec.section_index, cid).all.length">
             <p class="patron-ctx-note">
-              Variantes disponibles (contexte : {{ validatedBySection[rec.section_index]?.context || 'non précisé' }}) :
+              Variantes disponibles pour « {{ courseContext }} » :
             </p>
             <PatronBlock
               v-for="p in patronsForSectionConcept(rec.section_index, cid).all"
@@ -224,6 +231,8 @@ const { getPatronsByConceptAndContext } = useData()
 
 const props = defineProps({
   isProgramming:   { type: Boolean, default: true },
+  courseSummary:   { type: String,  default: '' },
+  courseContext:   { type: String,  default: 'Présentiel encadré' },
   swot:            { type: Object,  default: () => null },
   recommendations: { type: Array,   default: () => [] },
   sections:        { type: Array,   default: () => [] },
@@ -334,8 +343,7 @@ function sectionTitle(idx) {
 }
 
 function patronsForSectionConcept(sectionIndex, conceptId) {
-  const ctx = validatedBySection.value[sectionIndex]?.context
-  return getPatronsByConceptAndContext(conceptId, ctx)
+  return getPatronsByConceptAndContext(conceptId, props.courseContext)
 }
 </script>
 
@@ -384,6 +392,19 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin-top: 0.3rem;
+}
+
+/* === Résumé généré === */
+.course-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border-left: 3px solid var(--color-accent);
+}
+.course-summary-text {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.7;
 }
 
 /* === En bref === */

@@ -4,7 +4,6 @@ import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER }
 
 const PROXY_URL      = 'http://localhost:3001/api/classify'
 const CONCEPT_LIST   = conceptsData.map(c => `${c.id} : ${c.name}`).join('\n')
-const VALID_CONTEXTS = ['Présentiel encadré', 'Autonomie supervisée', 'Projet long', 'Diagnostic']
 const VALID_IDS      = new Set(conceptsData.map(c => c.id))
 const CHUNK_MAX      = 40_000  // max chars par appel analyzeDocument
 const CHUNK_LIMIT    = 4       // max morceaux par document (~160 k chars)
@@ -25,27 +24,26 @@ Concepts disponibles — retourne UNIQUEMENT des IDs de cette liste :
 ${CONCEPT_LIST}
 
 Niveaux Bloom acceptés : Remember, Understand, Apply, Analyze, Evaluate, Create
-Contextes acceptés : Présentiel encadré, Autonomie supervisée, Projet long, Diagnostic
 
 Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ni après :
 {
   "is_programming": true,
+  "course_summary": "Ce cours couvre la programmation Python orientée objet pour des étudiants de première année.",
   "sections": [
     {
       "title": "Titre de la section",
       "concept_ids": ["C1.1"],
-      "bloom": "Apply",
-      "context": "Présentiel encadré"
+      "bloom": "Apply"
     }
   ]
 }
 
 Règles strictes :
 - Ne jamais forcer des concepts de programmation sur un contenu non informatique
+- course_summary : 1 à 2 phrases neutres en français décrivant ce que couvre ce cours ; laisser "" si is_programming est false
 - concept_ids : 0 à 3 IDs parmi la liste ci-dessus, tableau vide si aucun concept identifiable
 - N'invente jamais un ID hors de la liste fournie
 - bloom : une valeur parmi les niveaux Bloom acceptés, ou null si incertain
-- context : une valeur parmi les contextes acceptés (défaut : Présentiel encadré)
 - Détecte les sections à partir des titres et de la structure du texte
 - Limite à 30 sections maximum`
 
@@ -176,15 +174,16 @@ async function analyzeDocument(cleanText) {
   const raw = JSON.parse(jsonMatch[0])
   const isProg      = raw.is_programming === true
   const rawSections = Array.isArray(raw.sections) ? raw.sections : []
+  const rawSummary  = typeof raw.course_summary === 'string' ? raw.course_summary.slice(0, 400).trim() : ''
   return {
     is_programming: isProg,
+    course_summary: rawSummary,
     sections: rawSections.slice(0, 30).map(entry => ({
       title:       typeof entry.title === 'string' ? entry.title.slice(0, 200) : 'Section',
       concept_ids: Array.isArray(entry.concept_ids)
         ? entry.concept_ids.filter(id => VALID_IDS.has(id)).slice(0, 3)
         : [],
-      bloom:   BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null,
-      context: VALID_CONTEXTS.includes(entry.context) ? entry.context : 'Présentiel encadré'
+      bloom:   BLOOM_ORDER.includes(entry.bloom) ? entry.bloom : null
     }))
   }
 }
@@ -198,15 +197,20 @@ async function analyzeWithChunking(cleanText) {
   for (let i = 0; i < cleanText.length && chunks.length < CHUNK_LIMIT; i += CHUNK_MAX) {
     chunks.push(cleanText.slice(i, i + CHUNK_MAX))
   }
-  let globalProg = false
+  let globalProg    = false
+  let globalSummary = ''
   const allSections = []
   for (const chunk of chunks) {
     const result = await analyzeDocument(chunk)
-    if (result.is_programming) globalProg = true
+    if (result.is_programming) {
+      globalProg = true
+      if (!globalSummary && result.course_summary) globalSummary = result.course_summary
+    }
     allSections.push(...result.sections)
   }
   return {
     is_programming: globalProg,
+    course_summary: globalSummary,
     sections: globalProg ? allSections.slice(0, 30) : []
   }
 }
@@ -271,7 +275,7 @@ function computeSwot(classifs, allSections) {
   return { forces, faiblesses, risques, opportunites, meta: { bloom, families } }
 }
 
-function computeRecommendations(classifs) {
+function computeRecommendations(classifs, courseCtx) {
   return classifs
     .filter(s => s.concept_ids.length > 0 && s.bloom)
     .map(s => {
@@ -281,7 +285,7 @@ function computeRecommendations(classifs) {
         concept_family: concept?.family || 'Syntaxe',
         bloom: s.bloom,
         function: 'Formative',
-        context: s.context
+        context: courseCtx
       })
       return { section_index: s.section_index, ...rec }
     })
@@ -299,6 +303,8 @@ export function useAudit() {
   const error           = ref(null)
   const isDemo          = ref(false)
   const isProgramming   = ref(true)
+  const courseContext   = ref('Présentiel encadré')
+  const courseSummary   = ref('')
 
   function loadFixture(fixture) {
     isDemo.value          = true
@@ -330,7 +336,7 @@ export function useAudit() {
       // PDF sans texte extractible (scanné, protégé, etc.)
       if (!cleanText.trim()) {
         sections.value        = [{ index: 0, title: 'Document complet' }]
-        classifications.value = [{ section_index: 0, concept_ids: [], bloom: null, context: 'Présentiel encadré', confidence: 0 }]
+        classifications.value = [{ section_index: 0, concept_ids: [], bloom: null, confidence: 0 }]
         phase.value = 'reviewing'
         return
       }
@@ -346,7 +352,8 @@ export function useAudit() {
         return
       }
 
-      const detected = result.sections
+      courseSummary.value = result.course_summary || ''
+      const detected      = result.sections
 
       if (DEBUG_SEGMENTATION) {
         // eslint-disable-next-line no-console
@@ -358,7 +365,6 @@ export function useAudit() {
         section_index: i,
         concept_ids:  entry.concept_ids,
         bloom:        entry.bloom,
-        context:      entry.context,
         confidence:   0.85
       }))
       phase.value = 'reviewing'
@@ -373,7 +379,7 @@ export function useAudit() {
     validated.value       = validatedClassifs
     phase.value           = 'computing'
     swot.value            = computeSwot(validatedClassifs, sections.value)
-    recommendations.value = computeRecommendations(validatedClassifs)
+    recommendations.value = computeRecommendations(validatedClassifs, courseContext.value)
     phase.value           = 'done'
   }
 
@@ -387,7 +393,9 @@ export function useAudit() {
     error.value           = null
     isDemo.value          = false
     isProgramming.value   = true
+    courseContext.value   = 'Présentiel encadré'
+    courseSummary.value   = ''
   }
 
-  return { phase, sections, classifications, validated, swot, recommendations, error, isDemo, isProgramming, loadFixture, extractAndClassify, confirmReview, reset }
+  return { phase, sections, classifications, validated, swot, recommendations, error, isDemo, isProgramming, courseContext, courseSummary, loadFixture, extractAndClassify, confirmReview, reset }
 }
