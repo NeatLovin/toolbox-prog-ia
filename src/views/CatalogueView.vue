@@ -178,7 +178,7 @@
 
         <!-- Niveau 3 : sources bibliographiques -->
         <template #deep>
-          <p v-if="tool.sources" class="td-sources">{{ tool.sources }}</p>
+          <p v-if="tool.sources" class="td-sources"><ReferenceLinks :text="tool.sources" /></p>
           <p v-else class="td-sources-empty">Aucune référence documentée pour cet outil.</p>
         </template>
 
@@ -195,6 +195,7 @@ import DisclosureCard from '../components/DisclosureCard.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
 import MetricGauge from '../components/MetricGauge.vue'
 import { GLOSSARY } from '../lib/glossary.js'
+import ReferenceLinks from '../components/ReferenceLinks.vue'
 
 const EFFICACITE_VALUE = { 'Validée': 3, 'Établie': 2, 'Émergente': 1 }
 

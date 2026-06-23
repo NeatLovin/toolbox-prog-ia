@@ -220,7 +220,7 @@
                 </div>
                 <div v-if="concept.references" class="cs-deep-block">
                   <span class="cs-block-label">Références</span>
-                  <p class="cs-deep-refs">{{ concept.references }}</p>
+                  <p class="cs-deep-refs"><ReferenceLinks :text="concept.references" /></p>
                 </div>
               </div>
             </template>
@@ -241,6 +241,7 @@ import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
+import ReferenceLinks from '../components/ReferenceLinks.vue'
 
 const { concepts, tools, matrix, getPatronsByConcept } = useData()
 

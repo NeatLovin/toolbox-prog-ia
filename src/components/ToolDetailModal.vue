@@ -70,7 +70,7 @@
 
         <div v-if="tool.sources" class="section">
           <h3 class="section-title">Sources</h3>
-          <p class="sources-text">{{ tool.sources }}</p>
+          <p class="sources-text"><ReferenceLinks :text="tool.sources" /></p>
         </div>
 
         <div v-if="tool.link" class="section">
@@ -89,6 +89,7 @@ import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import InfoTooltip from './InfoTooltip.vue'
 import { GLOSSARY } from '../lib/glossary.js'
+import ReferenceLinks from './ReferenceLinks.vue'
 
 const props = defineProps({
   tool: { type: Object, default: null }

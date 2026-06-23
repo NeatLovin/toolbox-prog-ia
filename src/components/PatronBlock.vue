@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <p v-if="patron.references" class="patron-refs">{{ patron.references }}</p>
+    <p v-if="patron.references" class="patron-refs"><ReferenceLinks :text="patron.references" /></p>
 
     <ToolDetailModal :tool="selectedTool" @close="selectedTool = null" />
   </div>
@@ -59,6 +59,7 @@
 import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import ToolDetailModal from './ToolDetailModal.vue'
+import ReferenceLinks from './ReferenceLinks.vue'
 
 const props = defineProps({
   patron: { type: Object, required: true }
