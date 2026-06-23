@@ -171,14 +171,4 @@ const efficaciteClass = computed(() => ({
   flex-wrap: wrap;
   gap: 0.3rem;
 }
-
-.card-cyberlearn {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  display: flex;
-  gap: 0.3rem;
-  align-items: center;
-}
-
-.cyberlearn-label { font-weight: 600; color: var(--color-text-muted); }
 </style>

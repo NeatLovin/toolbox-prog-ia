@@ -39,10 +39,6 @@
             <span class="info-label">Coût étudiant</span>
             <span class="info-value">{{ tool.cost_student }}</span>
           </div>
-          <div class="info-row">
-            <span class="info-label">Cyberlearn</span>
-            <span class="info-value">{{ tool.cyberlearn }}</span>
-          </div>
           <div v-if="tool.efficacite" class="info-row">
             <span class="info-label">Efficacite <InfoTooltip :content="GLOSSARY.efficacite.short" /></span>
             <span class="ui-badge" :class="efficaciteClass">{{ tool.efficacite }}</span>

@@ -137,10 +137,6 @@
                 <span class="td-label">Coût étudiant</span>
                 <span class="td-val">{{ tool.cost_student }}</span>
               </div>
-              <div v-if="tool.cyberlearn && tool.cyberlearn !== 'Non applicable'" class="td-row">
-                <span class="td-label">Cyberlearn</span>
-                <span class="td-val">{{ tool.cyberlearn }}</span>
-              </div>
             </div>
 
             <div v-if="resolvedScenarios(tool).length" class="td-section">
