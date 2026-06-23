@@ -458,7 +458,7 @@
     "robustness_num": 3,
     "function": "FS",
     "sources": "Zhang et al. 2026",
-    "link": "",
+    "link": "https://arxiv.org/abs/2601.20085",
     "efficacite": "Validée"
   },
   {
@@ -605,7 +605,7 @@
     "robustness_num": 3,
     "function": "F",
     "sources": "Nathaniel et al. 2025-2026",
-    "link": "",
+    "link": "https://www.hes-so.ch/la-hes-so/soutien-a-lenseignement/projets-enseignement/detail-projet/ameliorer-le-transfert-de-connaissances-entre-les-professeur-e-s-et-les-etudiant-e-s-adaptation-des-modeles-de-langage-generatif-llms-en-hebergement-local",
     "efficacite": "Validée"
   },
   {
@@ -710,7 +710,7 @@
     "robustness_num": 4,
     "function": "F",
     "sources": "Dickey et al. 2024",
-    "link": "",
+    "link": "https://doi.org/10.1007/s42979-024-03074-y",
     "efficacite": "Validée"
   },
   {
