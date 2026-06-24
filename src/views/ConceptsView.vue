@@ -399,7 +399,6 @@ function bloomClass(b) {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
-  align-items: start;
 }
 
 /* Contenu du slot summary */
