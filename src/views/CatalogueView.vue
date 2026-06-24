@@ -25,7 +25,7 @@
 
     <!-- Filtres avancés (repliables) -->
     <details class="ui-collapsible advanced-filters">
-      <summary>Filtres avancés (Fonction, Coût, Robustesse IA, Fil rouge)</summary>
+      <summary>Filtres avancés (Fonction, Coût, Robustesse IA, Axe pédagogique)</summary>
       <div class="ui-collapsible-body advanced-body">
         <div class="ui-filter-group">
           <label>Fonction <InfoTooltip :content="GLOSSARY.fonction.short" /></label>
@@ -60,10 +60,10 @@
         </div>
 
         <div class="ui-filter-group">
-          <label>Fil rouge <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></label>
+          <label>Axe pédagogique <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></label>
           <select v-model="selectedFil" class="ui-filter-select">
             <option value="">Tous</option>
-            <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.id }} : {{ f.label }}</option>
+            <option v-for="f in meta.fils_rouges" :key="f.id" :value="f.id">{{ f.label }}</option>
           </select>
         </div>
       </div>
@@ -150,7 +150,7 @@
             </div>
 
             <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="td-section">
-              <h4 class="td-section-title">Fils rouges <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h4>
+              <h4 class="td-section-title">Axes pédagogiques <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h4>
               <div class="td-items">
                 <div v-for="fil in resolvedFils(tool)" :key="fil.id" class="td-item td-fil">
                   <span class="ui-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
