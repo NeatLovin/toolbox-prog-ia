@@ -85,9 +85,18 @@
             scope="col"
             class="hm-th-concept"
             :class="{ 'hm-th--zone-last': zoneLastIds.has(concept.id) }"
-            :title="`${concept.id} : ${concept.name}`"
             :style="{ background: `color-mix(in srgb, var(--zone-${ZONE_KEYS[concept.family]}) 9%, var(--color-surface))` }"
-          ><span class="hm-concept-id">{{ concept.id }}</span><span class="hm-concept-name">{{ truncateName(concept.name) }}</span></th>
+          >
+            <button
+              class="hm-concept-btn"
+              :title="`${concept.id} : ${concept.name}`"
+              :aria-label="`Voir le concept ${concept.name}`"
+              @click="selectedConcept = concept"
+            >
+              <span class="hm-concept-id">{{ concept.id }}</span>
+              <span class="hm-concept-name">{{ truncateName(concept.name) }}</span>
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -130,6 +139,8 @@
       {{ tip.text }}
     </div>
   </Teleport>
+
+  <ConceptDetailModal :concept="selectedConcept" @close="selectedConcept = null" />
 </template>
 
 <script setup>
@@ -137,6 +148,7 @@ import { ref, computed } from 'vue'
 import matrixData   from '../data/matrix.json'
 import toolsData    from '../data/tools.json'
 import conceptsData from '../data/concepts.json'
+import ConceptDetailModal from './ConceptDetailModal.vue'
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const ZONES     = ['Syntaxe', 'Logique', 'Architecture']
@@ -193,9 +205,10 @@ for (const fam of FAMILIES) {
 }
 
 // ─── État réactif ─────────────────────────────────────────────────────────────
-const filterZone   = ref('')
-const filterFamily = ref('')
-const tip = ref({ show: false, text: '', x: 0, y: 0 })
+const filterZone      = ref('')
+const filterFamily    = ref('')
+const tip             = ref({ show: false, text: '', x: 0, y: 0 })
+const selectedConcept = ref(null)
 
 // ─── Computed ─────────────────────────────────────────────────────────────────
 const filteredConcepts = computed(() => {
@@ -440,6 +453,24 @@ function hideTip() { tip.value.show = false }
   border-right: 2px solid var(--color-border-strong);
 }
 
+.hm-concept-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.12s;
+  width: 100%;
+}
+.hm-concept-btn:hover { background: rgba(0, 0, 0, 0.06); }
+.hm-concept-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
 .hm-concept-id {
   display: inline-block;
   vertical-align: bottom;
@@ -451,7 +482,6 @@ function hideTip() { tip.value.show = false }
   color: var(--color-text-muted);
   white-space: nowrap;
   padding: 0.35rem 0;
-  cursor: default;
 }
 
 .hm-concept-name {
@@ -464,7 +494,6 @@ function hideTip() { tip.value.show = false }
   color: var(--color-text-faint);
   white-space: nowrap;
   padding: 0.35rem 0;
-  cursor: default;
 }
 
 /* Ligne de groupe famille */

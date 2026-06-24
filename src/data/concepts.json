@@ -6,6 +6,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Variables, types et déclarations",
+    "gloss": "Une variable est une étiquette qui range une valeur (un nombre, un texte) pour la réutiliser. Le type précise la nature de cette valeur, et déclarer une variable, c'est la créer en annonçant ce qu'elle contiendra.",
     "description": "Notion de variable, typage statique vs dynamique, scope, durée de vie, conversion de types.",
     "bloom": [
       "Remember",
@@ -23,6 +24,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Structures de contrôle",
+    "gloss": "Les instructions qui décident de l'ordre d'exécution : faire un choix selon une condition (si... alors...) ou répéter une action (boucle). C'est ce qui rend un programme autre chose qu'une liste figée d'étapes.",
     "description": "if/else, switch, while, for, do-while, break/continue, expressions booléennes.",
     "bloom": [
       "Apply"
@@ -38,6 +40,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Fonctions et paramétrisation",
+    "gloss": "Une fonction est un bloc de code nommé, réutilisable à volonté, auquel on passe des données d'entrée (les paramètres) pour obtenir un résultat. Cela évite de réécrire la même logique partout.",
     "description": "Définition, appel, paramètres par valeur/référence, retour, récursivité, scope.",
     "bloom": [
       "Apply",
@@ -54,6 +57,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Structures de données primitives",
+    "gloss": "Les façons de base d'organiser plusieurs valeurs ensemble : une liste ordonnée, un dictionnaire qui associe une clé à une valeur, un ensemble sans doublons, ou une chaîne pour du texte.",
     "description": "Tableaux, listes, dictionnaires/maps, ensembles, chaînes de caractères.",
     "bloom": [
       "Apply",
@@ -70,6 +74,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Syntaxe orientée objet",
+    "gloss": "Une manière d'organiser le code autour d'objets qui regroupent des données et les actions qui les manipulent, par exemple un objet Compte qui contient un solde et sait comment le débiter.",
     "description": "Classes, instances, attributs, méthodes, héritage, polymorphisme, encapsulation.",
     "bloom": [
       "Apply",
@@ -86,6 +91,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Gestion des erreurs",
+    "gloss": "Prévoir ce qui se passe quand quelque chose tourne mal (fichier absent, saisie invalide) pour que le programme réagisse proprement au lieu de planter : on attrape l'erreur et on décide quoi faire.",
     "description": "try/catch/finally, throw, types d'exceptions, gestion défensive, contrats.",
     "bloom": [
       "Apply"
@@ -101,6 +107,7 @@
     "family_description": "Concepts relatifs à la production et à l'interprétation du code en tant que texte conforme aux règles formelles du langage. Zone où l'IA générative est la plus performante et où le risque de vibe coding et de fragile knowledge est maximal.",
     "risk_ai": "Maximal",
     "name": "Conventions de style et lisibilité",
+    "gloss": "Les règles d'écriture qui rendent le code lisible et homogène : bien nommer, aligner proprement, commenter utilement. Un code lisible est plus facile à comprendre et à faire évoluer à plusieurs.",
     "description": "Nommage, indentation, commentaires, conventions de langage, linting, formatage.",
     "bloom": [
       "Understand",
@@ -117,6 +124,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Décomposition algorithmique",
+    "gloss": "Découper un problème complexe en sous-problèmes plus petits qu'on sait résoudre un par un. C'est la compétence de base pour aborder une tâche sans être submergé.",
     "description": "Décomposer un problème en sous-problèmes résolubles, identifier les invariants.",
     "bloom": [
       "Analyze"
@@ -132,6 +140,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Traçage de code (reading skills)",
+    "gloss": "Lire un programme et suivre à la main ce qu'il fait, étape par étape, en notant comment les valeurs changent, pour prédire son résultat sans l'exécuter. C'est savoir lire le code, pas seulement l'écrire.",
     "description": "Exécuter mentalement un programme, suivre l'état des variables, prédire la sortie.",
     "bloom": [
       "Understand",
@@ -148,6 +157,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Debugging et diagnostic",
+    "gloss": "Trouver pourquoi un programme ne fait pas ce qu'on attend : repérer le symptôme, localiser la cause, formuler une hypothèse et la tester. Une démarche d'enquête, pas du hasard.",
     "description": "Identifier la nature d'un bug, localiser sa source, formuler une hypothèse, tester.",
     "bloom": [
       "Analyze"
@@ -163,6 +173,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Écriture de tests et validation",
+    "gloss": "Écrire de petits programmes dont le seul rôle est de vérifier automatiquement que le code fait bien ce qu'il doit, et continue après modification. C'est le filet de sécurité du développement.",
     "description": "Tests unitaires, intégration, TDD, couverture, assertions, contrats.",
     "bloom": [
       "Apply",
@@ -179,6 +190,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Raisonnement sur la complexité",
+    "gloss": "Estimer si une solution restera rapide quand les données grossissent : un programme correct sur dix éléments peut devenir inutilisable sur un million. On compare les approches selon leur coût en temps et en mémoire.",
     "description": "Notation O() asymptotique, analyse coût mémoire, comparaison d'algorithmes.",
     "bloom": [
       "Analyze",
@@ -195,6 +207,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Invariants et préservation d'état",
+    "gloss": "Un invariant est une propriété qui reste vraie tout au long d'un calcul, par exemple à chaque tour d'une boucle. Le vérifier garantit par le raisonnement que le programme est correct, plutôt que par essais successifs.",
     "description": "Identifier les invariants d'une boucle, conditions de bord, préconditions/postconditions.",
     "bloom": [
       "Analyze"
@@ -210,6 +223,7 @@
     "family_description": "Concepts relatifs au raisonnement algorithmique, à l'interprétation dynamique du code et à la résolution de problèmes. Zone disputée où l'IA est partielle et variable, risque élevé de délégation sans compréhension.",
     "risk_ai": "Élevé",
     "name": "Patterns de résolution de problèmes",
+    "gloss": "Reconnaître qu'un nouveau problème ressemble à un type déjà rencontré et réutiliser la stratégie qui marche pour cette famille. C'est ce qui distingue le débutant, qui repart de zéro, de l'expert qui transpose.",
     "description": "Reconnaître des patterns algorithmiques et les transposer dans de nouveaux contextes.",
     "bloom": [
       "Analyze",
@@ -226,6 +240,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Conception modulaire",
+    "gloss": "Organiser un programme en morceaux indépendants, chacun avec une responsabilité claire, qui communiquent par des points de contact bien définis. On peut alors modifier un morceau sans tout casser.",
     "description": "Découpage en modules cohérents et faiblement couplés. Single Responsibility, interfaces, abstractions.",
     "bloom": [
       "Analyze",
@@ -242,6 +257,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Design patterns",
+    "gloss": "Des solutions éprouvées à des problèmes de conception récurrents, comme des recettes reconnues entre développeurs. Les nommer permet d'en parler vite et de ne pas réinventer la roue.",
     "description": "Patterns du Gang of Four (Singleton, Factory, Observer, MVC, etc.), reconnaissance et application.",
     "bloom": [
       "Apply",
@@ -258,6 +274,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Architecture multi-tiers",
+    "gloss": "Séparer une application en couches aux rôles distincts : l'affichage, la logique métier, les données. Cette séparation rend le système plus clair, testable et modifiable.",
     "description": "Architectures n-tiers, API REST, séparation présentation/métier/données, microservices.",
     "bloom": [
       "Analyze"
@@ -273,6 +290,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Performance et optimisation",
+    "gloss": "Mesurer où un programme passe son temps ou consomme trop de mémoire, identifier le vrai goulot d'étranglement, puis l'améliorer. On optimise ce qui compte, pas au hasard.",
     "description": "Profilage, identification de goulots, optimisations algorithmiques et systèmes.",
     "bloom": [
       "Analyze",
@@ -289,6 +307,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Sécurité et validation d'entrées",
+    "gloss": "Ne jamais faire confiance aveuglément aux données reçues et protéger l'application des usages malveillants : vérifier les entrées, contrôler qui a le droit de faire quoi, ne pas exposer de secrets.",
     "description": "Input validation, authentification, autorisation, OWASP Top 10, gestion des secrets.",
     "bloom": [
       "Apply",
@@ -305,6 +324,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Maintenabilité et évolutivité",
+    "gloss": "Concevoir un code qui restera facile à faire vivre : rembourser la dette technique, le réorganiser sans changer son comportement (refactoring), anticiper les évolutions futures.",
     "description": "Dette technique, refactoring, conception orientée évolution, tests de régression.",
     "bloom": [
       "Evaluate",
@@ -321,6 +341,7 @@
     "family_description": "Concepts relatifs à la conception et à l'évaluation de systèmes logiciels au-delà du code-unité. Niveaux Bloom dominants Analyze, Evaluate, Create. Risque IA modéré : l'IA assiste mais ne remplace pas le jugement architectural.",
     "risk_ai": "Modéré",
     "name": "Documentation et ADR",
+    "gloss": "Expliquer par écrit comment fonctionne le système et surtout pourquoi les grands choix ont été faits (un ADR est une fiche qui trace une décision d'architecture), pour que d'autres puissent reprendre le travail.",
     "description": "Documentation technique (README, ADR, UML), justification des choix architecturaux.",
     "bloom": [
       "Create"

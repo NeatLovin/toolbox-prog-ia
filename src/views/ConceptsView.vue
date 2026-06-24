@@ -161,6 +161,9 @@
                 <span class="ui-badge" :class="riskClass(fam.risk_ai)" style="margin-left:auto;">{{ fam.risk_ai }}</span>
               </div>
               <p class="cs-name">{{ concept.name }}</p>
+              <p v-if="concept.gloss" class="cs-gloss">
+                <span class="cs-gloss-label">En clair</span>{{ concept.gloss }}
+              </p>
               <p class="cs-desc">{{ concept.description }}</p>
             </template>
 
@@ -414,6 +417,25 @@ function bloomClass(b) {
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.3;
+}
+
+.cs-gloss {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: 1.55;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.cs-gloss-label {
+  font-size: var(--text-2xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+  flex-shrink: 0;
 }
 
 .cs-desc {
