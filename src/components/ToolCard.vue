@@ -25,22 +25,23 @@
     </div>
 
     <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="card-fils">
-      <span
+      <InfoTooltip
         v-for="fil in tool.fils_rouges"
         :key="fil"
-        class="ui-badge"
-        :class="filClass(fil)"
-        :title="filTitle(fil)"
-      >{{ fil }}</span>
+        :content="filTitle(fil)"
+      >
+        <span class="ui-badge" :class="filClass(fil)">{{ fil }}</span>
+      </InfoTooltip>
     </div>
 
     <div v-if="tool.scenarios && tool.scenarios.length" class="card-fils">
-      <span
+      <InfoTooltip
         v-for="sc in tool.scenarios"
         :key="sc"
-        class="ui-badge ui-badge--neutral"
-        :title="scenarioTitle(sc)"
-      >{{ sc }}</span>
+        :content="scenarioTitle(sc)"
+      >
+        <span class="ui-badge ui-badge--neutral">{{ sc }}</span>
+      </InfoTooltip>
     </div>
 
   </article>
@@ -49,6 +50,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useData } from '../composables/useData.js'
+import InfoTooltip from './InfoTooltip.vue'
 
 const props = defineProps({
   tool: { type: Object, required: true },

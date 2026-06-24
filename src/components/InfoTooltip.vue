@@ -1,6 +1,21 @@
 <template>
   <span class="info-tip" @mouseenter="onEnter" @mouseleave="onLeave">
+    <!-- Slot mode : le contenu fourni devient le déclencheur -->
+    <span
+      v-if="hasSlot"
+      class="slot-trigger"
+      role="button"
+      tabindex="0"
+      :aria-label="`Définition : ${content.slice(0, 60)}`"
+      :aria-expanded="open"
+      @click.stop="onToggle"
+      @touchstart.prevent.stop="onToggle"
+      @keydown.enter.stop="onToggle"
+      @keydown.space.prevent.stop="onToggle"
+    ><slot /></span>
+    <!-- Mode par défaut : bouton « ? » -->
     <button
+      v-else
       type="button"
       class="info-btn"
       :aria-label="`Definition : ${content.slice(0, 60)}`"
@@ -13,11 +28,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 
 defineProps({
   content: { type: String, required: true }
 })
+
+const slots   = useSlots()
+const hasSlot = computed(() => !!slots.default)
 
 const open = ref(false)
 let touchMode = false
@@ -37,6 +55,18 @@ function onToggle() {
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
+}
+
+/* Déclencheur slot : transparent, conserve l'apparence du contenu */
+.slot-trigger {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.slot-trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 .info-btn {
@@ -69,7 +99,7 @@ function onToggle() {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  z-index: 200;
+  z-index: 300;
   background: var(--color-text);
   color: var(--color-bg);
   border-radius: var(--radius-lg);
@@ -77,7 +107,7 @@ function onToggle() {
   font-size: var(--text-2xs);
   font-weight: 400;
   line-height: 1.55;
-  max-width: 240px;
+  max-width: 260px;
   width: max-content;
   box-shadow: var(--shadow-lg);
   white-space: normal;
