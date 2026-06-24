@@ -133,6 +133,22 @@
           <!-- Profil de zone : risque IA uniquement, sans exigence cognitive -->
           <ZoneProfile :zone="selectedZone" :show-posture="false" :show-cognitive="false" class="result-zone-profile" />
 
+          <!-- Concept ciblé (cliquable si un concept précis a été choisi) -->
+          <div v-if="selectedConcept" class="result-concept-row">
+            <span class="u-eyebrow">Concept ciblé</span>
+            <button
+              type="button"
+              class="result-concept-btn"
+              :aria-label="`Voir le concept ${selectedConcept.name}`"
+              @click="conceptDetail = selectedConcept"
+            >
+              <span class="rcb-id">{{ selectedConcept.id }}</span>
+              <span class="rcb-sep" aria-hidden="true">·</span>
+              <span class="rcb-name">{{ selectedConcept.name }}</span>
+              <span class="rcb-hint" aria-hidden="true">ⓘ</span>
+            </button>
+          </div>
+
           <!-- Proposition pédagogique (si concept choisi et patron disponible) -->
           <div v-if="selectedConcept && patronForResult?.all?.length" class="result-proposal">
             <span class="u-eyebrow">Ce qu'on vous propose</span>
@@ -233,6 +249,9 @@
       </div>
 
     </section>
+
+  <ConceptDetailModal :concept="conceptDetail" @close="conceptDetail = null" />
+
   </div>
 </template>
 
@@ -245,6 +264,7 @@ import ToolCard from '../components/ToolCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
 import ZoneProfile from '../components/ZoneProfile.vue'
+import ConceptDetailModal from '../components/ConceptDetailModal.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 
 const { concepts, getPatronsByConceptAndContext } = useData()
@@ -273,6 +293,7 @@ const selectedZone    = ref('')
 const selectedConcept = ref(null)
 const selectedContext = ref('')
 const selectedBloom   = ref(null)
+const conceptDetail   = ref(null)
 
 const conceptsInZone = computed(() => concepts.filter(c => c.family === selectedZone.value))
 const dominantBloom  = computed(() => selectedConcept.value?.bloom?.[0] ?? 'Apply')
@@ -756,6 +777,59 @@ function restart() {
 .deep-source-item { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
 .deep-source-name { font-weight: 600; color: var(--color-text); }
 .deep-source-ref  { color: var(--color-text-faint); }
+
+/* Concept ciblé */
+.result-concept-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.result-concept-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  text-align: left;
+  transition: border-color 0.12s, background 0.12s;
+  align-self: flex-start;
+}
+.result-concept-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+.result-concept-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+.rcb-id {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-text-placeholder);
+  letter-spacing: 0.03em;
+}
+.rcb-sep {
+  color: var(--color-text-placeholder);
+  user-select: none;
+}
+.rcb-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+.rcb-hint {
+  font-size: 0.85em;
+  color: var(--color-info-text);
+  margin-left: 0.1rem;
+}
 
 /* Actions */
 .result-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
