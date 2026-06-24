@@ -30,8 +30,17 @@
         :key="fil"
         class="ui-badge"
         :class="filClass(fil)"
-        :title="filLabel(fil)"
+        :title="filTitle(fil)"
       >{{ fil }}</span>
+    </div>
+
+    <div v-if="tool.scenarios && tool.scenarios.length" class="card-fils">
+      <span
+        v-for="sc in tool.scenarios"
+        :key="sc"
+        class="ui-badge ui-badge--neutral"
+        :title="scenarioTitle(sc)"
+      >{{ sc }}</span>
     </div>
 
   </article>
@@ -50,9 +59,18 @@ defineEmits(['open'])
 
 const { meta } = useData()
 
-const filMap = Object.fromEntries((meta.fils_rouges || []).map(f => [f.id, f.label]))
+const filMap = Object.fromEntries((meta.fils_rouges || []).map(f => [f.id, f]))
+const scenarioMap = Object.fromEntries((meta.scenarios || []).map(s => [s.id, s]))
 
-function filLabel(fil) { return filMap[fil] || fil }
+function filTitle(fil) {
+  const f = filMap[fil]
+  return f ? `${f.id} — ${f.label} : ${f.description}` : fil
+}
+
+function scenarioTitle(s) {
+  const sc = scenarioMap[s]
+  return sc ? `${sc.id} — ${sc.label} : ${sc.description}` : s
+}
 
 function filClass(fil) {
   return {

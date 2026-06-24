@@ -46,7 +46,7 @@
         </div>
 
         <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="section">
-          <h3 class="section-title">Fils rouges</h3>
+          <h3 class="section-title">Fils rouges <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h3>
           <div class="fils-list">
             <div v-for="fil in resolvedFils" :key="fil.id" class="fil-item">
               <span class="ui-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
@@ -59,7 +59,7 @@
         </div>
 
         <div v-if="resolvedScenarios.length" class="section">
-          <h3 class="section-title">Scenarios</h3>
+          <h3 class="section-title">Scénarios <InfoTooltip :content="GLOSSARY.scenario.short" /></h3>
           <div class="scenarios-list">
             <div v-for="s in resolvedScenarios" :key="s.id" class="scenario-item">
               <strong>{{ s.label }}</strong>
