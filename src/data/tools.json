@@ -331,7 +331,7 @@
     "robustness_ai": "Faible (ne détecte pas code IA)",
     "robustness_num": 1,
     "function": "S",
-    "sources": "Saglam & Schmid 2025",
+    "sources": "Sağlam & Schmid 2025",
     "link": "https://github.com/jplag/JPlag",
     "efficacite": "Validée"
   },
