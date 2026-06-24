@@ -153,7 +153,7 @@
             details-label="Indicateurs et description"
             deep-label="Références et cadre"
           >
-            <!-- Niveau 1 : identité + description -->
+            <!-- Niveau 1 : identité + explication en clair -->
             <template #summary>
               <div class="cs-meta-row">
                 <span class="cs-id">{{ concept.id }}</span>
@@ -164,12 +164,13 @@
               <p v-if="concept.gloss" class="cs-gloss">
                 <span class="cs-gloss-label">En clair</span>{{ concept.gloss }}
               </p>
-              <p class="cs-desc">{{ concept.description }}</p>
             </template>
 
-            <!-- Niveau 2 : Bloom, outils idéaux, patrons -->
+            <!-- Niveau 2 : description technique, Bloom, outils idéaux, patrons -->
             <template #details>
               <div class="cs-details-body">
+
+                <p class="cs-desc">{{ concept.description }}</p>
 
                 <div class="cs-block">
                   <span class="cs-block-label">Niveaux Bloom</span>
@@ -393,8 +394,13 @@ function bloomClass(b) {
 .concept-count { font-size: 0.8rem; color: var(--color-text-faint); margin-left: auto; }
 .family-description { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; }
 
-/* Pile de DisclosureCard */
-.concepts-list { display: flex; flex-direction: column; gap: var(--space-3); }
+/* Grille de concepts : 3 colonnes desktop, 2 tablette, 1 mobile */
+.concepts-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
 
 /* Contenu du slot summary */
 .cs-meta-row {
@@ -579,7 +585,12 @@ function bloomClass(b) {
 .ml-title { font-weight: 700; color: var(--color-text-muted); }
 .ml-sep   { color: var(--color-text-placeholder); }
 
+@media (max-width: 960px) {
+  .concepts-list { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 640px) {
+  .concepts-list { grid-template-columns: 1fr; }
   .bloom-grid  { grid-template-columns: 1fr; }
   .fuller-grid { grid-template-columns: 1fr; }
 }

@@ -337,11 +337,12 @@ function baseName(str) {
   align-items: flex-end;
 }
 
-/* Liste d'outils (une colonne) */
+/* Grille d'outils : 3 colonnes desktop, 2 tablette, 1 mobile */
 .tools-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  align-items: start;
 }
 
 /* ── Niveau 1 : summary ── */
@@ -486,8 +487,20 @@ function baseName(str) {
   font-style: italic;
 }
 
+/* Profil de métriques en colonne sur carte étroite */
+.metric-profile {
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Étiquette moins large dans carte grille */
+.td-label { min-width: 120px; }
+
+@media (max-width: 960px) {
+  .tools-list { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 640px) {
-  .td-label { min-width: 120px; }
-  .metric-profile { flex-direction: column; gap: var(--space-3); }
+  .tools-list { grid-template-columns: 1fr; }
 }
 </style>

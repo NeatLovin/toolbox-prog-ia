@@ -43,7 +43,8 @@ const hasDeep    = computed(() => !!slots.deep)
 .dc-root {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-3);
+  padding: var(--space-4);
   transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
 
