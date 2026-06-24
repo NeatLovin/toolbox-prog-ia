@@ -427,12 +427,6 @@ function restart() {
   gap: 0.4rem;
 }
 
-.trust-line::before {
-  content: '▶';
-  font-size: 0.5rem;
-  color: var(--color-accent);
-  flex-shrink: 0;
-}
 
 /* Fil d'Ariane */
 .breadcrumb {
