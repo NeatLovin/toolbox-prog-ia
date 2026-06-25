@@ -19,7 +19,10 @@
           {{ courseContext }}
         </p>
       </div>
-      <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Nouvelle analyse</button>
+      <div class="audit-header-actions">
+        <button class="ui-btn ui-btn-ghost no-print" @click="exportPDF" aria-label="Exporter en PDF via l'impression du navigateur">Exporter en PDF</button>
+        <button class="ui-btn ui-btn-secondary no-print" @click="$emit('reset')">Nouvelle analyse</button>
+      </div>
     </div>
 
     <!-- Note de méthode -->
@@ -259,6 +262,8 @@ const props = defineProps({
 
 defineEmits(['reset'])
 
+function exportPDF() { window.print() }
+
 // ── Données dérivées ─────────────────────────────────────────────────────────
 
 const validatedCount = computed(() => props.validated.length)
@@ -401,6 +406,13 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.audit-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 

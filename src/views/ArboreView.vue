@@ -245,8 +245,9 @@
 
       <!-- Actions -->
       <div class="result-actions">
-        <button class="ui-btn ui-btn-primary" @click="restart">Nouvelle recherche</button>
-        <router-link to="/catalogue" class="ui-btn ui-btn-secondary">Voir le catalogue complet</router-link>
+        <button class="ui-btn ui-btn-primary no-print" @click="restart">Nouvelle recherche</button>
+        <router-link to="/catalogue" class="ui-btn ui-btn-secondary no-print">Voir le catalogue complet</router-link>
+        <button class="ui-btn ui-btn-ghost no-print" @click="exportPDF" aria-label="Exporter en PDF via l'impression du navigateur">Exporter en PDF</button>
       </div>
 
     </section>
@@ -388,6 +389,8 @@ function restart() {
   selectedContext.value = ''; selectedBloom.value = null
   step.value = 'zone'
 }
+
+function exportPDF() { window.print() }
 </script>
 
 <style scoped>
