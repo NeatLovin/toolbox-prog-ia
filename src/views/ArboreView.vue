@@ -258,7 +258,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getRecommendation, ZONE_PRINCIPLES } from '../lib/recommendation.js'
 import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
@@ -270,6 +271,8 @@ import ConceptDetailModal from '../components/ConceptDetailModal.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 
 const { concepts, getPatronsByConceptAndContext } = useData()
+const route  = useRoute()
+const router = useRouter()
 
 const ZONES = [
   { family: 'Syntaxe',      key: 'syntaxe',      sub: 'Variables, structures, POO, syntaxe formelle',       risk: 'Maximal' },
@@ -388,9 +391,40 @@ function restart() {
   selectedZone.value = ''; selectedConcept.value = null
   selectedContext.value = ''; selectedBloom.value = null
   step.value = 'zone'
+  router.replace({ query: {} })
 }
 
 function exportPDF() { window.print() }
+
+// Synchro URL : écriture quand on atteint le résultat
+watch(step, (val) => {
+  if (val === 'result') {
+    router.replace({ query: {
+      zone:    selectedZone.value,
+      concept: selectedConcept.value?.id ?? 'all',
+      context: selectedContext.value,
+      bloom:   selectedBloom.value ?? 'none'
+    }})
+  }
+})
+
+// Restauration depuis l'URL au montage
+onMounted(() => {
+  const q = route.query
+  if (!q.zone) return
+  if (!ZONES.some(z => z.family === q.zone)) return
+  if (!CONTEXTS.some(c => c.value === q.context)) return
+
+  selectedZone.value    = q.zone
+  selectedConcept.value = (q.concept && q.concept !== 'all')
+    ? (concepts.find(c => c.id === q.concept) ?? null)
+    : null
+  selectedContext.value = q.context
+  selectedBloom.value   = (q.bloom && q.bloom !== 'none' && BLOOM_OBJECTIVES.some(b => b.bloom === q.bloom))
+    ? q.bloom
+    : null
+  step.value = 'result'
+})
 </script>
 
 <style scoped>
