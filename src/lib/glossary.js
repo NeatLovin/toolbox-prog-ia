@@ -50,5 +50,9 @@ export const GLOSSARY = {
   parade: {
     term: 'Parade',
     short: 'Mesure pédagogique qui réduit le risque de substitution par l\'IA, en rendant l\'activité moins délégable à un outil génératif (raisonnement sur papier, oral, énoncé original, etc.).'
+  },
+  fuller: {
+    term: 'Dimension Fuller',
+    short: 'Axe de la taxonomie de Fuller (2007). Produce = produire du code ou un algorithme. Interpret = lire, tracer et expliquer du code existant. L\'IA supplante surtout Produce ; Interpret protège mieux la compréhension réelle.'
   }
 }

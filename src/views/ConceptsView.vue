@@ -246,6 +246,7 @@ import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 import ReferenceLinks from '../components/ReferenceLinks.vue'
+import { fullerHint } from '../lib/fuller.js'
 
 const { concepts, tools, matrix, getPatronsByConcept } = useData()
 
@@ -273,13 +274,6 @@ const bloomEntries = [
   { key: 'create',     label: 'Create',     strong: 'Concevoir, produire',       desc: bloomDesc.Create     }
 ]
 
-function fullerHint(fuller) {
-  if (fuller?.includes('Produce') && fuller?.includes('Interpret'))
-    return 'Produce (écrire du code) et Interpret (lire/tracer du code) sont tous les deux mobilisés.'
-  if (fuller?.includes('Produce'))   return 'Principalement Produce : l\'étudiant doit produire du code ou un algorithme.'
-  if (fuller?.includes('Interpret')) return 'Principalement Interpret : l\'étudiant doit lire, tracer et expliquer du code existant.'
-  return fuller || ''
-}
 
 const hasFilters = computed(() =>
   selectedFamily.value !== '' || selectedBloom.value !== '' || selectedRisk.value !== ''

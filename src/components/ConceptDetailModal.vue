@@ -43,8 +43,11 @@
             </div>
           </div>
           <div class="info-row">
-            <span class="info-label">Dimension Fuller</span>
-            <span class="info-value">{{ concept.fuller }}</span>
+            <span class="info-label">Dimension Fuller <InfoTooltip :content="GLOSSARY.fuller.short" /></span>
+            <div>
+              <span class="info-value">{{ concept.fuller }}</span>
+              <p class="info-hint">{{ fullerHint(concept.fuller) }}</p>
+            </div>
           </div>
           <div class="info-row">
             <span class="info-label">Risque IA</span>
@@ -64,6 +67,9 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
 import ReferenceLinks from './ReferenceLinks.vue'
+import InfoTooltip from './InfoTooltip.vue'
+import { GLOSSARY } from '../lib/glossary.js'
+import { fullerHint } from '../lib/fuller.js'
 
 const props = defineProps({
   concept: { type: Object, default: null }
@@ -233,6 +239,13 @@ function bloomClass(b) {
 }
 
 .info-value { color: var(--color-text); }
+
+.info-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  margin: 0.2rem 0 0;
+  line-height: 1.4;
+}
 
 .info-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
