@@ -24,7 +24,7 @@
         <p class="pf-text pf-text--risk">{{ patron.risque_ia }}</p>
       </div>
       <div class="patron-field">
-        <span class="pf-label">Parade</span>
+        <span class="pf-label">Parade <InfoTooltip :content="GLOSSARY.parade.short" /></span>
         <p class="pf-text">{{ patron.parade }}</p>
       </div>
       <div class="patron-field">
@@ -60,6 +60,8 @@ import { ref, computed } from 'vue'
 import { useData } from '../composables/useData.js'
 import ToolDetailModal from './ToolDetailModal.vue'
 import ReferenceLinks from './ReferenceLinks.vue'
+import InfoTooltip from './InfoTooltip.vue'
+import { GLOSSARY } from '../lib/glossary.js'
 
 const props = defineProps({
   patron: { type: Object, required: true }

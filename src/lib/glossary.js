@@ -46,5 +46,9 @@ export const GLOSSARY = {
   efficacite: {
     term: 'Efficacité documentée',
     short: 'Validée = étude évaluée par les pairs (RCT ou étude empirique publiée). Établie = pratique reconnue sans étude dédiée. Émergente = outil récent ou non encore documenté.'
+  },
+  parade: {
+    term: 'Parade',
+    short: 'Mesure pédagogique qui réduit le risque de substitution par l\'IA, en rendant l\'activité moins délégable à un outil génératif (raisonnement sur papier, oral, énoncé original, etc.).'
   }
 }
