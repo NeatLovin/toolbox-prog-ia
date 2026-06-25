@@ -631,9 +631,9 @@
   },
   {
     "id": "I07",
-    "name": "NotebookLM (Google, RAG curé)",
-    "description": "IA conversationnelle ancrée sur documents uploadés. Corpus curé limite les dérapes.",
-    "detail": "Référence sur C3.7 Documentation et ADR : l'enseignant uploade un corpus curé (modèles ADR, RFC, guides architecturaux) et l'IA reste ancrée dessus par RAG. Le risque d'hallucination hors corpus est minimisé par construction. Coût enseignant faible (niveau 1) : configuration initiale puis usage autonome par les étudiants.",
+    "name": "NotebookLM (Google)",
+    "description": "IA conversationnelle ancrée sur des documents uploadés. Le corpus sélectionné limite les hallucinations.",
+    "detail": "Référence sur C3.7 Documentation et ADR : l'enseignant uploade un corpus sélectionné (modèles ADR, RFC, guides architecturaux) et l'IA reste ancrée dessus par RAG. Le risque d'hallucination hors corpus est minimisé par construction. Coût enseignant faible (niveau 1) : configuration initiale puis usage autonome par les étudiants.",
     "scenarios": ["S3"],
     "family": "FM3",
     "family_label": "Tuteurs IA et dispositifs scaffoldés",
