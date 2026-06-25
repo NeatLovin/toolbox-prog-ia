@@ -30,7 +30,7 @@
         :key="fil"
         :content="filTitle(fil)"
       >
-        <span class="ui-badge" :class="filClass(fil)">{{ fil }}</span>
+        <span class="ui-badge" :class="filClass(fil)">{{ axeLabel(fil) }}</span>
       </InfoTooltip>
     </div>
 
@@ -64,9 +64,11 @@ const { meta } = useData()
 const filMap = Object.fromEntries((meta.fils_rouges || []).map(f => [f.id, f]))
 const scenarioMap = Object.fromEntries((meta.scenarios || []).map(s => [s.id, s]))
 
+function axeLabel(id) { return id.replace('Fil', 'Axe') }
+
 function filTitle(fil) {
   const f = filMap[fil]
-  return f ? `${f.id} — ${f.label} : ${f.description}` : fil
+  return f ? `${axeLabel(f.id)} — ${f.label} : ${f.description}` : fil
 }
 
 function scenarioTitle(s) {

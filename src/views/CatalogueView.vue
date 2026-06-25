@@ -153,7 +153,7 @@
               <h4 class="td-section-title">Axes pédagogiques <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h4>
               <div class="td-items">
                 <div v-for="fil in resolvedFils(tool)" :key="fil.id" class="td-item td-fil">
-                  <span class="ui-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
+                  <span class="ui-badge" :class="filClass(fil.id)">{{ axeLabel(fil.id) }}</span>
                   <div>
                     <strong>{{ fil.label }}</strong>
                     <p>{{ fil.description }}</p>
@@ -304,6 +304,8 @@ function filClass(fil) {
     'ui-badge--fil-d': fil === 'Fil D'
   }
 }
+
+function axeLabel(id) { return id.replace('Fil', 'Axe') }
 
 function resolvedFils(tool) {
   return (tool.fils_rouges || []).map(id => filMap[id] || { id, label: id, description: '' })

@@ -49,7 +49,7 @@
           <h3 class="section-title">Axes pédagogiques <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h3>
           <div class="fils-list">
             <div v-for="fil in resolvedFils" :key="fil.id" class="fil-item">
-              <span class="ui-badge" :class="filClass(fil.id)">{{ fil.id }}</span>
+              <span class="ui-badge" :class="filClass(fil.id)">{{ axeLabel(fil.id) }}</span>
               <div>
                 <strong>{{ fil.label }}</strong>
                 <p>{{ fil.description }}</p>
@@ -108,6 +108,8 @@ const resolvedFils = computed(() =>
 const resolvedScenarios = computed(() =>
   (props.tool?.scenarios || []).map(id => scenarioMap[id]).filter(Boolean)
 )
+
+function axeLabel(id) { return id.replace('Fil', 'Axe') }
 
 function filClass(fil) {
   return {
