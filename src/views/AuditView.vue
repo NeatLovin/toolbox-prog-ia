@@ -9,14 +9,13 @@
     </div>
 
     <!-- Idle : depot PDF ou fixture -->
-    <template v-if="audit.phase.value === 'idle'">
+    <template v-if="audit.phase === 'idle'">
       <div class="ctx-chooser">
         <label class="ctx-label" for="ctx-select">Contexte du cours</label>
         <select
           id="ctx-select"
           class="ctx-select"
-          :value="audit.courseContext.value"
-          @change="audit.courseContext.value = $event.target.value"
+          v-model="audit.courseContext"
         >
           <option value="Présentiel encadré">Présentiel encadré</option>
           <option value="Autonomie supervisée">Autonomie supervisée</option>
@@ -32,55 +31,55 @@
     </template>
 
     <!-- Extraction en cours -->
-    <div v-else-if="audit.phase.value === 'extracting'" class="loading-state">
+    <div v-else-if="audit.phase === 'extracting'" class="loading-state">
       <div class="spinner"></div>
       <p>Extraction du texte depuis le PDF...</p>
     </div>
 
     <!-- Classification en cours -->
-    <div v-else-if="audit.phase.value === 'classifying'" class="loading-state">
+    <div v-else-if="audit.phase === 'classifying'" class="loading-state">
       <div class="spinner"></div>
       <p>Analyse du document en cours...</p>
       <p class="loading-sub">Segmentation et classification en un seul appel. Cela peut prendre quelques secondes.</p>
     </div>
 
     <!-- Validation humaine -->
-    <template v-else-if="audit.phase.value === 'reviewing'">
-      <div v-if="audit.isDemo.value" class="demo-banner">
+    <template v-else-if="audit.phase === 'reviewing'">
+      <div v-if="audit.isDemo" class="demo-banner">
         <span>&#127917; Mode demo</span>
         Classifications pre-calculees chargees. Modifiez librement avant de confirmer.
       </div>
       <SectionReview
-        :sections="audit.sections.value"
-        :classifications="audit.classifications.value"
+        :sections="audit.sections"
+        :classifications="audit.classifications"
         @confirm="audit.confirmReview"
       />
     </template>
 
     <!-- Calcul SWOT -->
-    <div v-else-if="audit.phase.value === 'computing'" class="loading-state">
+    <div v-else-if="audit.phase === 'computing'" class="loading-state">
       <div class="spinner"></div>
       <p>Construction de l'analyse SWOT...</p>
     </div>
 
     <!-- Resultats -->
-    <template v-else-if="audit.phase.value === 'done'">
+    <template v-else-if="audit.phase === 'done'">
       <CourseAudit
-        :is-programming="audit.isProgramming.value"
-        :course-summary="audit.courseSummary.value"
-        :course-context="audit.courseContext.value"
-        :swot="audit.swot.value"
-        :recommendations="audit.recommendations.value"
-        :sections="audit.sections.value"
-        :validated="audit.validated.value"
+        :is-programming="audit.isProgramming"
+        :course-summary="audit.courseSummary"
+        :course-context="audit.courseContext"
+        :swot="audit.swot"
+        :recommendations="audit.recommendations"
+        :sections="audit.sections"
+        :validated="audit.validated"
         @reset="audit.reset"
       />
     </template>
 
     <!-- Erreur -->
-    <div v-else-if="audit.phase.value === 'error'" class="error-state">
+    <div v-else-if="audit.phase === 'error'" class="error-state">
       <p class="error-title">Une erreur est survenue</p>
-      <p class="error-msg">{{ audit.error.value }}</p>
+      <p class="error-msg">{{ audit.error }}</p>
       <div class="error-hints">
         <p>Vérifications :</p>
         <ul>
@@ -95,13 +94,13 @@
 </template>
 
 <script setup>
-import { useAudit } from '../composables/useAudit.js'
+import { useAuditStore } from '../stores/audit.js'
 import PdfDropzone from '../components/PdfDropzone.vue'
 import SectionReview from '../components/SectionReview.vue'
 import CourseAudit from '../components/CourseAudit.vue'
 import fixtureData from '../data/fixtures/cours-exemple.json'
 
-const audit = useAudit()
+const audit = useAuditStore()
 
 function loadFixture() {
   audit.loadFixture(fixtureData)
