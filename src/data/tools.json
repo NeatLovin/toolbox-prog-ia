@@ -643,7 +643,7 @@
     "cost_teacher": "Faible (configuration)",
     "cost_num": 1,
     "cost_student": "Faible",
-    "robustness_ai": "Élevée (corpus curé)",
+    "robustness_ai": "Élevée (corpus sélectionné)",
     "robustness_num": 3,
     "function": "F",
     "sources": "E04 · E33",

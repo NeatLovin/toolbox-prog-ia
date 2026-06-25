@@ -108,7 +108,8 @@
           class="bloom-btn"
           @click="chooseBloom(obj.bloom)"
         >
-          {{ obj.label }}
+          <span class="bloom-btn-label">{{ obj.label }}</span>
+          <span class="bloom-btn-hint">{{ obj.hint }}</span>
         </button>
         <button class="bloom-btn bloom-btn--skip" @click="chooseBloom(null)">
           Passer <span class="skip-note">({{ dominantBloom }})</span>
@@ -283,9 +284,9 @@ const CONTEXTS = [
 ]
 
 const BLOOM_OBJECTIVES = [
-  { bloom: 'Understand', label: 'Comprendre / expliquer' },
-  { bloom: 'Apply',      label: 'Appliquer / produire'   },
-  { bloom: 'Create',     label: 'Concevoir / evaluer'    }
+  { bloom: 'Understand', label: 'Comprendre / expliquer', hint: 'Lire et expliquer un programme existant' },
+  { bloom: 'Apply',      label: 'Appliquer / produire',   hint: 'Écrire du code, mettre en œuvre une solution connue' },
+  { bloom: 'Create',     label: 'Concevoir / évaluer',    hint: 'Imaginer la solution en amont, juger ou critiquer une approche' }
 ]
 
 const step            = ref('zone')
@@ -582,18 +583,31 @@ function restart() {
 .bloom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 
 .bloom-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
   padding: 0.85rem var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
   cursor: pointer;
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--color-text);
   text-align: left;
   transition: border-color 0.1s, background 0.1s;
 }
 .bloom-btn:hover { border-color: var(--color-accent); background: var(--color-accent-subtle); }
+
+.bloom-btn-label {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.bloom-btn-hint {
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--color-text-faint);
+  line-height: 1.4;
+}
 
 .bloom-btn--skip {
   grid-column: 1 / -1;
