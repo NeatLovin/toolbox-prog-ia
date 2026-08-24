@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import conceptsData from '../data/concepts.json'
 import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER } from '../lib/recommendation.js'
+import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 const PROXY_URL      = 'http://localhost:3001/api/classify'
 const CONCEPT_LIST   = conceptsData.map(c => `${c.id} : ${c.name}`).join('\n')
@@ -314,8 +315,7 @@ export const useAuditStore = defineStore('audit', {
         this.phase = 'extracting'
 
         const pdfjsLib = await import('pdfjs-dist')
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-          `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+        pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl
 
         const buffer = await file.arrayBuffer()
         const pdf    = await pdfjsLib.getDocument({ data: buffer }).promise
