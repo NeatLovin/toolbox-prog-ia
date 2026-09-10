@@ -83,8 +83,8 @@
       <div class="error-hints">
         <p>Vérifications :</p>
         <ul>
-          <li>Le proxy local tourne-t-il ? Lancer <code>npm run dev:full</code> au lieu de <code>npm run dev</code>.</li>
-          <li>Le fichier <code>.env</code> existe-t-il à la racine avec une clé <code>ANTHROPIC_API_KEY</code> valide ?</li>
+          <li>Le Worker local tourne-t-il ? Lancer <code>npm run dev:full</code> au lieu de <code>npm run dev</code>.</li>
+          <li>Le fichier <code>worker/.dev.vars</code> existe-t-il avec une clé <code>ANTHROPIC_API_KEY</code> valide ?</li>
           <li>En mode démo, utilisez le bouton "Charger le cours exemple" pour éviter tout appel API.</li>
         </ul>
       </div>

@@ -1,52 +1,18 @@
 import { defineStore } from 'pinia'
 import conceptsData from '../data/concepts.json'
 import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER } from '../lib/recommendation.js'
+import { getSessionId } from '../lib/session.js'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
-const PROXY_URL      = 'http://localhost:3001/api/classify'
-const CONCEPT_LIST   = conceptsData.map(c => `${c.id} : ${c.name}`).join('\n')
+// Le prompt système, le modèle et max_tokens sont fixés côté serveur (worker/src/audit.js) :
+// le client n'envoie que le texte extrait, jamais de quoi faire varier le coût par appel.
+const AUDIT_URL      = `${import.meta.env.VITE_API_BASE || ''}/audit`
 const VALID_IDS      = new Set(conceptsData.map(c => c.id))
 const CHUNK_MAX      = 40_000
 const CHUNK_LIMIT    = 4
 
 // Set to true locally to log detected sections (never commit as true)
 const DEBUG_SEGMENTATION = false
-
-const SYSTEM_TEXT = `Tu analyses un document pour déterminer s'il porte sur l'enseignement de la programmation ou de l'informatique, puis en extraire la structure pédagogique si applicable.
-
-ÉTAPE 1 — ÉVALUER si le document traite de programmation ou d'informatique (algorithmique, bases de données, réseaux, systèmes, génie logiciel…).
-Si le contenu porte sur autre chose (droit, médecine, histoire, langues, gestion, etc.) : renvoie immédiatement { "is_programming": false, "sections": [] } sans analyser davantage.
-Si le contenu porte sur la programmation ou l'informatique : passe à l'étape 2.
-
-ÉTAPE 2 — Analyser la structure pédagogique section par section.
-Concepts disponibles — retourne UNIQUEMENT des IDs de cette liste :
-${CONCEPT_LIST}
-
-Niveaux Bloom acceptés : Remember, Understand, Apply, Analyze, Evaluate, Create
-
-Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ni après :
-{
-  "is_programming": true,
-  "course_summary": "Ce cours couvre la programmation Python orientée objet pour des étudiants de première année.",
-  "sections": [
-    {
-      "title": "Titre de la section",
-      "concept_ids": ["C1.1"],
-      "bloom": "Apply",
-      "confidence": "high"
-    }
-  ]
-}
-
-Règles strictes :
-- Ne jamais forcer des concepts de programmation sur un contenu non informatique
-- course_summary : 1 à 2 phrases neutres en français décrivant ce que couvre ce cours ; laisser "" si is_programming est false
-- concept_ids : 0 à 3 IDs parmi la liste ci-dessus, tableau vide si aucun concept identifiable
-- N'invente jamais un ID hors de la liste fournie
-- bloom : une valeur parmi les niveaux Bloom acceptés, ou null si incertain
-- confidence : "low" | "medium" | "high". Honnêteté requise : "low" si la section est courte, ambiguë, ou que le concept est déduit avec peu d'indices ; "medium" si plausible mais partiel ; "high" seulement si l'evidence est claire. Ne pas surévaluer.
-- Détecte les sections à partir des titres et de la structure du texte
-- Limite à 30 sections maximum`
 
 // ── Extraction + débruitage côté client (gratuit) ────────────────────────────
 
@@ -149,20 +115,18 @@ function buildCleanText(pages) {
 // ── Appel unique au modèle ───────────────────────────────────────────────────
 
 async function analyzeDocument(cleanText) {
-  const response = await fetch(PROXY_URL, {
+  const response = await fetch(AUDIT_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
-      system: [{ type: 'text', text: SYSTEM_TEXT, cache_control: { type: 'ephemeral' } }],
-      messages: [{ role: 'user', content: cleanText }]
+      session_id: getSessionId(),
+      text: cleanText
     })
   })
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}))
-    throw new Error(err.error || `Proxy: HTTP ${response.status}`)
+    throw new Error(err.reason || err.error || `Worker: HTTP ${response.status}`)
   }
 
   const data = await response.json()
@@ -172,10 +136,12 @@ async function analyzeDocument(cleanText) {
 
   const raw = JSON.parse(jsonMatch[0])
   const isProg      = raw.is_programming === true
+  const relevance   = ['low', 'medium', 'high'].includes(raw.relevance_confidence) ? raw.relevance_confidence : 'medium'
   const rawSections = Array.isArray(raw.sections) ? raw.sections : []
   const rawSummary  = typeof raw.course_summary === 'string' ? raw.course_summary.slice(0, 400).trim() : ''
   return {
     is_programming: isProg,
+    relevance_confidence: relevance,
     course_summary: rawSummary,
     sections: rawSections.slice(0, 30).map(entry => ({
       title:       typeof entry.title === 'string' ? entry.title.slice(0, 200) : 'Section',
@@ -195,19 +161,22 @@ async function analyzeWithChunking(cleanText) {
   for (let i = 0; i < cleanText.length && chunks.length < CHUNK_LIMIT; i += CHUNK_MAX) {
     chunks.push(cleanText.slice(i, i + CHUNK_MAX))
   }
-  let globalProg    = false
-  let globalSummary = ''
-  const allSections = []
+  let globalProg       = false
+  let globalSummary    = ''
+  let globalConfidence = null
+  const allSections    = []
   for (const chunk of chunks) {
     const result = await analyzeDocument(chunk)
     if (result.is_programming) {
       globalProg = true
       if (!globalSummary && result.course_summary) globalSummary = result.course_summary
+      if (!globalConfidence) globalConfidence = result.relevance_confidence
     }
     allSections.push(...result.sections)
   }
   return {
     is_programming: globalProg,
+    relevance_confidence: globalConfidence || 'low',
     course_summary: globalSummary,
     sections: globalProg ? allSections.slice(0, 30) : []
   }

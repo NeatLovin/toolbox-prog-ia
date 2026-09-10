@@ -1,0 +1,24 @@
+name = "toolbox-prog-ia-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Purge quotidienne des données au-delà de la rétention annoncée (voir index.js: scheduled()).
+[triggers]
+crons = ["0 3 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "toolbox-telemetry"
+# Remplacer par l'ID retourné par `wrangler d1 create toolbox-telemetry --location=weur`.
+# Voir worker/README.md pour la procédure complète.
+database_id = "REPLACE_WITH_DATABASE_ID"
+
+# Valeurs non secrètes. ANTHROPIC_API_KEY se configure séparément avec :
+#   wrangler secret put ANTHROPIC_API_KEY
+[vars]
+ALLOWED_ORIGINS = "https://neatlovin.github.io,http://localhost:5173"
+AUDIT_KILL_SWITCH = "false"
+AUDIT_MAX_CHARS = "160000"
+AUDIT_RATE_LIMIT_PER_SESSION_HOUR = "8"
+AUDIT_DAILY_GLOBAL_CAP = "200"
+RETENTION_DAYS = "365"

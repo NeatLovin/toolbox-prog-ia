@@ -1,0 +1,4 @@
+# Copier ce fichier en worker/.dev.vars (gitignore) pour le développement local avec
+# `wrangler dev --local`. Ne jamais committer worker/.dev.vars.
+
+ANTHROPIC_API_KEY=sk-ant-VOTRE_CLE_ICI
