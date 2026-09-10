@@ -16,7 +16,9 @@ database_id = "REPLACE_WITH_DATABASE_ID"
 # Valeurs non secrètes. ANTHROPIC_API_KEY se configure séparément avec :
 #   wrangler secret put ANTHROPIC_API_KEY
 [vars]
-ALLOWED_ORIGINS = "https://neatlovin.github.io,http://localhost:5173"
+# localhost:5173 = vite dev ; localhost:4173 = vite preview (build --mode development, utilisé
+# par worker/scripts/verify-e2e.mjs pour la vérification bout en bout du lot 7).
+ALLOWED_ORIGINS = "https://neatlovin.github.io,http://localhost:5173,http://localhost:4173"
 AUDIT_KILL_SWITCH = "false"
 AUDIT_MAX_CHARS = "160000"
 AUDIT_RATE_LIMIT_PER_SESSION_HOUR = "8"

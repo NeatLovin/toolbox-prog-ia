@@ -67,7 +67,7 @@ Toutes dans `worker/wrangler.toml [vars]`, sauf la clé API (secret).
 
 | Variable | Rôle | Défaut |
 |---|---|---|
-| `ALLOWED_ORIGINS` | CSV des origines autorisées en CORS | GitHub Pages + localhost:5173 |
+| `ALLOWED_ORIGINS` | CSV des origines autorisées en CORS | GitHub Pages + localhost:5173 (vite dev) + localhost:4173 (vite preview, utilisé par verify-e2e.mjs) |
 | `ANTHROPIC_API_KEY` | Clé API Anthropic (secret, jamais dans `wrangler.toml`) | — |
 | `AUDIT_KILL_SWITCH` | `"true"` coupe `/audit` sans redéployer le code | `"false"` |
 | `AUDIT_MAX_CHARS` | Taille max du texte extrait envoyé au modèle | `160000` |
@@ -89,5 +89,22 @@ npx wrangler d1 execute toolbox-telemetry --remote --command "SELECT * FROM even
 ## Requêtes d'analyse
 
 Voir `worker/analysis.sql` (lot 7) pour les requêtes préparées correspondant aux métriques
-d'évaluation du prototype, et `worker/scripts/verify-e2e.mjs` pour le script de vérification bout en
-bout.
+d'évaluation du prototype.
+
+## Vérification bout en bout
+
+`worker/scripts/verify-e2e.mjs` simule un parcours de recommandation complet dans un vrai
+navigateur (Playwright) puis interroge la base D1 locale pour confirmer que les événements
+attendus sont arrivés. La télémétrie n'envoyant rien sur le réseau en mode développement, il faut
+un build "production" pointant sur le Worker local :
+
+```bash
+npx wrangler d1 execute toolbox-telemetry --local --file=worker/schema.sql   # une fois
+npm run worker:dev                                                          # terminal 1
+npm run build -- --mode development && npm run preview                      # terminal 2
+node worker/scripts/verify-e2e.mjs                                          # terminal 3
+```
+
+`--mode development` ne change que les fichiers `.env` chargés (donc `VITE_API_BASE` pointe sur
+`localhost:8787`), pas le mode DEV/PROD de Vite lui-même : la télémétrie envoie donc bien sur le
+réseau, contrairement à `npm run dev`.
