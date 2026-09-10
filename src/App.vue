@@ -3,8 +3,6 @@ import { ref } from 'vue'
 import ConsentBanner from './components/ConsentBanner.vue'
 import { reopenBanner } from './lib/consent.js'
 
-const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-
 // Theme toggle - initialise depuis localStorage, sinon suit la préférence OS
 const saved = localStorage.getItem('theme')
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -34,7 +32,7 @@ function toggleTheme() {
           <li><router-link to="/concepts">Concepts</router-link></li>
           <li><router-link to="/cartographie">Matrice</router-link></li>
           <li><router-link to="/methodologie">Methodologie</router-link></li>
-          <li v-if="isLocal"><router-link to="/audit" class="nav-audit">Audit PDF</router-link></li>
+          <li><router-link to="/audit">Audit PDF</router-link></li>
         </ul>
         <button
           class="theme-toggle"
@@ -127,11 +125,6 @@ function toggleTheme() {
   color: var(--color-text);
   background: transparent;
   text-decoration-color: var(--color-accent);
-}
-
-.nav-audit {
-  font-style: italic;
-  opacity: 0.8;
 }
 
 .main-content {

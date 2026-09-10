@@ -22,7 +22,6 @@
     <div class="hub-grid">
 
       <router-link
-        v-if="isLocal"
         to="/audit"
         class="hub-card hub-card--audit ui-card reveal reveal--stagger"
         style="--i:0"
@@ -35,19 +34,6 @@
         </p>
         <span class="hub-cta">Démarrer l'audit →</span>
       </router-link>
-      <div
-        v-else
-        class="hub-card hub-card--audit hub-card--disabled ui-card reveal reveal--stagger"
-        style="--i:0"
-        aria-disabled="true"
-      >
-        <h2>Auditer un cours</h2>
-        <p>
-          Importez le PDF de votre cours pour analyser les concepts couverts
-          et obtenir des recommandations d'outils ciblées par section.
-        </p>
-        <span class="hub-cta-disabled">Disponible en local uniquement</span>
-      </div>
 
       <router-link
         to="/arbre"
@@ -74,8 +60,6 @@
 import StatStrip   from '../components/StatStrip.vue'
 import ZoneProfile from '../components/ZoneProfile.vue'
 import { track } from '../lib/telemetry.js'
-
-const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 </script>
 
 <style scoped>
@@ -143,19 +127,6 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   margin-top: auto;
 }
 
-.hub-card--disabled {
-  opacity: 0.42;
-  cursor: default;
-  pointer-events: none;
-}
-
-.hub-cta-disabled {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text-faint);
-  margin-top: auto;
-  font-style: italic;
-}
 
 @media (max-width: 600px) {
   .home      { max-width: 100%; }
