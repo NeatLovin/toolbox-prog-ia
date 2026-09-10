@@ -260,6 +260,8 @@
         <button class="ui-btn ui-btn-ghost no-print" @click="exportPDF" aria-label="Exporter en PDF via l'impression du navigateur">Exporter en PDF</button>
       </div>
 
+      <UsabilitySurvey />
+
     </section>
 
   <ConceptDetailModal :concept="conceptDetail" @close="conceptDetail = null" />
@@ -280,6 +282,7 @@ import PatronBlock from '../components/PatronBlock.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
 import ZoneProfile from '../components/ZoneProfile.vue'
 import ConceptDetailModal from '../components/ConceptDetailModal.vue'
+import UsabilitySurvey from '../components/UsabilitySurvey.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 import { track } from '../lib/telemetry.js'
 

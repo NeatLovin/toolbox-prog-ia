@@ -236,6 +236,8 @@
       </div>
     </section>
 
+    <UsabilitySurvey />
+
     <ToolDetailModal :tool="selectedTool" @close="selectedTool = null" />
 
   </div>
@@ -249,6 +251,7 @@ import MetricGauge   from './MetricGauge.vue'
 import ZoneProfile   from './ZoneProfile.vue'
 import DisclosureCard from './DisclosureCard.vue'
 import ToolDetailModal from './ToolDetailModal.vue'
+import UsabilitySurvey from './UsabilitySurvey.vue'
 import { computeCourseGlobalRec } from '../lib/recommendation.js'
 import { track } from '../lib/telemetry.js'
 
