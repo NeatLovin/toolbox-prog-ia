@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import ConsentBanner from './components/ConsentBanner.vue'
+import { reopenBanner } from './lib/consent.js'
 
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 
@@ -47,7 +49,13 @@ function toggleTheme() {
     </main>
     <footer class="site-footer">
       <p>Travail de Bachelor, HEG Arc, HES-SO, 2025-2026</p>
+      <p class="footer-links">
+        <router-link to="/transparence">Transparence</router-link>
+        <span aria-hidden="true">·</span>
+        <button type="button" class="footer-link-btn" @click="reopenBanner">Confidentialité</button>
+      </p>
     </footer>
+    <ConsentBanner />
   </div>
 </template>
 
@@ -143,6 +151,37 @@ function toggleTheme() {
   font-size: 0.75rem;
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
+}
+
+.footer-links {
+  margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.footer-links a,
+.footer-link-btn {
+  color: var(--color-text-faint);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+  transition: color var(--dur-1) var(--ease), text-decoration-color var(--dur-1) var(--ease);
+}
+
+.footer-links a:hover,
+.footer-link-btn:hover {
+  color: var(--color-text-muted);
+  text-decoration-color: currentColor;
+}
+
+.footer-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
 .theme-toggle {
