@@ -132,3 +132,42 @@ Structure de fichiers envisagée : un dossier `data` contenant les quatre fichie
 Ordre de développement suggéré : d'abord la conversion de la cartographie en JSON (socle de données), puis le catalogue interactif (vue la plus simple, permet de valider le chargement des données et les filtres), ensuite l'arbre de décision avec sa logique déterministe (cœur fonctionnel), enfin les vues d'accueil et de méthodologie. La couche générative optionnelle interviendrait en dernier, uniquement si le calendrier le permet.
 
 Cette progression permet d'avoir un PoC fonctionnel de bout en bout dès l'achèvement de l'arbre de décision, les éléments suivants n'étant que des enrichissements.
+
+---
+
+## 7. Extension Itération 2 : service serveur et instrumentation
+
+### 7.1 Contexte et besoin
+
+Le PoC initial (section 3) n'avait volontairement aucun backend : les données sont statiques, la recommandation est calculée dans le navigateur, et l'unique appel réseau (l'audit de plan de cours, section 4.3) transitait par un proxy Express local, jamais déployé. Cette absence de service serveur en production a un coût concret au moment où le PoC change de statut : il n'est plus seulement présenté au jury, il est envoyé à 22 enseignants de 7 institutions romandes pour un test d'usage réel. Deux besoins nouveaux apparaissent, que l'architecture initiale ne couvre pas :
+
+- rendre l'audit de plan de cours utilisable sur le site déployé, sans exposer la clé API Anthropic au client ;
+- mesurer l'usage réel du prototype (taux de complétion, points d'abandon, corrections apportées par les enseignants), condition pour que ce test alimente l'évaluation de l'artefact et une publication scientifique.
+
+Les deux besoins partagent la même contrainte : un point de collecte côté serveur, minimal, qui ne remette pas en cause le caractère statique et déterministe du reste du PoC (contrainte non négociable : le socle de recommandation reste souverain, aucune recommandation ne dépend d'un appel réseau).
+
+### 7.2 Choix du service serveur
+
+| Option | Avantages | Inconvénients | Verdict |
+|--------|-----------|----------------|---------|
+| **Cloudflare Worker + D1** | Sans serveur à administrer, cohérent avec l'hébergement statique déjà retenu (GitHub Pages), gratuit dans les volumes visés (22 participants), déploiement par CLI, D1 est une base SQLite gérée suffisante pour un volume d'événements modeste | Écosystème propre à Cloudflare (Workers, D1) à apprendre, contrairement à Vue déjà maîtrisé | **Retenu** |
+| Fonction serverless classique (Vercel/Netlify Functions) + base hébergée tierce | Écosystème proche de Vite/Vue, déploiement simple | Deux services à coordonner (fonction + base), CORS et secrets à gérer sur deux plateformes, gratuité moins généreuse à ce volume | Écarté |
+| Backend dédié (Node/Express sur un VPS ou un PaaS) | Contrôle total, familiarité avec Express (déjà utilisé pour le proxy local) | Un serveur à administrer et sécuriser en continu, disproportionné pour deux routes et un volume de 22 utilisateurs, contraire au critère de simplicité qui a guidé tous les choix précédents | Écarté |
+| Firebase / Supabase (BaaS) | Base de données et fonctions intégrées, tableau de bord prêt à l'emploi | Modèle de données orienté document/relationnel plus riche que nécessaire, dépendance à un écosystème tiers plus lourd pour un besoin de deux routes HTTP et une table | Écarté |
+
+Le Worker Cloudflare est retenu pour les mêmes raisons qui ont guidé le choix de GitHub Pages en section 3.5 : gratuité, absence d'administration, cohérence avec un artefact démonstratif plutôt qu'un produit. D1 est retenu comme base plutôt qu'un service de base de données managé séparé parce qu'il partage le même compte et le même déploiement que le Worker, réduisant le nombre de pièces mobiles à une seule plateforme.
+
+**Localisation de la base** : Europe de l'Ouest, choisie à la création (`wrangler d1 create --location=weur`), cohérente avec le public visé (enseignants romands) et avec les exigences de protection des données évoquées dans la page de transparence.
+
+### 7.3 Choix de la télémétrie
+
+| Option | Avantages | Inconvénients | Verdict |
+|--------|-----------|----------------|---------|
+| **Module maison minimal** (`src/lib/telemetry.js` + table D1 `events`) | Contrôle total du schéma d'événements et de son alignement avec les questions d'évaluation du TB, aucune dépendance tierce, aucun cookie de suivi, traçabilité complète jusqu'aux requêtes SQL d'analyse | Développement et maintenance à la charge du projet, pas de tableau de bord prêt à l'emploi | **Retenu** |
+| Bibliothèque d'analytics tierce (Plausible, Umami, Google Analytics) | Tableau de bord immédiat, développement quasi nul | Schéma d'événements imposé ou générique, mal aligné avec les questions d'évaluation précises du TB (repli matriciel, corrections de classification...), dépendance externe explicitement écartée par les contraintes de la mission | Écarté |
+
+Le choix d'un module maison découle directement d'une contrainte non négociable de cette itération : ne pas ajouter de bibliothèque d'analytics tierce ni de cookie de suivi. Les événements mesurés ne sont pas des métriques web génériques (pages vues, rebonds) mais des signaux spécifiques à l'évaluation du PoC (taux de repli sur la matrice, corrections de classification IA, temps par étape du tunnel de recommandation), qu'aucun outil générique ne peut capturer sans un développement sur mesure de toute façon. Le coût de maintenance d'un module maison est faible : moins de 200 lignes, une seule responsabilité (mettre en file, envoyer par lots, respecter le consentement).
+
+### 7.4 Conséquences sur les critères de décision (section 2)
+
+Cette extension respecte les critères qui ont guidé l'ensemble du PoC : le socle déterministe reste seul décisionnaire des recommandations (le Worker relaie un appel IA existant, il n'en introduit pas de nouveau dans le chemin de décision) ; la robustesse en démonstration est préservée par un repli automatique sur la fixture précalculée si le service est indisponible ; la simplicité prime sur la richesse fonctionnelle, d'où l'absence de tableau de bord et le choix de requêtes SQL préparées plutôt que d'une interface d'analyse dédiée.
