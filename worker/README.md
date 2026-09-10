@@ -71,13 +71,30 @@ Toutes dans `worker/wrangler.toml [vars]`, sauf la clé API (secret).
 | `ANTHROPIC_API_KEY` | Clé API Anthropic (secret, jamais dans `wrangler.toml`) | — |
 | `AUDIT_KILL_SWITCH` | `"true"` coupe `/audit` sans redéployer le code | `"false"` |
 | `AUDIT_MAX_CHARS` | Taille max du texte extrait envoyé au modèle | `160000` |
-| `AUDIT_RATE_LIMIT_PER_SESSION_HOUR` | Appels `/audit` max par session et par heure | `8` |
-| `AUDIT_DAILY_GLOBAL_CAP` | Appels `/audit` max, tous visiteurs confondus, par jour UTC | `200` |
+| `AUDIT_RATE_LIMIT_PER_SESSION_HOUR` | Appels `/audit` max par session et par heure | `5` |
+| `AUDIT_DAILY_GLOBAL_CAP` | Appels `/audit` max, tous visiteurs confondus, par jour UTC | `40` |
 | `RETENTION_DAYS` | Ancienneté au-delà de laquelle les `events` sont purgés | `365` |
 
 Modifier une variable puis `npm run worker:deploy` pour l'appliquer. `AUDIT_KILL_SWITCH=true` est la
 procédure de coupure d'urgence : l'audit devient indisponible côté serveur en quelques secondes, sans
 toucher au reste du site (la télémétrie et les parcours 1/2 continuent de fonctionner).
+
+### Coût maximal théorique
+
+Modèle utilisé : `claude-haiku-4-5-20251001`, tarif 1,00 $ / 5,00 $ par million de tokens en
+entrée/sortie (écriture cache ≈1,25×, lecture cache ≈0,10×). Un document peut se découper en
+jusqu'à 4 appels `/audit` côté client (`CHUNK_LIMIT` dans `stores/audit.js`, un par tranche de
+`CHUNK_MAX` = 40 000 caractères). Coût maximal par appel (une tranche à `AUDIT_MAX_CHARS`, sans
+bénéfice de cache) : environ 0,025 $. Coût maximal par document (4 appels) : environ 0,10 $.
+
+Avec `AUDIT_DAILY_GLOBAL_CAP=40`, le coût théorique maximal est de 40 × 0,025 $ ≈ **1 $/jour**,
+soit environ **90 $ sur 3 mois** si le plafond journalier était atteint chaque jour — un scénario
+d'abus soutenu, pas un usage normal. Pour comparaison, l'usage réaliste attendu (~25 enseignants,
+quelques documents chacun sur la durée du test) reste de l'ordre de **10 à 20 $ au total**.
+
+Ces plafonds bornent le risque côté code, mais restent une limite applicative : ajouter en
+complément, hors de portée du code, une limite de dépense sur la console Anthropic et une alerte
+d'usage côté tableau de bord Cloudflare.
 
 ## Export des données collectées
 

@@ -72,8 +72,12 @@ confiance moyenne (T09, I09, I10, I12), aucun lien de tutoriel inventé.
 
 ## §3 — Plafonds de coût
 
-Voir le message accompagnant ce plan pour le calcul détaillé (tarif Haiku 4.5 : 1,00 $ / 5,00 $ par
-million de tokens en entrée/sortie) et les options proposées. Statut : en attente de votre choix.
+✅ Option "Conservatrice" retenue : `AUDIT_RATE_LIMIT_PER_SESSION_HOUR=5`,
+`AUDIT_DAILY_GLOBAL_CAP=40`. Calcul détaillé dans `worker/README.md` section "Coût maximal
+théorique" : ~90 $ de coût maximal théorique sur 3 mois si le plafond journalier était atteint
+chaque jour, ~10-20 $ pour un usage réaliste sur la durée du test. Reste hors de mon accès : une
+limite de dépense côté console Anthropic et une alerte d'usage côté Cloudflare (rappelé dans le
+compte rendu final).
 
 ## §9 — Publication
 
