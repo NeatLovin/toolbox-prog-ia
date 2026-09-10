@@ -100,19 +100,14 @@
       />
     </template>
 
-    <!-- Erreur -->
+    <!-- Erreur : jamais une erreur brute, toujours un message clair et une issue immédiate -->
     <div v-else-if="audit.phase === 'error'" class="error-state">
-      <p class="error-title">Une erreur est survenue</p>
-      <p class="error-msg">{{ audit.error }}</p>
-      <div class="error-hints">
-        <p>Vérifications :</p>
-        <ul>
-          <li>Le Worker local tourne-t-il ? Lancer <code>npm run dev:full</code> au lieu de <code>npm run dev</code>.</li>
-          <li>Le fichier <code>worker/.dev.vars</code> existe-t-il avec une clé <code>ANTHROPIC_API_KEY</code> valide ?</li>
-          <li>En mode démo, utilisez le bouton "Charger le cours exemple" pour éviter tout appel API.</li>
-        </ul>
+      <p class="error-title">Analyse automatique momentanément indisponible</p>
+      <p class="error-msg">{{ friendlyErrorMessage(audit.error) }}</p>
+      <div class="error-actions">
+        <button class="ui-btn ui-btn-primary" @click="loadFixture">Charger le cours exemple</button>
+        <button class="ui-btn ui-btn-secondary" @click="audit.reset">Recommencer</button>
       </div>
-      <button class="btn-retry" @click="audit.reset">Recommencer</button>
     </div>
     </template>
   </div>
@@ -147,6 +142,17 @@ onMounted(() => {
 onBeforeUnmount(() => {
   mql?.removeEventListener('change', updateWidth)
 })
+
+// L'enseignant ne voit jamais le code d'erreur brut renvoyé par le Worker (kill_switch,
+// session_cap, daily_cap...) : un message neutre, identique quelle que soit la cause technique,
+// avec la fixture toujours proposée comme issue immédiate (audit_unavailable est déjà tracé côté
+// Worker pour les refus de plafond, côté client uniquement pour les échecs réseau, cf. lot 1).
+function friendlyErrorMessage(reason) {
+  if (reason === 'size_exceeded') {
+    return "Ce document est trop volumineux pour être analysé automatiquement."
+  }
+  return "L'analyse automatique n'a pas pu aboutir pour le moment. Vous pouvez explorer le cours d'exemple pré-calculé en attendant, ou réessayer plus tard."
+}
 </script>
 
 <style scoped>
@@ -262,60 +268,32 @@ onBeforeUnmount(() => {
 }
 
 .error-state {
-  background: var(--color-danger-bg);
-  border: 1px solid var(--color-danger-border);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-text-faint);
   border-radius: var(--radius-xl);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-width: 600px;
+  max-width: 560px;
 }
 
 .error-title {
   font-weight: 700;
-  color: var(--color-danger-text);
+  color: var(--color-text);
   font-size: var(--text-base);
 }
 
 .error-msg {
   font-size: var(--text-sm);
-  color: var(--color-danger-text);
-  font-family: var(--font-mono);
-}
-
-.error-hints {
-  font-size: var(--text-sm);
   color: var(--color-text-muted);
+  line-height: 1.6;
 }
 
-.error-hints ul {
-  margin-top: 0.35rem;
-  padding-left: 1.25rem;
+.error-actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-3);
+  flex-wrap: wrap;
 }
-
-.error-hints code {
-  background: var(--risk-max-bg);
-  padding: 0.1rem 0.3rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-}
-
-.btn-retry {
-  padding: 0.55rem 1.25rem;
-  background: var(--color-danger-text);
-  color: var(--color-surface);
-  border: none;
-  border-radius: var(--radius-lg);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: opacity 0.15s;
-}
-
-.btn-retry:hover { opacity: 0.85; }
 </style>
