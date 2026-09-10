@@ -19,6 +19,7 @@
         to="/audit"
         class="hub-card hub-card--audit ui-card reveal reveal--stagger"
         style="--i:0"
+        @click="track('home_entry_click', { entry: 'audit' })"
       >
         <h2>Auditer un cours</h2>
         <p>
@@ -41,7 +42,12 @@
         <span class="hub-cta-disabled">Disponible en local uniquement</span>
       </div>
 
-      <router-link to="/arbre" class="hub-card ui-card reveal reveal--stagger" style="--i:1">
+      <router-link
+        to="/arbre"
+        class="hub-card ui-card reveal reveal--stagger"
+        style="--i:1"
+        @click="track('home_entry_click', { entry: 'reco' })"
+      >
         <h2>Obtenir une recommandation</h2>
         <p>
           Parcours guidé en trois étapes : zone conceptuelle, concept précis, contexte d'usage.
@@ -60,6 +66,7 @@
 <script setup>
 import StatStrip   from '../components/StatStrip.vue'
 import ZoneProfile from '../components/ZoneProfile.vue'
+import { track } from '../lib/telemetry.js'
 
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 </script>

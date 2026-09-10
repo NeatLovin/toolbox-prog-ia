@@ -12,7 +12,24 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import HeatmapMatrix from '../components/HeatmapMatrix.vue'
+import { getLastFromPath } from '../router/index.js'
+import { track } from '../lib/telemetry.js'
+
+const FROM_LABELS = {
+  '/':            'accueil',
+  '/arbre':       'arbre',
+  '/catalogue':   'catalogue',
+  '/concepts':    'concepts',
+  '/methodologie':'methodologie',
+  '/audit':       'audit'
+}
+
+onMounted(() => {
+  const path = getLastFromPath()
+  track('matrix_open', { from: FROM_LABELS[path] || (path ? 'autre' : 'direct') })
+})
 </script>
 
 <style scoped>

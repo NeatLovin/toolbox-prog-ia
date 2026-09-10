@@ -65,7 +65,7 @@
 
           <div class="field-row">
             <label class="field-label">Niveau Bloom</label>
-            <select v-model="classif.bloom" class="field-select">
+            <select v-model="classif.bloom" class="field-select" @change="onBloomChange(idx)">
               <option value="">Non identifiable</option>
               <option v-for="b in bloomLevels" :key="b" :value="b">{{ b }}</option>
             </select>
@@ -88,6 +88,7 @@
 <script setup>
 import { ref } from 'vue'
 import conceptsData from '../data/concepts.json'
+import { track } from '../lib/telemetry.js'
 
 const props = defineProps({
   sections: { type: Array, required: true },
@@ -110,20 +111,31 @@ function availableConcepts(currentIds) {
   return conceptsData.filter(c => !currentIds.includes(c.id))
 }
 
+function editedPayload(idx, action, extra) {
+  return { segment_index: localClassifs.value[idx].section_index, concept_before: null, concept_after: null, action, ...extra }
+}
+
 function addConcept(idx, event) {
   const id = event.target.value
   if (id && !localClassifs.value[idx].concept_ids.includes(id)) {
     localClassifs.value[idx].concept_ids.push(id)
+    track('audit_classification_edited', editedPayload(idx, 'add', { concept_after: id }))
   }
   event.target.value = ''
 }
 
 function removeConcept(idx, cid) {
   localClassifs.value[idx].concept_ids = localClassifs.value[idx].concept_ids.filter(id => id !== cid)
+  track('audit_classification_edited', editedPayload(idx, 'remove', { concept_before: cid }))
 }
 
 function toggleSkip(idx) {
   localClassifs.value[idx].skipped = !localClassifs.value[idx].skipped
+  track('audit_classification_edited', editedPayload(idx, localClassifs.value[idx].skipped ? 'skip' : 'unskip'))
+}
+
+function onBloomChange(idx) {
+  track('audit_classification_edited', editedPayload(idx, 'bloom_change'))
 }
 
 function confidenceLabel(c) {
@@ -139,6 +151,18 @@ function confidenceClass(c) {
 }
 
 function handleConfirm() {
+  const correctedCount = props.classifications.reduce((count, orig, idx) => {
+    const current = localClassifs.value[idx]
+    const conceptsChanged = JSON.stringify([...orig.concept_ids].sort()) !== JSON.stringify([...current.concept_ids].sort())
+    const bloomChanged = orig.bloom !== current.bloom
+    return count + (conceptsChanged || bloomChanged || current.skipped ? 1 : 0)
+  }, 0)
+  const total = props.classifications.length
+  track('audit_validation_confirmed', {
+    corrections: correctedCount,
+    correction_rate: total ? Math.round((correctedCount / total) * 100) / 100 : 0
+  })
+
   const result = localClassifs.value
     .filter(c => !c.skipped)
     .map(({ skipped, ...rest }) => rest)

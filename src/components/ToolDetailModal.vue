@@ -74,7 +74,13 @@
         </div>
 
         <div v-if="tool.link" class="section">
-          <a :href="tool.link" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary tool-link-btn">
+          <a
+            :href="tool.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ui-btn ui-btn-primary tool-link-btn"
+            @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'officiel' })"
+          >
             Voir la ressource
             <span class="tool-link-domain">{{ linkDomain }}</span>
           </a>
@@ -85,17 +91,31 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useData } from '../composables/useData.js'
 import InfoTooltip from './InfoTooltip.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 import ReferenceLinks from './ReferenceLinks.vue'
+import { track } from '../lib/telemetry.js'
 
 const props = defineProps({
   tool: { type: Object, default: null }
 })
 
 defineEmits(['close'])
+
+// Auto-instrumentation : tool_detail_open (tool_id, dwell_ms) a chaque ouverture/fermeture,
+// quel que soit l'appelant (PatronBlock, CourseAudit...). Identifie les outils jamais consultes,
+// candidats a l'elagage du catalogue - la question posee ne depend pas du point d'entree.
+let openedAt = null
+watch(() => props.tool, (tool, prevTool) => {
+  if (tool && !prevTool) {
+    openedAt = Date.now()
+  } else if (!tool && prevTool && openedAt) {
+    track('tool_detail_open', { tool_id: prevTool.id, dwell_ms: Date.now() - openedAt })
+    openedAt = null
+  }
+})
 
 const { meta } = useData()
 

@@ -34,17 +34,23 @@ defineProps({
   content: { type: String, required: true }
 })
 
+// Emis a l'ouverture, jamais a la fermeture. Optionnel pour l'appelant (aucun listener par
+// defaut) : sert uniquement aux quelques points d'integration qui veulent mesurer si le
+// complement d'explication est consulte (ex. matrix_legend_open dans HeatmapMatrix.vue).
+const emit = defineEmits(['open'])
+
 const slots   = useSlots()
 const hasSlot = computed(() => !!slots.default)
 
 const open = ref(false)
 let touchMode = false
 
-function onEnter() { if (!touchMode) open.value = true }
+function onEnter() { if (!touchMode) { open.value = true; emit('open') } }
 function onLeave() { if (!touchMode) open.value = false }
 function onToggle() {
   touchMode = true
   open.value = !open.value
+  if (open.value) emit('open')
   setTimeout(() => { touchMode = false }, 600)
 }
 </script>

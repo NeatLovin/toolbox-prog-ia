@@ -16,6 +16,7 @@
           id="ctx-select"
           class="ctx-select"
           v-model="audit.courseContext"
+          @change="track('audit_context_filled', { context: true })"
         >
           <option value="Présentiel encadré">Présentiel encadré</option>
           <option value="Autonomie supervisée">Autonomie supervisée</option>
@@ -99,6 +100,7 @@ import PdfDropzone from '../components/PdfDropzone.vue'
 import SectionReview from '../components/SectionReview.vue'
 import CourseAudit from '../components/CourseAudit.vue'
 import fixtureData from '../data/fixtures/cours-exemple.json'
+import { track } from '../lib/telemetry.js'
 
 const audit = useAuditStore()
 

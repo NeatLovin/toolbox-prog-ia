@@ -192,7 +192,7 @@
             type="button"
             class="rec-tool-card"
             :aria-label="`Voir l'outil ${tool.name}`"
-            @click="selectedTool = tool"
+            @click="openRecommendedTool(tool)"
           >
             <div class="rtc-header">
               <span class="rtc-id">{{ tool.id }}</span>
@@ -237,7 +237,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useData } from '../composables/useData.js'
 import PatronBlock    from './PatronBlock.vue'
 import MetricGauge   from './MetricGauge.vue'
@@ -245,6 +245,7 @@ import ZoneProfile   from './ZoneProfile.vue'
 import DisclosureCard from './DisclosureCard.vue'
 import ToolDetailModal from './ToolDetailModal.vue'
 import { computeCourseGlobalRec } from '../lib/recommendation.js'
+import { track } from '../lib/telemetry.js'
 
 const { getPatronsByConceptAndContext } = useData()
 
@@ -262,7 +263,25 @@ const props = defineProps({
 
 defineEmits(['reset'])
 
-function exportPDF() { window.print() }
+function exportPDF() {
+  track('audit_export', { format: 'pdf' })
+  window.print()
+}
+
+function openRecommendedTool(tool) {
+  selectedTool.value = tool
+  track('audit_recommendation_open', { tool_id: tool.id })
+}
+
+onMounted(() => {
+  if (!props.swot) return
+  track('audit_result_shown', {
+    forces: props.swot.forces?.length || 0,
+    faiblesses: props.swot.faiblesses?.length || 0,
+    risques: props.swot.risques?.length || 0,
+    opportunites: props.swot.opportunites?.length || 0
+  })
+})
 
 // ── Données dérivées ─────────────────────────────────────────────────────────
 

@@ -80,6 +80,7 @@
         :key="tool.id"
         details-label="Détails et usage"
         deep-label="Sources et littérature"
+        @toggle="onToolToggle(tool, $event)"
       >
 
         <!-- Niveau 1 : id + famille + nom + description + efficacité -->
@@ -168,6 +169,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="ui-btn ui-btn-primary td-link-btn"
+              @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'officiel' })"
             >
               Voir la ressource
               <span class="td-link-domain">{{ linkDomain(tool) }}</span>
@@ -189,13 +191,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
 import MetricGauge from '../components/MetricGauge.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 import ReferenceLinks from '../components/ReferenceLinks.vue'
+import { track } from '../lib/telemetry.js'
 
 const EFFICACITE_VALUE = { 'Validée': 3, 'Établie': 2, 'Émergente': 1 }
 
@@ -236,6 +239,42 @@ const filtered = computed(() => {
     return true
   })
 })
+
+// catalogue_filter / catalogue_empty_result : débouncé pour ne pas tracker chaque frappe de la
+// recherche libre. Le texte saisi lui-même ne transite jamais, seul un booléen "recherche active".
+let filterDebounce = null
+watch([search, selectedFamily, selectedFunction, selectedCost, selectedRobustness, selectedFil], () => {
+  clearTimeout(filterDebounce)
+  filterDebounce = setTimeout(() => {
+    const activeFilters = {
+      search: search.value !== '',
+      family: selectedFamily.value || null,
+      function: selectedFunction.value || null,
+      cost: selectedCost.value || null,
+      robustness: selectedRobustness.value !== '' ? selectedRobustness.value : null,
+      fil: selectedFil.value || null
+    }
+    track('catalogue_filter', { filters: activeFilters, result_count: filtered.value.length })
+    if (filtered.value.length === 0) {
+      track('catalogue_empty_result', { filters: activeFilters })
+    }
+  }, 400)
+})
+
+// tool_detail_open (dwell_ms) : le détail par outil est un tiroir DisclosureCard, pas une modale.
+const toolDetailOpenedAt = new Map()
+function onToolToggle(tool, { section, open }) {
+  if (section !== 'details') return
+  if (open) {
+    toolDetailOpenedAt.set(tool.id, Date.now())
+  } else {
+    const start = toolDetailOpenedAt.get(tool.id)
+    if (start) {
+      track('tool_detail_open', { tool_id: tool.id, dwell_ms: Date.now() - start })
+      toolDetailOpenedAt.delete(tool.id)
+    }
+  }
+}
 
 function resetFilters() {
   search.value = ''; selectedFamily.value = ''; selectedFunction.value = ''

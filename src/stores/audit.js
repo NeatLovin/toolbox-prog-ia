@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import conceptsData from '../data/concepts.json'
 import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER } from '../lib/recommendation.js'
 import { getSessionId } from '../lib/session.js'
+import { track } from '../lib/telemetry.js'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 // Le prompt système, le modèle et max_tokens sont fixés côté serveur (worker/src/audit.js) :
@@ -115,17 +116,28 @@ function buildCleanText(pages) {
 // ── Appel unique au modèle ───────────────────────────────────────────────────
 
 async function analyzeDocument(cleanText) {
-  const response = await fetch(AUDIT_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      session_id: getSessionId(),
-      text: cleanText
+  let response
+  try {
+    response = await fetch(AUDIT_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        session_id: getSessionId(),
+        text: cleanText
+      })
     })
-  })
+  } catch {
+    // La requête n'a jamais atteint le Worker (hors ligne, DNS...) : le seul cas que le
+    // service serveur ne peut pas logger lui-même en audit_unavailable.
+    const networkErr = new Error('network_error')
+    networkErr.isNetworkError = true
+    throw networkErr
+  }
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}))
+    // Réponse reçue (guard-rail cote serveur) : déjà loggé en audit_unavailable côté Worker,
+    // pas besoin de le refaire côté client.
     throw new Error(err.reason || err.error || `Worker: HTTP ${response.status}`)
   }
 
@@ -143,6 +155,7 @@ async function analyzeDocument(cleanText) {
     is_programming: isProg,
     relevance_confidence: relevance,
     course_summary: rawSummary,
+    model: typeof data.model === 'string' ? data.model : null,
     sections: rawSections.slice(0, 30).map(entry => ({
       title:       typeof entry.title === 'string' ? entry.title.slice(0, 200) : 'Section',
       concept_ids: Array.isArray(entry.concept_ids)
@@ -164,6 +177,7 @@ async function analyzeWithChunking(cleanText) {
   let globalProg       = false
   let globalSummary    = ''
   let globalConfidence = null
+  let globalModel      = null
   const allSections    = []
   for (const chunk of chunks) {
     const result = await analyzeDocument(chunk)
@@ -172,12 +186,14 @@ async function analyzeWithChunking(cleanText) {
       if (!globalSummary && result.course_summary) globalSummary = result.course_summary
       if (!globalConfidence) globalConfidence = result.relevance_confidence
     }
+    if (!globalModel) globalModel = result.model
     allSections.push(...result.sections)
   }
   return {
     is_programming: globalProg,
     relevance_confidence: globalConfidence || 'low',
     course_summary: globalSummary,
+    model: globalModel,
     sections: globalProg ? allSections.slice(0, 30) : []
   }
 }
@@ -272,13 +288,26 @@ export const useAuditStore = defineStore('audit', {
 
   actions: {
     loadFixture(fixture) {
+      track('audit_start', {})
       this.isDemo          = true
       this.sections        = fixture.sections
       this.classifications = fixture.classifications
       this.phase           = 'reviewing'
+
+      const charCount = (fixture.sections || []).reduce((sum, s) => sum + (s.text_excerpt?.length || 0), 0)
+      const pageCount = Math.max(0, ...(fixture.sections || []).map(s => s.page_start || 0))
+      track('audit_document_submitted', {
+        pages: pageCount,
+        characters: charCount,
+        extraction_ok: true,
+        duration_ms: 0,
+        is_example_fixture: true
+      })
     },
 
     async extractAndClassify(file) {
+      const startedAt = Date.now()
+      track('audit_start', {})
       try {
         this.error = null
         this.phase = 'extracting'
@@ -296,8 +325,17 @@ export const useAuditStore = defineStore('audit', {
         }
 
         const cleanText = buildCleanText(pages)
+        const extractionOk = !!cleanText.trim()
 
-        if (!cleanText.trim()) {
+        track('audit_document_submitted', {
+          pages: pdf.numPages,
+          characters: cleanText.length,
+          extraction_ok: extractionOk,
+          duration_ms: Date.now() - startedAt,
+          is_example_fixture: false
+        })
+
+        if (!extractionOk) {
           this.sections        = [{ index: 0, title: 'Document complet' }]
           this.classifications = [{ section_index: 0, concept_ids: [], bloom: null, confidence: 'low' }]
           this.phase = 'reviewing'
@@ -305,6 +343,7 @@ export const useAuditStore = defineStore('audit', {
         }
 
         this.phase = 'classifying'
+        const classifyStartedAt = Date.now()
         const result = await analyzeWithChunking(cleanText)
 
         if (!result.is_programming) {
@@ -332,9 +371,27 @@ export const useAuditStore = defineStore('audit', {
         }))
         this.phase = 'reviewing'
 
+        const conceptCounts = {}
+        detected.forEach(s => (s.concept_ids || []).forEach(cid => { conceptCounts[cid] = (conceptCounts[cid] || 0) + 1 }))
+        const confidenceNum = { low: 1, medium: 2, high: 3 }
+        const avgConfidence = detected.length
+          ? detected.reduce((sum, s) => sum + (confidenceNum[s.confidence] || 2), 0) / detected.length
+          : null
+
+        track('audit_classification_result', {
+          segment_count: detected.length,
+          concept_distribution: conceptCounts,
+          avg_confidence: avgConfidence ? Math.round(avgConfidence * 100) / 100 : null,
+          model: result.model,
+          latency_ms: Date.now() - classifyStartedAt
+        })
+
       } catch (e) {
         this.error = e.message
         this.phase = 'error'
+        if (e.isNetworkError) {
+          track('audit_unavailable', { reason: 'network_error' })
+        }
       }
     },
 

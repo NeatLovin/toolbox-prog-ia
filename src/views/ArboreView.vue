@@ -120,7 +120,7 @@
     <!-- Resultat -->
     <section v-else-if="step === 'result' && result" class="result-section reveal">
 
-      <DisclosureCard details-label="Patron et outils" deep-label="Sources">
+      <DisclosureCard details-label="Patron et outils" deep-label="Sources" @toggle="onResultToggle">
 
         <!-- ── Niveau 1 : l'essentiel ── -->
         <template #summary>
@@ -203,7 +203,13 @@
 
           <!-- Liste complète des outils -->
           <div class="result-tools">
-            <ToolCard v-for="tool in result.tools" :key="tool.id" :tool="tool" />
+            <ToolCard
+              v-for="tool in result.tools"
+              :key="tool.id"
+              :tool="tool"
+              clickable
+              @open="openToolFromResult"
+            />
           </div>
 
           <!-- Justification et provenance (remontées depuis niveau 3) -->
@@ -253,22 +259,25 @@
     </section>
 
   <ConceptDetailModal :concept="conceptDetail" @close="conceptDetail = null" />
+  <ToolDetailModal :tool="arboreSelectedTool" @close="arboreSelectedTool = null" />
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getRecommendation, ZONE_PRINCIPLES } from '../lib/recommendation.js'
 import { useData } from '../composables/useData.js'
 import DisclosureCard from '../components/DisclosureCard.vue'
 import ToolCard from '../components/ToolCard.vue'
+import ToolDetailModal from '../components/ToolDetailModal.vue'
 import PatronBlock from '../components/PatronBlock.vue'
 import InfoTooltip from '../components/InfoTooltip.vue'
 import ZoneProfile from '../components/ZoneProfile.vue'
 import ConceptDetailModal from '../components/ConceptDetailModal.vue'
 import { GLOSSARY } from '../lib/glossary.js'
+import { track } from '../lib/telemetry.js'
 
 const { concepts, getPatronsByConceptAndContext } = useData()
 const route  = useRoute()
@@ -299,6 +308,37 @@ const selectedConcept = ref(null)
 const selectedContext = ref('')
 const selectedBloom   = ref(null)
 const conceptDetail   = ref(null)
+const arboreSelectedTool = ref(null)
+
+// Instrumentation du tunnel de recommandation. recoStartedAt sert au latency_ms de
+// reco_result_shown ; lastShownParams permet de détecter un reco_restart (résultat re-affiché
+// avec un paramètre différent, sans passer par "Nouvelle recherche").
+let stepEnteredAt      = Date.now()
+let recoStartedAt      = null
+const answeredValues   = {}
+const lastShownParams  = ref(null)
+
+function currentParams() {
+  return {
+    zone:    selectedZone.value,
+    concept: selectedConcept.value?.id ?? 'all',
+    context: selectedContext.value,
+    bloom:   effectiveBloom.value
+  }
+}
+
+function trackQuestionAnswered(stepName, param, value) {
+  const now = Date.now()
+  track('reco_question_answered', {
+    step: stepName,
+    param,
+    value,
+    time_on_step_ms: now - stepEnteredAt,
+    changed_previous: stepName in answeredValues && answeredValues[stepName] !== value
+  })
+  answeredValues[stepName] = value
+  stepEnteredAt = now
+}
 
 const conceptsInZone = computed(() => concepts.filter(c => c.family === selectedZone.value))
 const dominantBloom  = computed(() => selectedConcept.value?.bloom?.[0] ?? 'Apply')
@@ -367,12 +407,29 @@ function toolFamilyClass(tool) {
   }
 }
 
-function chooseZone(family)   { selectedZone.value = family; step.value = 'concept' }
-function chooseConcept(c)     { selectedConcept.value = c; step.value = 'context' }
-function chooseContext(ctx)   { selectedContext.value = ctx; step.value = 'bloom' }
-function chooseBloom(bloom)   { selectedBloom.value = bloom; step.value = 'result' }
+function chooseZone(family) {
+  trackQuestionAnswered('zone', 'concept_family', family)
+  selectedZone.value = family
+  step.value = 'concept'
+}
+function chooseConcept(c) {
+  trackQuestionAnswered('concept', 'concept', c ? c.id : 'all')
+  selectedConcept.value = c
+  step.value = 'context'
+}
+function chooseContext(ctx) {
+  trackQuestionAnswered('context', 'context', ctx)
+  selectedContext.value = ctx
+  step.value = 'bloom'
+}
+function chooseBloom(bloom) {
+  trackQuestionAnswered('bloom', 'bloom', bloom ?? 'skip')
+  selectedBloom.value = bloom
+  step.value = 'result'
+}
 
 function goToStep(target) {
+  track('reco_back', { from_step: step.value })
   if (target === 'zone') {
     selectedZone.value = ''; selectedConcept.value = null
     selectedContext.value = ''; selectedBloom.value = null
@@ -385,16 +442,41 @@ function goToStep(target) {
   } else if (target === 'bloom') {
     selectedBloom.value = null; step.value = 'bloom'
   }
+  stepEnteredAt = Date.now()
 }
 
 function restart() {
   selectedZone.value = ''; selectedConcept.value = null
   selectedContext.value = ''; selectedBloom.value = null
   step.value = 'zone'
+  stepEnteredAt = Date.now()
+  recoStartedAt = Date.now()
+  track('reco_start', {})
   router.replace({ query: {} })
 }
 
-function exportPDF() { window.print() }
+function exportPDF() {
+  track('reco_export', { format: 'pdf' })
+  window.print()
+}
+
+function onResultToggle({ section, open }) {
+  if (!open) return
+  if (section === 'details') {
+    track('reco_detail_expand', { section: 'details' })
+    if (patronForResult.value?.all?.length) {
+      const p = patronForResult.value.hasExact ? patronForResult.value.exact[0] : patronForResult.value.all[0]
+      if (p) track('reco_patron_open', { patron_id: p.id })
+    }
+  } else if (section === 'deep') {
+    track('reco_detail_expand', { section: 'deep' })
+  }
+}
+
+function openToolFromResult(tool) {
+  arboreSelectedTool.value = tool
+  track('reco_tool_open', { tool_id: tool.id })
+}
 
 // Synchro URL : écriture quand on atteint le résultat
 watch(step, (val) => {
@@ -408,12 +490,45 @@ watch(step, (val) => {
   }
 })
 
+// reco_result_shown (métrique centrale) + reco_restart (relance avec paramètre changé) :
+// un watch sur le computed result, jamais un effet de bord dans le computed lui-même.
+watch(result, (val) => {
+  if (!val) return
+
+  const resolutionMap = { combo: 'combo_exact', 'combo-approche': 'combo_partial', matrix: 'matrix_fallback' }
+  const patron = patronForResult.value
+  const patronId = patron?.hasExact ? patron.exact[0]?.id : patron?.all?.[0]?.id
+
+  track('reco_result_shown', {
+    zone: selectedZone.value,
+    concept: selectedConcept.value?.id ?? 'all',
+    context: selectedContext.value,
+    bloom: effectiveBloom.value,
+    resolution: resolutionMap[val.source] || 'matrix_fallback',
+    combo_id: val.combo?.id ?? null,
+    patron_id: patronId ?? null,
+    tools: val.tools.map(t => t.id),
+    latency_ms: recoStartedAt ? Date.now() - recoStartedAt : null
+  })
+
+  const params = currentParams()
+  if (lastShownParams.value) {
+    const changedKey = Object.keys(params).find(k => params[k] !== lastShownParams.value[k])
+    if (changedKey) track('reco_restart', { changed_param: changedKey })
+  }
+  lastShownParams.value = params
+})
+
 // Restauration depuis l'URL au montage
 onMounted(() => {
   const q = route.query
-  if (!q.zone) return
-  if (!ZONES.some(z => z.family === q.zone)) return
-  if (!CONTEXTS.some(c => c.value === q.context)) return
+  if (!q.zone || !ZONES.some(z => z.family === q.zone) || !CONTEXTS.some(c => c.value === q.context)) {
+    // Vrai début de tunnel (pas une restauration depuis un lien partagé/rechargement) :
+    // dénominateur de reco_result_shown / reco_abandon.
+    recoStartedAt = Date.now()
+    track('reco_start', {})
+    return
+  }
 
   selectedZone.value    = q.zone
   selectedConcept.value = (q.concept && q.concept !== 'all')
@@ -424,6 +539,13 @@ onMounted(() => {
     ? q.bloom
     : null
   step.value = 'result'
+})
+
+// reco_abandon : le tunnel a débuté (recoStartedAt posé) mais n'a jamais atteint le résultat.
+onBeforeUnmount(() => {
+  if (recoStartedAt && step.value !== 'result') {
+    track('reco_abandon', { last_step: step.value })
+  }
 })
 </script>
 

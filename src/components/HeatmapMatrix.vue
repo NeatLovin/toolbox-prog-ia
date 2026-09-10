@@ -24,6 +24,7 @@
   <section class="legend-wrap">
     <p class="legend-note">
       Le score encode la valeur pédagogique de l'outil pour ce concept, non la capacité de l'IA à le maîtriser.
+      <InfoTooltip :content="LEGEND_DETAIL" @open="track('matrix_legend_open', {})" />
     </p>
     <div class="legend-items">
       <span class="leg-label u-eyebrow">Intensité :</span>
@@ -103,7 +104,7 @@
         <template v-for="fam in visibleFamilies" :key="fam">
           <tr class="hm-tr-family">
             <td :colspan="filteredConcepts.length + 1">
-              <div class="hm-td-fam-inner">
+              <div class="hm-td-fam-inner" @click="onFamilyLabelClick(fam)">
                 <span :class="['ui-badge', FAMILY_BADGE[fam]]">{{ fam }}</span>
                 {{ FAMILY_LABELS[fam] }}
               </div>
@@ -126,6 +127,7 @@
               :aria-label="tdLabel(tool, concept)"
               @mousemove="showTip($event, tdLabel(tool, concept))"
               @mouseleave="hideTip()"
+              @click="onCellClick(tool, concept)"
             >{{ SCORE_MAP[tool.id]?.[concept.id] || '' }}</td>
           </tr>
         </template>
@@ -149,6 +151,13 @@ import matrixData   from '../data/matrix.json'
 import toolsData    from '../data/tools.json'
 import conceptsData from '../data/concepts.json'
 import ConceptDetailModal from './ConceptDetailModal.vue'
+import InfoTooltip from './InfoTooltip.vue'
+import { track } from '../lib/telemetry.js'
+import { useDeadClickZone } from '../lib/deadClick.js'
+
+const LEGEND_DETAIL = "L'échelle va de 1 (pertinent selon le contexte) à 3 (référence directe issue de la littérature ou du terrain). Un score élevé ne signifie pas que l'IA maîtrise le concept : c'est l'inverse pour la zone Syntaxe, où un score élevé désigne un outil traditionnel jugé nécessaire précisément parce que l'IA y est trop performante."
+
+const onFamilyDeadClick = useDeadClickZone('matrix_family_label')
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const ZONES     = ['Syntaxe', 'Logique', 'Architecture']
@@ -288,6 +297,16 @@ function showTip(e, text) {
   tip.value = { show: true, text, x: e.clientX + 14, y: e.clientY - 40 }
 }
 function hideTip() { tip.value.show = false }
+
+function onCellClick(tool, concept) {
+  const score = SCORE_MAP[tool.id]?.[concept.id] || 0
+  track('matrix_cell_open', { concept_id: concept.id, tool_id: tool.id, score })
+  selectedConcept.value = concept
+}
+
+function onFamilyLabelClick(fam) {
+  onFamilyDeadClick(fam)
+}
 </script>
 
 <style scoped>

@@ -8,7 +8,7 @@
     </div>
 
     <!-- Niveau 2 - tiroir Détails -->
-    <details v-if="hasDetails" class="ui-collapsible">
+    <details v-if="hasDetails" class="ui-collapsible" @toggle="onToggle('details', $event)">
       <summary>{{ detailsLabel }}</summary>
       <div class="ui-collapsible-body">
         <slot name="details" />
@@ -16,7 +16,7 @@
     </details>
 
     <!-- Niveau 3 - tiroir Creuser -->
-    <details v-if="hasDeep" class="ui-collapsible">
+    <details v-if="hasDeep" class="ui-collapsible" @toggle="onToggle('deep', $event)">
       <summary>{{ deepLabel }}</summary>
       <div class="ui-collapsible-body">
         <slot name="deep" />
@@ -34,9 +34,17 @@ defineProps({
   deepLabel:    { type: String, default: 'Creuser' }
 })
 
+// Optionnel pour l'appelant : sert aux points d'integration qui mesurent la consultation d'un
+// tiroir (ex. reco_detail_expand dans ArboreView.vue, tool_detail_open dans CatalogueView.vue).
+const emit = defineEmits(['toggle'])
+
 const slots      = useSlots()
 const hasDetails = computed(() => !!slots.details)
 const hasDeep    = computed(() => !!slots.deep)
+
+function onToggle(section, event) {
+  emit('toggle', { section, open: event.target.open })
+}
 </script>
 
 <style scoped>

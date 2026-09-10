@@ -16,4 +16,16 @@ const router = createRouter({
   routes
 })
 
+// Retenu pour matrix_open{from} (lot 3). beforeEach, pas afterEach : garantit que la valeur est
+// déjà à jour quand le composant de destination s'exécute (setup/onMounted), contrairement à
+// afterEach dont l'ordre par rapport au montage du composant n'est pas garanti.
+let lastFromPath = null
+router.beforeEach((to, from) => {
+  lastFromPath = from.path
+})
+
+export function getLastFromPath() {
+  return lastFromPath
+}
+
 export default router
