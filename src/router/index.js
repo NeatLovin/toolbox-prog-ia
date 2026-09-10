@@ -8,7 +8,8 @@ const routes = [
   { path: '/concepts',    component: () => import('../views/ConceptsView.vue') },
   { path: '/methodologie',  component: () => import('../views/MethodologieView.vue') },
   { path: '/cartographie', component: () => import('../views/CartographieView.vue') },
-  { path: '/audit',       component: () => import('../views/AuditView.vue') }
+  { path: '/audit',       component: () => import('../views/AuditView.vue') },
+  { path: '/transparence', component: () => import('../views/TransparenceView.vue') }
 ]
 
 const router = createRouter({
