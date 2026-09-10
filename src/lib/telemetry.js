@@ -1,5 +1,6 @@
 import { getSessionId } from './session.js'
 import { hasConsent } from './consent.js'
+import { API_BASE, isApiConfigured } from './apiBase.js'
 
 const SCHEMA_VERSION = '1.0'
 const FLUSH_INTERVAL_MS = 10_000
@@ -9,10 +10,9 @@ const FLUSH_BATCH_SIZE = 20
 // sur une session très longue. Très généreux par rapport au rythme de flush normal (10s/20 evt).
 const MAX_QUEUE = 200
 
-const API_BASE = import.meta.env.VITE_API_BASE || ''
-// Mode développement (npm run dev, ou VITE_API_BASE absent) : journalise en console au lieu
-// d'envoyer sur le réseau, pour ne jamais peupler la base pendant le développement local.
-const CONSOLE_MODE = import.meta.env.DEV || !API_BASE
+// Mode développement (npm run dev), ou adresse du Worker absente/placeholder (voir apiBase.js) :
+// journalise en console au lieu d'envoyer sur le réseau.
+const CONSOLE_MODE = import.meta.env.DEV || !isApiConfigured
 
 let queue = []
 let flushTimer = null

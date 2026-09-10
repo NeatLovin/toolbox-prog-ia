@@ -3,11 +3,12 @@ import conceptsData from '../data/concepts.json'
 import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER } from '../lib/recommendation.js'
 import { getSessionId } from '../lib/session.js'
 import { track } from '../lib/telemetry.js'
+import { API_BASE, isApiConfigured } from '../lib/apiBase.js'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 // Le prompt système, le modèle et max_tokens sont fixés côté serveur (worker/src/audit.js) :
 // le client n'envoie que le texte extrait, jamais de quoi faire varier le coût par appel.
-const AUDIT_URL      = `${import.meta.env.VITE_API_BASE || ''}/audit`
+const AUDIT_URL      = `${API_BASE}/audit`
 const VALID_IDS      = new Set(conceptsData.map(c => c.id))
 const CHUNK_MAX      = 40_000
 const CHUNK_LIMIT    = 4
@@ -121,6 +122,14 @@ function buildCleanText(pages) {
 // ── Appel unique au modèle ───────────────────────────────────────────────────
 
 async function analyzeDocument(cleanText) {
+  if (!isApiConfigured) {
+    // Adresse du Worker absente ou encore au placeholder (apiBase.js) : inutile de tenter une
+    // requête vouée à l'échec (DNS invalide), on tombe directement sur le même repli convivial.
+    const notConfiguredErr = new Error('not_configured')
+    notConfiguredErr.isNetworkError = true
+    throw notConfiguredErr
+  }
+
   let response
   try {
     response = await fetch(AUDIT_URL, {
@@ -367,7 +376,7 @@ export const useAuditStore = defineStore('audit', {
         this.error = e.message
         this.phase = 'error'
         if (e.isNetworkError) {
-          track('audit_unavailable', { reason: 'network_error' })
+          track('audit_unavailable', { reason: e.message })
         }
       }
     },
