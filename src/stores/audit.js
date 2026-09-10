@@ -15,6 +15,11 @@ const CHUNK_LIMIT    = 4
 // Set to true locally to log detected sections (never commit as true)
 const DEBUG_SEGMENTATION = false
 
+// Scratch d'exécution du garde-fou de pertinence (lot 4.7) : pas de la donnée d'état
+// applicative, donc volontairement hors de state() Pinia (rien à réhydrater, rien à persister).
+let pendingResult = null
+let classifyStartedAt = null
+
 // ── Extraction + débruitage côté client (gratuit) ────────────────────────────
 
 function buildCleanText(pages) {
@@ -273,7 +278,7 @@ function computeRecs(classifs, courseCtx) {
 
 export const useAuditStore = defineStore('audit', {
   state: () => ({
-    phase:           'idle', // idle | extracting | classifying | reviewing | computing | done | error
+    phase:           'idle', // idle | extracting | classifying | reviewing | relevance-warning | computing | done | error
     sections:        [],
     classifications: [],
     validated:       [],
@@ -281,7 +286,7 @@ export const useAuditStore = defineStore('audit', {
     recommendations: [],
     error:           null,
     isDemo:          false,
-    isProgramming:   true,
+    relevanceConfidence: null,
     courseContext:   'Présentiel encadré',
     courseSummary:   ''
   }),
@@ -343,48 +348,20 @@ export const useAuditStore = defineStore('audit', {
         }
 
         this.phase = 'classifying'
-        const classifyStartedAt = Date.now()
+        classifyStartedAt = Date.now()
         const result = await analyzeWithChunking(cleanText)
 
-        if (!result.is_programming) {
-          this.isProgramming   = false
-          this.sections        = []
-          this.classifications = []
-          this.phase           = 'done'
+        // Garde-fou de pertinence : jamais de blocage, toujours une confirmation. Basse
+        // confiance ou is_programming false -> l'enseignant tranche, le modèle ne décide pas
+        // seul de fermer la porte.
+        if (!result.is_programming || result.relevance_confidence === 'low') {
+          pendingResult = result
+          this.relevanceConfidence = result.relevance_confidence
+          this.phase = 'relevance-warning'
           return
         }
 
-        this.courseSummary = result.course_summary || ''
-        const detected     = result.sections
-
-        if (DEBUG_SEGMENTATION) {
-          // eslint-disable-next-line no-console
-          console.debug('[analyzeDocument]', detected.map((s, i) => `${i + 1}. "${s.title}"`).join('\n'))
-        }
-
-        this.sections        = detected.map((entry, i) => ({ index: i, title: entry.title }))
-        this.classifications = detected.map((entry, i) => ({
-          section_index: i,
-          concept_ids:  entry.concept_ids,
-          bloom:        entry.bloom,
-          confidence:   entry.confidence
-        }))
-        this.phase = 'reviewing'
-
-        const conceptCounts = {}
-        detected.forEach(s => (s.concept_ids || []).forEach(cid => { conceptCounts[cid] = (conceptCounts[cid] || 0) + 1 }))
-        const confidenceNum = { low: 1, medium: 2, high: 3 }
-        const avgConfidence = detected.length
-          ? detected.reduce((sum, s) => sum + (confidenceNum[s.confidence] || 2), 0) / detected.length
-          : null
-
-        track('audit_classification_result', {
-          segment_count: detected.length,
-          concept_distribution: conceptCounts,
-          avg_confidence: avgConfidence ? Math.round(avgConfidence * 100) / 100 : null,
-          model: result.model,
-          latency_ms: Date.now() - classifyStartedAt
-        })
+        this._applyClassificationResult(result)
 
       } catch (e) {
         this.error = e.message
@@ -392,6 +369,53 @@ export const useAuditStore = defineStore('audit', {
         if (e.isNetworkError) {
           track('audit_unavailable', { reason: 'network_error' })
         }
+      }
+    },
+
+    // Point d'entrée commun pour le chemin normal et pour la reprise après confirmation
+    // du garde-fou de pertinence : même traitement, même instrumentation.
+    _applyClassificationResult(result) {
+      this.courseSummary = result.course_summary || ''
+      const detected      = result.sections
+
+      if (DEBUG_SEGMENTATION) {
+        // eslint-disable-next-line no-console
+        console.debug('[analyzeDocument]', detected.map((s, i) => `${i + 1}. "${s.title}"`).join('\n'))
+      }
+
+      this.sections        = detected.map((entry, i) => ({ index: i, title: entry.title }))
+      this.classifications = detected.map((entry, i) => ({
+        section_index: i,
+        concept_ids:  entry.concept_ids,
+        bloom:        entry.bloom,
+        confidence:   entry.confidence
+      }))
+      this.phase = 'reviewing'
+
+      const conceptCounts = {}
+      detected.forEach(s => (s.concept_ids || []).forEach(cid => { conceptCounts[cid] = (conceptCounts[cid] || 0) + 1 }))
+      const confidenceNum = { low: 1, medium: 2, high: 3 }
+      const avgConfidence = detected.length
+        ? detected.reduce((sum, s) => sum + (confidenceNum[s.confidence] || 2), 0) / detected.length
+        : null
+
+      track('audit_classification_result', {
+        segment_count: detected.length,
+        concept_distribution: conceptCounts,
+        avg_confidence: avgConfidence ? Math.round(avgConfidence * 100) / 100 : null,
+        model: result.model,
+        latency_ms: Date.now() - (classifyStartedAt || Date.now())
+      })
+    },
+
+    confirmRelevance(userConfirmed) {
+      track('audit_relevance_check', { confidence: this.relevanceConfidence, user_confirmed: userConfirmed })
+      const result = pendingResult
+      pendingResult = null
+      if (userConfirmed && result) {
+        this._applyClassificationResult(result)
+      } else {
+        this.reset()
       }
     },
 
@@ -403,6 +427,13 @@ export const useAuditStore = defineStore('audit', {
       this.phase           = 'done'
     },
 
+    // Contexte modifiable après le résultat sans relancer l'extraction ni la classification :
+    // recalcul déterministe pur sur les données déjà validées, aucun appel réseau, aucun coût.
+    recomputeWithContext(newContext) {
+      this.courseContext   = newContext
+      this.recommendations = computeRecs(this.validated, newContext)
+    },
+
     reset() {
       this.$reset()
       try { localStorage.removeItem('audit_v1') } catch (_) {}
@@ -411,6 +442,6 @@ export const useAuditStore = defineStore('audit', {
 
   persist: {
     key:  'audit_v1',
-    pick: ['phase', 'sections', 'validated', 'swot', 'recommendations', 'courseContext', 'courseSummary', 'isProgramming', 'isDemo']
+    pick: ['phase', 'sections', 'validated', 'swot', 'recommendations', 'courseContext', 'courseSummary', 'isDemo']
   }
 })

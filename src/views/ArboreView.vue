@@ -125,10 +125,14 @@
         <!-- ── Niveau 1 : l'essentiel ── -->
         <template #summary>
 
-          <!-- Principe IA de la zone -->
+          <!-- Principe IA de la zone + action immédiate : conclusion en 2-3 phrases, même sans -->
+          <!-- rien lire d'autre. Calculée par le socle déterministe, jamais par une couche IA. -->
           <div class="zone-principle" :class="`zone-principle--${zoneKey}`">
             <span class="zp-label">Principe IA : {{ selectedZone }}</span>
             <p class="zp-text">{{ ZONE_PRINCIPLES[selectedZone] }}</p>
+            <p v-if="immediateAction" class="zp-action">
+              <span class="zp-action-label">À faire maintenant</span> {{ immediateAction }}
+            </p>
           </div>
 
           <!-- Profil de zone : risque IA uniquement, sans exigence cognitive -->
@@ -359,6 +363,18 @@ const result = computed(() => {
 const patronForResult = computed(() => {
   if (!selectedConcept.value || step.value !== 'result') return null
   return getPatronsByConceptAndContext(selectedConcept.value.id, selectedContext.value)
+})
+
+// Action la plus immédiatement applicable : le patron si disponible pour ce concept, sinon
+// l'outil le mieux classé. Toujours dérivé du socle déterministe, jamais reformulé par une IA.
+const immediateAction = computed(() => {
+  if (step.value !== 'result' || !result.value?.tools?.length) return ''
+  const patron = patronForResult.value
+  if (patron?.all?.length) {
+    const p = patron.hasExact ? patron.exact[0] : patron.all[0]
+    if (p) return p.titre
+  }
+  return `Essayer ${result.value.tools[0].name}`
 })
 
 const sourceBadgeClass = computed(() => {
@@ -818,6 +834,18 @@ onBeforeUnmount(() => {
 .zone-principle--architecture .zp-label { color: var(--zone-architecture-text); }
 
 .zp-text { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
+
+.zp-action {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.6;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.zp-action-label {
+  font-weight: 700;
+}
 
 /* Niveau 1 - proposition + outils */
 .result-proposal {

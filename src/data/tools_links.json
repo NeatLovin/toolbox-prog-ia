@@ -1,0 +1,194 @@
+{
+  "M01": {
+    "explainer": "Un examen classique sur papier, sans ordinateur : la manière la plus simple de garantir qu'aucune IA n'a pu intervenir dans la production de l'étudiant.",
+    "tutorial_link": null
+  },
+  "M02": {
+    "explainer": "Un examen sur ordinateur mais dans une salle contrôlée, avec accès réseau coupé ou restreint, pour empêcher le recours à une IA pendant l'épreuve.",
+    "tutorial_link": null
+  },
+  "M03": {
+    "explainer": "Un entretien individuel où l'étudiant explique son raisonnement à l'oral : impossible de déléguer sa réflexion à une IA pendant l'échange.",
+    "tutorial_link": null
+  },
+  "M04": {
+    "explainer": "Une défense orale collective d'un projet, où chaque membre du groupe doit être capable d'expliquer les choix faits, y compris ceux d'architecture.",
+    "tutorial_link": null
+  },
+  "M05": {
+    "explainer": "Les étudiants relisent et commentent le code d'un camarade selon une grille de critères : cela développe leur capacité à juger un code, le leur ou celui d'une IA.",
+    "tutorial_link": null
+  },
+  "M06": {
+    "explainer": "Deux étudiants codent ensemble sur le même poste, en alternant qui écrit et qui relit, pour maintenir une réflexion partagée plutôt que déléguée.",
+    "tutorial_link": null
+  },
+  "M07": {
+    "explainer": "Montrer un exemple entièrement résolu avant de poser un exercice similaire, pour réduire la charge mentale des débutants et construire des repères avant l'autonomie.",
+    "tutorial_link": null
+  },
+  "M08": {
+    "explainer": "De courts exercices où l'étudiant lit et explique un code déjà écrit, sans rien produire lui-même : cela mesure sa compréhension indépendamment de sa capacité à faire écrire du code par une IA.",
+    "tutorial_link": null
+  },
+  "M09": {
+    "explainer": "L'étudiant réfléchit à voix haute pendant qu'il résout un problème sur papier, ce qui permet de repérer précisément où son raisonnement bloque.",
+    "tutorial_link": null
+  },
+  "M10": {
+    "explainer": "Une période où les étudiants conçoivent des algorithmes uniquement sur papier, avant tout accès à un environnement de code, pour construire le raisonnement avant la syntaxe.",
+    "tutorial_link": null
+  },
+  "M11": {
+    "explainer": "Les étudiants s'évaluent mutuellement sur des critères définis à l'avance, ce qui répartit le jugement au-delà du seul enseignant.",
+    "tutorial_link": null
+  },
+  "M12": {
+    "explainer": "Une collection de productions et de réflexions de l'étudiant rassemblée sur la durée, pour évaluer une progression plutôt qu'un instantané isolé.",
+    "tutorial_link": null
+  },
+  "M13": {
+    "explainer": "Des travaux pratiques notés tout au long du semestre plutôt qu'un seul examen final ; à encadrer avec attention, les TPs faits hors classe sont plus exposés à une délégation à l'IA.",
+    "tutorial_link": null
+  },
+  "T01": {
+    "explainer": "Observer la fréquence et la régularité des commits Git d'un étudiant donne un indice discret sur son processus de travail, sans rien lui imposer de plus.",
+    "tutorial_link": null
+  },
+  "T02": {
+    "explainer": "Un tableau de bord qui synthétise automatiquement l'activité Git des étudiants par des règles simples, sans IA, pour repérer d'un coup d'œil les profils atypiques.",
+    "tutorial_link": null
+  },
+  "T03": {
+    "explainer": "Un outil qui compare le code de tous les étudiants entre eux pour repérer les similitudes suspectes de plagiat inter-étudiants ; il ne détecte pas le code généré par IA.",
+    "tutorial_link": null
+  },
+  "T04": {
+    "explainer": "Comme JPlag, un outil gratuit de détection de similitudes entre codes d'étudiants, déjà utilisé à grande échelle dans une HES romande.",
+    "tutorial_link": null
+  },
+  "T05": {
+    "explainer": "La version enseignement de GitHub : distribuer des exercices, suivre qui a rendu quoi, et faire tourner automatiquement des tests sur chaque rendu.",
+    "tutorial_link": null
+  },
+  "T06": {
+    "explainer": "Une application développée en interne dans une HES romande pour faire passer des examens sur machine avec surveillance d'écran et accès réseau contrôlé.",
+    "tutorial_link": null
+  },
+  "T07": {
+    "explainer": "Une plateforme d'examen sur machine virtuelle coupée d'internet, développée dans une autre HES romande, comme alternative à l'examen papier.",
+    "tutorial_link": null
+  },
+  "T08": {
+    "explainer": "L'outil de détection de plagiat textuel déjà intégré à Cyberlearn ; utile contre le copier-coller entre étudiants, mais ne détecte pas un texte ou du code généré par IA.",
+    "tutorial_link": null
+  },
+  "T09": {
+    "explainer": "Un outil de recherche qui enregistre dans l'éditeur de code les interactions de l'étudiant avec une IA (éditions, chronologie), pour rendre visible ce qui se passait jusqu'ici en coulisses.",
+    "tutorial_link": null
+  },
+  "T10": {
+    "explainer": "Des travaux de recherche récents qui cherchent à repérer, à partir du style d'un commit, s'il a probablement été écrit par un humain ou généré par une IA.",
+    "tutorial_link": null
+  },
+  "T11": {
+    "explainer": "Une plateforme d'apprentissage de la programmation développée dans une HES romande, citée par plusieurs enseignants interrogés dans le cadre de ce travail.",
+    "tutorial_link": null
+  },
+  "I01": {
+    "explainer": "Un tuteur IA qui n'offre que quatre types d'aide bien délimités (expliquer, corriger, faire écrire un bout de code, poser une question), ce qui l'empêche de simplement donner la solution complète.",
+    "tutorial_link": null
+  },
+  "I02": {
+    "explainer": "Un tuteur IA open source pensé pour donner des indices plutôt que des réponses toutes faites ; candidat principal pour une intégration future dans les cours HES-SO.",
+    "tutorial_link": null
+  },
+  "I03": {
+    "explainer": "Un tuteur IA sous forme de chat, intégré directement à la plateforme d'enseignement d'une grande école allemande et utilisé par plus de 2000 étudiants.",
+    "tutorial_link": null
+  },
+  "I04": {
+    "explainer": "Le tuteur IA du cours d'introduction à la programmation le plus suivi au monde (Harvard CS50), conçu pour guider sans jamais donner la solution directement.",
+    "tutorial_link": null
+  },
+  "I05": {
+    "explainer": "Un cadre pédagogique en six étapes qui organise l'introduction progressive de l'IA générative dans un cours, en s'appuyant sur plusieurs théories de l'apprentissage reconnues.",
+    "tutorial_link": null
+  },
+  "I06": {
+    "explainer": "Un modèle d'IA de Google spécifiquement entraîné pour l'enseignement plutôt que pour la production générale de texte, testé en conditions réelles dans des écoles britanniques.",
+    "tutorial_link": null
+  },
+  "I07": {
+    "explainer": "Une IA conversationnelle qu'on limite à un ensemble de documents qu'on lui fournit soi-même (cours, guides, normes) : elle répond en s'appuyant sur ce corpus, ce qui réduit le risque qu'elle invente des réponses.",
+    "tutorial_link": null
+  },
+  "I08": {
+    "explainer": "Un mode spécial de ChatGPT, pensé pour accompagner l'apprentissage plutôt que donner directement la réponse, mais qui reste contournable par l'étudiant.",
+    "tutorial_link": null
+  },
+  "I09": {
+    "explainer": "Un outil qui assiste en temps réel non pas l'étudiant mais le tuteur humain pendant une séance de soutien, pour l'aider à mieux réagir aux difficultés de l'élève.",
+    "tutorial_link": null
+  },
+  "I10": {
+    "explainer": "Un programme de recherche qui documente comment l'IA générative complique particulièrement la transition entre les cours d'introduction et les cours avancés.",
+    "tutorial_link": null
+  },
+  "I11": {
+    "explainer": "Une méthode formalisée pour interroger une IA par questions successives façon maïeutique socratique, plutôt que de lui demander directement une réponse.",
+    "tutorial_link": null
+  },
+  "I12": {
+    "explainer": "Une architecture technique, développée conjointement par une HES romande et l'EPFL, pour construire des chatbots pédagogiques sur mesure.",
+    "tutorial_link": null
+  },
+  "I13": {
+    "explainer": "Un service commercial qui aide l'enseignant lui-même à générer du contenu de cours, des évaluations et des retours, plutôt qu'un outil destiné aux étudiants.",
+    "tutorial_link": null
+  },
+  "I14": {
+    "explainer": "Des projets de recherche internes à la HES-SO explorant des modèles de langage hébergés localement, pour garder la maîtrise des données pédagogiques.",
+    "tutorial_link": null
+  },
+  "I15": {
+    "explainer": "Un wiki interne créé dans une HES romande pour former les étudiants eux-mêmes à un usage réfléchi de l'IA générative.",
+    "tutorial_link": null
+  },
+  "I16": {
+    "explainer": "Un outil HES-SO qui cartographie les compétences acquises par chaque étudiant, avec une réflexion en cours sur son adaptation à l'ère de l'IA.",
+    "tutorial_link": null
+  },
+  "A01": {
+    "explainer": "Un éditeur de code, dérivé de VS Code, avec une IA capable d'agir directement dans le projet ; très répandu chez les développeurs professionnels.",
+    "tutorial_link": null
+  },
+  "A02": {
+    "explainer": "Un assistant de code IA intégré à l'éditeur, capable d'agir de façon autonome sur le code, comparable à Cursor.",
+    "tutorial_link": null
+  },
+  "A03": {
+    "explainer": "Un agent IA en ligne de commande d'Anthropic, utile pour explorer rapidement une architecture logicielle, mais à réserver aux étudiants ayant déjà les bases : un débutant risque de générer des choix de conception sans les comprendre.",
+    "tutorial_link": null
+  },
+  "A04": {
+    "explainer": "L'équivalent chez OpenAI de Claude Code : un agent en ligne de commande capable d'écrire et modifier du code de façon autonome.",
+    "tutorial_link": null
+  },
+  "A05": {
+    "explainer": "L'outil de complétion de code par IA le plus répandu, intégré directement dans l'éditeur, standard dans le monde professionnel.",
+    "tutorial_link": null
+  },
+  "A06": {
+    "explainer": "Le modèle d'IA généraliste grand public d'OpenAI ; c'est l'outil le plus utilisé par les étudiants HES-SO, avec ou sans l'accord de l'enseignant.",
+    "tutorial_link": null
+  },
+  "A07": {
+    "explainer": "Le modèle d'IA généraliste de Google, deuxième outil le plus utilisé par les étudiants après ChatGPT.",
+    "tutorial_link": null
+  },
+  "A08": {
+    "explainer": "L'IA générative intégrée à la suite Office 365, disponible pour les étudiants via leur licence HES-SO.",
+    "tutorial_link": null
+  }
+}

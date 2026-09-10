@@ -191,9 +191,11 @@
                     <span
                       v-for="entry in idealTools(concept.id)"
                       :key="entry.toolId"
-                      class="ui-badge ui-badge--score-ideal cs-tool-id"
-                      :title="toolName(entry.toolId)"
-                    >{{ entry.toolId }}</span>
+                      class="ui-badge ui-badge--score-ideal cs-tool-badge"
+                    >
+                      {{ toolName(entry.toolId) }}
+                      <span class="cs-tool-id">{{ entry.toolId }}</span>
+                    </span>
                   </div>
                 </div>
 
@@ -458,7 +460,18 @@ function bloomClass(b) {
 
 .cs-badge-row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
-.cs-tool-id { font-family: var(--font-mono); letter-spacing: 0.03em; }
+.cs-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cs-tool-id {
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  opacity: 0.6;
+  font-size: 0.9em;
+}
 
 .cs-patrons { display: flex; flex-direction: column; gap: var(--space-3); }
 

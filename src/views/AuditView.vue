@@ -8,6 +8,15 @@
       </p>
     </div>
 
+    <!-- Réservé au grand écran : jamais de dégradation silencieuse, un message explicite -->
+    <div v-if="!isWideEnough" class="audit-narrow ui-card">
+      <p>
+        L'audit de cours est optimisé pour un écran large (tableaux, comparaisons côte à côte).
+        Ouvrez ce lien sur un ordinateur pour l'utiliser dans de bonnes conditions.
+      </p>
+    </div>
+    <template v-else>
+
     <!-- Idle : depot PDF ou fixture -->
     <template v-if="audit.phase === 'idle'">
       <div class="ctx-chooser">
@@ -44,6 +53,20 @@
       <p class="loading-sub">Segmentation et classification en un seul appel. Cela peut prendre quelques secondes.</p>
     </div>
 
+    <!-- Garde-fou de pertinence : jamais un blocage, toujours une confirmation -->
+    <div v-else-if="audit.phase === 'relevance-warning'" class="relevance-warning ui-card">
+      <h2 class="rw-title">Ce document ne semble pas clairement porter sur la programmation</h2>
+      <p class="rw-text">
+        L'analyse automatique n'est pas certaine que ce document soit un cours de programmation
+        ou d'informatique. Vous pouvez continuer quand même : l'enseignant reste seul juge, le
+        modèle ne fait que signaler un doute.
+      </p>
+      <div class="rw-actions">
+        <button class="ui-btn ui-btn-secondary" @click="audit.confirmRelevance(false)">Recommencer</button>
+        <button class="ui-btn ui-btn-primary" @click="audit.confirmRelevance(true)">Continuer quand même</button>
+      </div>
+    </div>
+
     <!-- Validation humaine -->
     <template v-else-if="audit.phase === 'reviewing'">
       <div v-if="audit.isDemo" class="demo-banner">
@@ -66,7 +89,6 @@
     <!-- Resultats -->
     <template v-else-if="audit.phase === 'done'">
       <CourseAudit
-        :is-programming="audit.isProgramming"
         :course-summary="audit.courseSummary"
         :course-context="audit.courseContext"
         :swot="audit.swot"
@@ -74,6 +96,7 @@
         :sections="audit.sections"
         :validated="audit.validated"
         @reset="audit.reset"
+        @update-context="audit.recomputeWithContext"
       />
     </template>
 
@@ -91,10 +114,12 @@
       </div>
       <button class="btn-retry" @click="audit.reset">Recommencer</button>
     </div>
+    </template>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useAuditStore } from '../stores/audit.js'
 import PdfDropzone from '../components/PdfDropzone.vue'
 import SectionReview from '../components/SectionReview.vue'
@@ -107,6 +132,21 @@ const audit = useAuditStore()
 function loadFixture() {
   audit.loadFixture(fixtureData)
 }
+
+// 4.8 : l'audit reste réservé au grand écran, mais avec un message explicite plutôt qu'une
+// dégradation silencieuse. Le lien de nav reste visible : seul le contenu de la vue s'adapte.
+const isWideEnough = ref(true)
+let mql = null
+function updateWidth() { isWideEnough.value = mql.matches }
+
+onMounted(() => {
+  mql = window.matchMedia('(min-width: 860px)')
+  updateWidth()
+  mql.addEventListener('change', updateWidth)
+})
+onBeforeUnmount(() => {
+  mql?.removeEventListener('change', updateWidth)
+})
 </script>
 
 <style scoped>
@@ -147,6 +187,14 @@ function loadFixture() {
 
 .header-desc { max-width: 680px; }
 
+.audit-narrow {
+  max-width: 480px;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  border-left: 3px solid var(--color-accent);
+}
+
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -186,6 +234,32 @@ function loadFixture() {
 }
 
 .demo-banner span { font-weight: 700; }
+
+.relevance-warning {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 560px;
+  border-left: 3px solid var(--color-warning-border);
+}
+
+.rw-title {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.rw-text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.rw-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
 
 .error-state {
   background: var(--color-danger-bg);

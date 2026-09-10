@@ -16,6 +16,7 @@
           </div>
           <h2 class="modal-title">{{ tool.name }}</h2>
           <p class="modal-desc">{{ tool.description }}</p>
+          <p v-if="tool.explainer" class="modal-explainer">{{ tool.explainer }}</p>
         </div>
 
         <div v-if="tool.detail" class="detail-block">
@@ -73,8 +74,9 @@
           <p class="sources-text"><ReferenceLinks :text="tool.sources" /></p>
         </div>
 
-        <div v-if="tool.link" class="section">
+        <div v-if="tool.link || tool.tutorial_link" class="section tool-links-row">
           <a
+            v-if="tool.link"
             :href="tool.link"
             target="_blank"
             rel="noopener noreferrer"
@@ -83,6 +85,16 @@
           >
             Voir la ressource
             <span class="tool-link-domain">{{ linkDomain }}</span>
+          </a>
+          <a
+            v-if="tool.tutorial_link"
+            :href="tool.tutorial_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ui-btn ui-btn-secondary tool-link-btn"
+            @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'tutoriel' })"
+          >
+            Tutoriel de prise en main
           </a>
         </div>
       </div>
@@ -248,6 +260,19 @@ const efficaciteClass = computed(() => ({
   font-size: var(--text-base);
   color: var(--color-text-muted);
   line-height: 1.6;
+}
+
+.modal-explainer {
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.tool-links-row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
 }
 
 .detail-block {

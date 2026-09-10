@@ -155,7 +155,7 @@ a { color: inherit; text-decoration: none; }
 /* Niveau étudiant */
 .ui-badge--level {
   background: var(--color-accent-subtle);
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   border-color: var(--color-border);
 }
 
@@ -167,7 +167,7 @@ a { color: inherit; text-decoration: none; }
 /* Neutre générique */
 .ui-badge--neutral {
   background: var(--color-accent-subtle);
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   border-color: var(--color-border);
 }
 
@@ -176,7 +176,7 @@ a { color: inherit; text-decoration: none; }
 .ui-badge--efficacite-validee {
   background: color-mix(in srgb, var(--zone-logique) 16%, var(--color-surface));
   border-color: color-mix(in srgb, var(--zone-logique) 36%, var(--color-surface));
-  color: var(--zone-logique);
+  color: var(--efficacite-validee-text);
 }
 .ui-badge--efficacite-etablie {
   background: var(--color-surface-2);
@@ -186,7 +186,7 @@ a { color: inherit; text-decoration: none; }
 .ui-badge--efficacite-emergente {
   background: transparent;
   border-color: var(--color-border-strong);
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
 }
 
 /* =============================================
@@ -230,7 +230,7 @@ a { color: inherit; text-decoration: none; }
 
 .ui-btn-ghost {
   background: transparent;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   border-color: var(--color-border);
 }
 .ui-btn-ghost:hover { background: var(--color-accent-subtle); }

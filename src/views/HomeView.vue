@@ -10,6 +10,13 @@
       </p>
     </div>
 
+    <p class="home-generic-rec">
+      Sans précision de votre part : privilégiez l'évaluation orale ou tracée sur la syntaxe, où
+      l'IA générative produit du code correct sans garantir la compréhension, et réservez les
+      exercices de conception et de débogage à la main avant tout recours à un assistant.
+      Répondez aux quelques questions ci-dessous pour une recommandation adaptée à votre cours.
+    </p>
+
     <StatStrip class="reveal" />
 
     <div class="hub-grid">
@@ -77,6 +84,17 @@ const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   flex-direction: column;
   gap: var(--space-6);
   max-width: 740px;
+}
+
+.home-generic-rec {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-lg);
 }
 
 

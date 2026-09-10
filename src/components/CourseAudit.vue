@@ -1,13 +1,7 @@
 <template>
-  <!-- Document hors programmation -->
-  <div v-if="!isProgramming" class="not-prog ui-card">
-    <h2 class="np-title">Ce document ne semble pas porter sur la programmation.</h2>
-    <p class="np-text">L'audit est conçu pour analyser des cours de programmation ou d'informatique. Déposez un syllabus, un plan de cours ou un support de cours en lien avec ces disciplines.</p>
-    <button class="ui-btn ui-btn-secondary" @click="$emit('reset')">Recommencer</button>
-  </div>
-
-  <!-- Résultat normal -->
-  <div v-else class="audit">
+  <!-- Résultat normal : le garde-fou de pertinence (relevance-warning) intercepte désormais les
+       documents hors sujet avant d'arriver ici, jamais en blocage sans issue (voir AuditView.vue). -->
+  <div class="audit">
 
     <!-- En-tête -->
     <div class="audit-header">
@@ -16,7 +10,18 @@
         <p class="audit-meta">
           {{ validatedCount }} section{{ validatedCount > 1 ? 's' : '' }} ·
           {{ allConceptIds.length }} notion{{ allConceptIds.length > 1 ? 's' : '' }} repérée{{ allConceptIds.length > 1 ? 's' : '' }} ·
-          {{ courseContext }}
+          <select
+            class="ctx-inline-select no-print"
+            :value="courseContext"
+            aria-label="Contexte du cours"
+            @change="$emit('update-context', $event.target.value)"
+          >
+            <option value="Présentiel encadré">Présentiel encadré</option>
+            <option value="Autonomie supervisée">Autonomie supervisée</option>
+            <option value="Projet long">Projet long</option>
+            <option value="Diagnostic">Diagnostic</option>
+          </select>
+          <span class="ctx-inline-print">{{ courseContext }}</span>
         </p>
       </div>
       <div class="audit-header-actions">
@@ -252,7 +257,6 @@ const { getPatronsByConceptAndContext } = useData()
 const selectedTool = ref(null)
 
 const props = defineProps({
-  isProgramming:   { type: Boolean, default: true },
   courseSummary:   { type: String,  default: '' },
   courseContext:   { type: String,  default: 'Présentiel encadré' },
   swot:            { type: Object,  default: () => null },
@@ -261,7 +265,7 @@ const props = defineProps({
   validated:       { type: Array,   default: () => [] }
 })
 
-defineEmits(['reset'])
+defineEmits(['reset', 'update-context'])
 
 function exportPDF() {
   track('audit_export', { format: 'pdf' })
@@ -388,28 +392,10 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 </script>
 
 <style scoped>
-/* === Document hors programmation === */
 .audit-method-note {
   font-size: var(--text-xs);
   color: var(--color-text-faint);
   font-style: italic;
-}
-
-.not-prog {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  max-width: 560px;
-}
-.np-title {
-  font-size: var(--text-xl);
-  font-weight: 800;
-  color: var(--color-text);
-}
-.np-text {
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  line-height: 1.6;
 }
 
 /* === Conteneur principal === */
@@ -445,6 +431,24 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin-top: 0.3rem;
+}
+
+.ctx-inline-select {
+  font: inherit;
+  color: inherit;
+  background: var(--color-accent-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+}
+
+.ctx-inline-print {
+  display: none;
+}
+
+@media print {
+  .ctx-inline-print { display: inline; }
 }
 
 /* === Résumé généré === */

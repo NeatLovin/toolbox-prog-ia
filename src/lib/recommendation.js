@@ -1,4 +1,4 @@
-import toolsData from '../data/tools.json'
+import { tools as toolsData } from '../data/toolsResolved.js'
 import conceptsData from '../data/concepts.json'
 import matrixData from '../data/matrix.json'
 import combosData from '../data/combos.json'

@@ -121,6 +121,8 @@
               />
             </div>
 
+            <p v-if="tool.explainer" class="td-explainer">{{ tool.explainer }}</p>
+
             <div v-if="tool.detail" class="td-detail">
               <p>{{ tool.detail }}</p>
             </div>
@@ -163,17 +165,29 @@
               </div>
             </div>
 
-            <a
-              v-if="tool.link"
-              :href="tool.link"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="ui-btn ui-btn-primary td-link-btn"
-              @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'officiel' })"
-            >
-              Voir la ressource
-              <span class="td-link-domain">{{ linkDomain(tool) }}</span>
-            </a>
+            <div v-if="tool.link || tool.tutorial_link" class="td-links-row">
+              <a
+                v-if="tool.link"
+                :href="tool.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ui-btn ui-btn-primary td-link-btn"
+                @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'officiel' })"
+              >
+                Voir la ressource
+                <span class="td-link-domain">{{ linkDomain(tool) }}</span>
+              </a>
+              <a
+                v-if="tool.tutorial_link"
+                :href="tool.tutorial_link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ui-btn ui-btn-secondary td-link-btn"
+                @click="track('reco_external_link_click', { tool_id: tool.id, link_type: 'tutoriel' })"
+              >
+                Tutoriel de prise en main
+              </a>
+            </div>
 
           </div>
         </template>
@@ -431,6 +445,19 @@ function baseName(str) {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+}
+
+.td-explainer {
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.td-links-row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
 }
 
 .td-detail {
