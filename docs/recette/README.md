@@ -110,7 +110,63 @@ compte rendu final).
 
 | Étape | Statut |
 |---|---|
-| Branche poussée sur `origin` | 🚫 accord explicite requis |
-| Pull request ouverte | 🚫 `gh` indisponible sur cette machine — corps de PR préparé, lien de comparaison à ouvrir manuellement |
-| Fusion | 🚫 attend votre accord |
+| Branche poussée sur `origin` | ✅ `feat/telemetry-and-ux` poussée, suit `origin/feat/telemetry-and-ux` |
+| Pull request ouverte | 🚫 `gh` indisponible sur cette machine — corps de PR rédigé ci-dessous, lien à ouvrir manuellement : https://github.com/NeatLovin/toolbox-prog-ia/pull/new/feat/telemetry-and-ux |
+| Fusion | 🚫 attend votre accord explicite |
 | Tag `v0.2.0` déplacé sur `main` | 🚫 après fusion uniquement |
+
+### Corps de PR proposé
+
+**Titre :** `Itération 2 : service serveur, télémétrie et recette avant test enseignants`
+
+**Corps :**
+
+```markdown
+## Résumé
+
+Itération 2 du prototype Toolbox : Worker Cloudflare + D1 remplaçant le proxy local,
+consentement + télémétrie respectant la vie privée, ergonomie retravaillée pour un test
+utilisateur avec 22 enseignants de 7 institutions romandes, puis recette complète contre
+l'environnement réellement déployé.
+
+- Service serveur (Worker + D1) déployé et vérifié en conditions réelles : `POST /events`,
+  `POST /audit` (relais Anthropic, clé jamais exposée au client), plafonds de coût dimensionnés
+  pour un pilote de ~25 utilisateurs.
+- Consentement en sessionStorage (jamais persistant), télémétrie alignée sur une taxonomie
+  d'événements fermée, aucune PII journalisée.
+- 8 points d'ergonomie retravaillés (contraste WCAG AA, densité, noms d'outils, légende matrice,
+  explications d'outils, contexte de cours modifiable, garde-fou de pertinence non bloquant,
+  affichage 380px).
+- Page de transparence, questionnaire UMUX-Lite, requêtes d'analyse SQL.
+- Recette intégrale menée contre le site publié (jamais localhost) : voir `docs/recette/README.md`.
+
+## Bugs trouvés par le test, pas par la lecture du code
+
+- `sendBeacon` envoie toujours `credentials:'include'` cross-origin ; le Worker ne renvoyait pas
+  `Access-Control-Allow-Credentials`, ce qui bloquait silencieusement toute la télémétrie de fin
+  de session. Invisible en local, découvert uniquement contre le Worker réellement déployé.
+- L'audit PDF restait masqué hors localhost (reliquat de l'architecture à proxy local).
+- Le bandeau de consentement s'affichait quasi instantanément à cause de la résolution de route
+  initiale de vue-router, confondue avec une navigation réelle.
+- `ts_server` est assigné une fois par lot de flush, pas par événement : plusieurs événements
+  d'une session partagent le même `ts_server`. `ts_client` reste la seule colonne fiable pour
+  l'ordre chronologique fin (documenté dans la recette).
+
+## Recette
+
+Détail complet dans `docs/recette/README.md` : chaîne de configuration, ergonomie (captures),
+données analysables (parcours réels + `analysis.sql` en `--remote`), chemins de secours (coupure
+d'urgence, plafond, refus de consentement), navigateurs (Chromium/Firefox/WebKit).
+
+**Reste non vérifiable pour l'instant** : le test avec un document hors sujet contre l'API
+Anthropic réelle est bloqué tant que `ANTHROPIC_API_KEY` n'est pas posée sur le Worker
+(action qui revient au porteur du projet, jamais partagée dans cette conversation).
+
+## Hors de portée de ce PR (à faire séparément par le porteur du projet)
+
+- Poser `ANTHROPIC_API_KEY` (`wrangler secret put ANTHROPIC_API_KEY --config worker/wrangler.toml`).
+- Limite de dépense sur la console Anthropic.
+- Alerte d'usage sur le tableau de bord Cloudflare.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+```
