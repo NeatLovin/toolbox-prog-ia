@@ -66,14 +66,12 @@ un build de test publié.
 ces quelques parcours de test, ce qui est attendu (pas un défaut de requête) et se peuplera avec
 un usage réel plus large.
 
-**Nettoyage des données de test : en attente de votre accord.** 4 sessions de test sont
-actuellement dans D1 distant (`14501712-...`, `6187126f-...`, `b3b3dacd-...`, `c638af61-...`,
-au total 48 lignes dans `events` + les lignes correspondantes dans `audit_calls`). Une tentative
-de `DELETE` a été bloquée par le classificateur de sécurité du mode automatique (action
-destructive sur une base de production distante) — à juste titre, une suppression réelle contre
-l'infrastructure Cloudflare mérite votre confirmation explicite plutôt qu'une exécution
-silencieuse. Dites-moi si je supprime ces 4 sessions avant le début du vrai test enseignants, ou
-si vous préférez vous en charger vous-même.
+**Nettoyage des données de test : fait, avec votre accord.** Les 4 sessions de test de cette
+section (`14501712-...`, `6187126f-...`, `b3b3dacd-...`, `c638af61-...`, 48 lignes) ainsi que 3
+sessions supplémentaires générées par le test croisé-navigateurs du §7 (`5a682a58-...`,
+`ebb16b0f-...`, `f3e95323-...`, 12 lignes) ont été supprimées de `events` et `audit_calls` sur D1
+distant après confirmation explicite. `SELECT COUNT(*) FROM events` confirme 0 ligne restante :
+la base est vide et prête pour le vrai test enseignants.
 
 ## §6 — Chemins de secours
 
