@@ -35,6 +35,19 @@
       Notions détectées par IA et validées par l'enseignant. Calcul déterministe basé sur la matrice de pertinence.
     </p>
 
+    <!-- Bannière de troncature : reste visible sur tout l'écran de résultat, pas seulement au
+         dépôt, car c'est en lisant les conclusions que l'information compte. -->
+    <div v-if="truncation" class="truncation-banner ui-card">
+      <p class="tb-title">Analyse partielle</p>
+      <p class="tb-text">
+        Ce document dépasse la capacité d'analyse en une fois : environ {{ truncationPct }} % du
+        contenu a été pris en compte ({{ truncation.charactersSubmitted.toLocaleString('fr-CH') }}
+        caractères sur {{ truncation.charactersTotal.toLocaleString('fr-CH') }}). Les manques
+        signalés plus bas peuvent provenir de la partie non analysée, pas d'un manque réel dans
+        votre cours.
+      </p>
+    </div>
+
     <!-- 0. RÉSUMÉ GÉNÉRÉ (si course_summary disponible) -->
     <div v-if="courseSummary" class="course-summary-card ui-card">
       <span class="u-eyebrow">Votre cours porte sur</span>
@@ -265,10 +278,13 @@ const props = defineProps({
   swot:            { type: Object,  default: () => null },
   recommendations: { type: Array,   default: () => [] },
   sections:        { type: Array,   default: () => [] },
-  validated:       { type: Array,   default: () => [] }
+  validated:       { type: Array,   default: () => [] },
+  truncation:      { type: Object,  default: () => null }
 })
 
 defineEmits(['reset', 'update-context'])
+
+const truncationPct = computed(() => props.truncation ? Math.round(props.truncation.coverageRatio * 100) : null)
 
 function exportPDF() {
   track('audit_export', { format: 'pdf' })
@@ -452,6 +468,24 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 
 @media print {
   .ctx-inline-print { display: inline; }
+}
+
+/* === Bannière de troncature === */
+.truncation-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-info-border);
+}
+.tb-title {
+  font-weight: 700;
+  color: var(--color-info-text);
+}
+.tb-text {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: 1.6;
 }
 
 /* === Résumé généré === */

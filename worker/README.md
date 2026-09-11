@@ -114,6 +114,20 @@ Ces plafonds bornent le risque côté code, mais restent une limite applicative 
 complément, hors de portée du code, une limite de dépense sur la console Anthropic et une alerte
 d'usage côté tableau de bord Cloudflare.
 
+## Capacité totale d'un document vs plafond par requête
+
+`VITE_AUDIT_MAX_DOCUMENT_CHARS` (front, `.env.production`/`.env.development`, défaut 160 000) est
+la capacité totale de caractères extraits qu'un audit traite réellement avant troncature
+(`src/stores/audit.js`) : au-delà, le document est tronqué à cette limite et l'écran de résultat
+affiche une bannière expliquant la proportion couverte (voir `CourseAudit.vue`), avec l'événement
+`audit_truncated` (caractères soumis, caractères totaux, proportion couverte).
+
+C'est une valeur distincte d'`AUDIT_MAX_CHARS` ci-dessus, qui plafonne une seule requête `/audit`
+(toujours ≤ 40 000 caractères en pratique, la taille d'une tranche côté client) : ce plafond reste
+une protection de défense en profondeur contre un appel direct hors interface avec un texte non
+découpé, largement au-dessus de la taille réelle d'une tranche, sans lien avec la capacité totale
+du document.
+
 ## ts_client vs ts_server
 
 `ts_client` est pris côté navigateur à chaque appel de `track()` : strictement croissant, c'est la

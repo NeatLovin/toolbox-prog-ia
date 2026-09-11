@@ -16,6 +16,7 @@ export const ALLOWED_EVENTS = new Set([
   'audit_start', 'audit_document_submitted', 'audit_relevance_check', 'audit_context_filled',
   'audit_classification_result', 'audit_classification_edited', 'audit_validation_confirmed',
   'audit_result_shown', 'audit_recommendation_open', 'audit_export', 'audit_unavailable',
+  'audit_truncated',
   // Transversal
   'app_error', 'survey_submitted'
 ])

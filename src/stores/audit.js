@@ -11,7 +11,11 @@ import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 const AUDIT_URL      = `${API_BASE}/audit`
 const VALID_IDS      = new Set(conceptsData.map(c => c.id))
 const CHUNK_MAX      = 40_000
-const CHUNK_LIMIT    = 4
+// Capacité totale réellement traitée (pas une valeur implicite déduite de CHUNK_MAX x un nombre
+// de tranches) : au-delà, le document est tronqué et l'écran de résultat l'annonce (voir
+// CourseAudit.vue). Distincte d'AUDIT_MAX_CHARS côté Worker, qui plafonne une seule requête
+// (toujours <= CHUNK_MAX en pratique), pas le document entier.
+const MAX_DOCUMENT_CHARS = parseInt(import.meta.env.VITE_AUDIT_MAX_DOCUMENT_CHARS || '160000', 10)
 
 // Set to true locally to log detected sections (never commit as true)
 const DEBUG_SEGMENTATION = false
@@ -185,8 +189,8 @@ async function analyzeWithChunking(cleanText) {
   if (cleanText.length <= CHUNK_MAX) return analyzeDocument(cleanText)
 
   const chunks = []
-  for (let i = 0; i < cleanText.length && chunks.length < CHUNK_LIMIT; i += CHUNK_MAX) {
-    chunks.push(cleanText.slice(i, i + CHUNK_MAX))
+  for (let i = 0; i < cleanText.length && i < MAX_DOCUMENT_CHARS; i += CHUNK_MAX) {
+    chunks.push(cleanText.slice(i, Math.min(i + CHUNK_MAX, MAX_DOCUMENT_CHARS)))
   }
   let globalProg       = false
   let globalSummary    = ''
@@ -203,12 +207,18 @@ async function analyzeWithChunking(cleanText) {
     if (!globalModel) globalModel = result.model
     allSections.push(...result.sections)
   }
+
+  const charactersSubmitted = Math.min(cleanText.length, MAX_DOCUMENT_CHARS)
+  const isTruncated = cleanText.length > MAX_DOCUMENT_CHARS
   return {
     is_programming: globalProg,
     relevance_confidence: globalConfidence || 'low',
     course_summary: globalSummary,
     model: globalModel,
-    sections: globalProg ? allSections.slice(0, 30) : []
+    sections: globalProg ? allSections.slice(0, 30) : [],
+    truncation: isTruncated
+      ? { charactersSubmitted, charactersTotal: cleanText.length, coverageRatio: charactersSubmitted / cleanText.length }
+      : null
   }
 }
 
@@ -297,7 +307,8 @@ export const useAuditStore = defineStore('audit', {
     isDemo:          false,
     relevanceConfidence: null,
     courseContext:   'Présentiel encadré',
-    courseSummary:   ''
+    courseSummary:   '',
+    truncation:      null
   }),
 
   actions: {
@@ -385,6 +396,14 @@ export const useAuditStore = defineStore('audit', {
     // du garde-fou de pertinence : même traitement, même instrumentation.
     _applyClassificationResult(result) {
       this.courseSummary = result.course_summary || ''
+      this.truncation     = result.truncation || null
+      if (this.truncation) {
+        track('audit_truncated', {
+          characters_submitted: this.truncation.charactersSubmitted,
+          characters_total: this.truncation.charactersTotal,
+          coverage_ratio: Math.round(this.truncation.coverageRatio * 100) / 100
+        })
+      }
       const detected      = result.sections
 
       if (DEBUG_SEGMENTATION) {
@@ -451,6 +470,6 @@ export const useAuditStore = defineStore('audit', {
 
   persist: {
     key:  'audit_v1',
-    pick: ['phase', 'sections', 'validated', 'swot', 'recommendations', 'courseContext', 'courseSummary', 'isDemo']
+    pick: ['phase', 'sections', 'validated', 'swot', 'recommendations', 'courseContext', 'courseSummary', 'isDemo', 'truncation']
   }
 })

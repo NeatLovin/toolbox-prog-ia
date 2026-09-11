@@ -95,6 +95,7 @@
         :recommendations="audit.recommendations"
         :sections="audit.sections"
         :validated="audit.validated"
+        :truncation="audit.truncation"
         @reset="audit.reset"
         @update-context="audit.recomputeWithContext"
       />
