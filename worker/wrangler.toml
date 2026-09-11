@@ -9,9 +9,7 @@ crons = ["0 3 * * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "toolbox-telemetry"
-# Remplacer par l'ID retourné par `wrangler d1 create toolbox-telemetry --location=weur`.
-# Voir worker/README.md pour la procédure complète.
-database_id = "REPLACE_WITH_DATABASE_ID"
+database_id = "d971299e-becb-4605-ac50-313aba36dfba"
 
 # Valeurs non secrètes. ANTHROPIC_API_KEY se configure séparément avec :
 #   wrangler secret put ANTHROPIC_API_KEY
