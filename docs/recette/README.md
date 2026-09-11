@@ -19,9 +19,9 @@ un build de test publié.
 
 | Vérification | Statut | Preuve |
 |---|---|---|
-| `VITE_API_BASE` résout vers le Worker réel sur le site publié (onglet réseau) | 🚫 | — |
-| Aucune requête ne part vers le placeholder `REPLACE_WITH_SUBDOMAIN` | 🚫 | — |
-| Garde-fou `src/lib/apiBase.js` : avertissement console si non configuré, pas de requête tentée | ✅ (vérifié localement, guard fonctionnel par construction) | voir compte rendu — testé avec `.env.production` non renseigné |
+| `VITE_API_BASE` résout vers le Worker réel sur le site publié (onglet réseau) | ✅ | Playwright contre `https://neatlovin.github.io/toolbox-prog-ia/` : requête `POST https://toolbox-prog-ia-api.toolbox-prog-ia.workers.dev/events` capturée après acceptation du consentement et flush |
+| Aucune requête ne part vers le placeholder `REPLACE_WITH_SUBDOMAIN` | ✅ | Aucun avertissement console, aucune requête avant flush, URL confirmée réelle |
+| Garde-fou `src/lib/apiBase.js` : avertissement console si non configuré, pas de requête tentée | ✅ | Testé sur un build avec `.env.production` non renseigné (avant déploiement) : avertissement affiché, zéro requête, bascule fixture en <1s |
 | `npm install` / `npm ci` sur un checkout propre | ⚠️ | échoue avec `ERESOLVE` (peer dependency `@vitejs/plugin-vue@5.2.4` veut `vite@^5\|^6`, le projet a `vite@8.1.0`) sans `--legacy-peer-deps` — constaté, non corrigé (hors périmètre : ne pas toucher aux dépendances) |
 | `npm run build` aboutit malgré ce décalage | ✅ | le build réussit une fois `node_modules` déjà résolu (ce qui est le cas sur cette machine) |
 
@@ -29,41 +29,70 @@ un build de test publié.
 
 | Point du brief | Statut | Preuve |
 |---|---|---|
-| Densité et palette (contraste WCAG) | 🚫 | — |
-| Bloc de synthèse en tête de résultat | 🚫 | — |
-| Noms d'outils au lieu des codes | 🚫 | — |
-| Lisibilité de la matrice et légende | 🚫 | — |
-| Explications et liens des outils | 🚫 | — |
-| Contexte de cours saisi une seule fois | 🚫 | — |
-| Garde-fou de pertinence (non bloquant) | 🚫 | — |
-| Affichage à 380px de large | 🚫 | — |
+| Densité et palette (contraste WCAG) | ✅ | Audit chiffré Playwright contre le site déployé (Catalogue, Concepts, Cartographie, résultat de l'arbre, clair + sombre) : 0 échec sur tous les badges/boutons/cellules testés |
+| Bloc de synthèse en tête de résultat | ✅ | `screenshots/01-arbre-resultat-synthese.png` — "Principe IA : Logique" + "À faire maintenant : Essayer Algorithmique pure papier (avant code)" |
+| Noms d'outils au lieu des codes | ✅ | `screenshots/02-arbre-resultat-details-noms-outils.png`, `04-cartographie-matrice-legende.png` — noms affichés, ID en secondaire |
+| Lisibilité de la matrice et légende | ✅ | `screenshots/04-cartographie-matrice-legende.png` — valeurs dans les cellules, légende toujours visible |
+| Explications et liens des outils | ✅ | `screenshots/03-catalogue-outil-explainer.png` |
+| Contexte de cours saisi une seule fois | ✅ | `screenshots/05-audit-contexte-idle.png` (saisie initiale), `06-`/`07-audit-resultat-contexte-*.png` (modifiable depuis le résultat, testé via la fixture démo — sans appel API — : le changement de contexte reste sur l'écran de résultat, aucun reset) |
+| Garde-fou de pertinence (non bloquant) | ✅ | `screenshots/08-audit-garde-fou-pertinence.png` — réponse `/audit` interceptée (Playwright) pour simuler une confiance faible sur le site réel : bannière neutre, "Continuer quand même" / "Recommencer", jamais un blocage |
+| Affichage à 380px de large | ✅ | `screenshots/09-380px-*.png`, 7 routes, `scrollWidth === clientWidth` partout (aucun débordement horizontal). `/audit` affiche correctement le message grand écran requis |
 
 ## §5 — Données analysables
 
 | Vérification | Statut | Preuve |
 |---|---|---|
-| Parcours réels (reco, catalogue, audit) sur le site publié avec `?src=tb2026` | 🚫 | — |
-| `worker/analysis.sql` exécuté en `--remote` sur les données réelles | 🚫 | — |
-| Ordre chronologique reconstituable au sein d'une session | 🚫 | — |
-| Marqueur `tb2026` survit à la navigation | 🚫 | — |
-| Événements de fin de session (`sendBeacon`) arrivent bien | 🚫 | — |
+| Parcours réels (reco, catalogue, audit) sur le site publié avec `?src=tb2026` | ✅ | 2 parcours complets joués avec Playwright contre le site déployé (recommandation jusqu'au résultat, filtre catalogue, ouverture d'outil, audit via la fixture avec une vraie correction, sondage UMUX-Lite) |
+| `worker/analysis.sql` exécuté en `--remote` sur les données réelles | ✅ | Les 9 requêtes exécutées contre D1 distant, résultats montrés ci-dessous |
+| Ordre chronologique reconstituable au sein d'une session | ⚠️ conforme, avec une nuance à documenter | `ts_server` est identique pour tous les événements d'un même lot de flush (assigné une fois par le Worker au moment du traitement du lot, pas par événement) : plusieurs événements d'une session partagent donc le même `ts_server`. `ts_client` (horodatage pris côté navigateur à chaque `track()`) est en revanche strictement croissant et reconstitue l'ordre réel sans ambiguïté. **À documenter dans `worker/README.md`/`analysis.sql` : trier par `ts_client` pour l'ordre fin, `ts_server` ne sert qu'à la rétention/purge.** |
+| Marqueur `tb2026` survit à la navigation | ✅ | Requête 9 : 2 sessions `tb2026`, 2 `direct` (mes tests ad hoc antérieurs sans le paramètre) — distinction correcte |
+| Événements de fin de session (`sendBeacon`) arrivent bien | ✅ | Déjà prouvé en §2 (requête `/events` via `sendBeacon` après `visibilitychange`) ; les deux parcours de cette section ont par ailleurs laissé le temps au flush périodique (10s) de partir avant la fin de session, donc n'ont pas eu besoin du beacon pour ce test précis |
+
+### Résultats réels des 9 requêtes (contre D1 distant, après les parcours de test)
+
+```
+1. Tunnel : 2/2 sessions atteignent chaque étape jusqu'au résultat (dénominateur trop petit pour un vrai taux, mais le calcul est correct)
+2a. Repli matrice : 0/3 résultats
+3. Zones interrogées : Syntaxe (1), Logique (1), Architecture (1)
+5. Outils ouverts : M01 (2 ouvertures)
+6a. Taux de correction moyen : 0,047
+6b. Corrections par concept : C1.1 retiré (1 fois)
+7. Latence médiane jusqu'au résultat : 825 ms
+8. UMUX-Lite : 1 réponse, score moyen 83,3/100, équivalent SUS 77,1
+9. Campagnes : tb2026 (2 sessions), direct (2 sessions)
+```
+
+2b et 4a/4b renvoient des jeux vides : aucun repli matriciel ni aucune relance n'ont eu lieu dans
+ces quelques parcours de test, ce qui est attendu (pas un défaut de requête) et se peuplera avec
+un usage réel plus large.
+
+**Nettoyage des données de test : en attente de votre accord.** 4 sessions de test sont
+actuellement dans D1 distant (`14501712-...`, `6187126f-...`, `b3b3dacd-...`, `c638af61-...`,
+au total 48 lignes dans `events` + les lignes correspondantes dans `audit_calls`). Une tentative
+de `DELETE` a été bloquée par le classificateur de sécurité du mode automatique (action
+destructive sur une base de production distante) — à juste titre, une suppression réelle contre
+l'infrastructure Cloudflare mérite votre confirmation explicite plutôt qu'une exécution
+silencieuse. Dites-moi si je supprime ces 4 sessions avant le début du vrai test enseignants, ou
+si vous préférez vous en charger vous-même.
 
 ## §6 — Chemins de secours
 
 | Vérification | Statut | Preuve |
 |---|---|---|
-| Coupure d'urgence (`AUDIT_KILL_SWITCH`) → message convivial + fixture proposée | 🚫 | méthode prévue : interception réseau Playwright contre le site publié (pas de bascule réelle du Worker, hors périmètre §1) |
-| Plafond journalier dépassé → même comportement | 🚫 | idem |
-| Refus de consentement → 3 parcours fonctionnels, zéro requête (onglet réseau) | 🚫 | — |
-| Document hors sujet soumis à l'audit réel | 🚫 | — |
+| Coupure d'urgence (`AUDIT_KILL_SWITCH`) → message convivial + fixture proposée | ✅ | Réponse `/audit` interceptée (503, message réel renvoyé par le Worker en cas de coupure) sur le site publié : bouton "Charger le cours exemple" proposé, aucun code technique brut affiché (503/error/NetworkError absents du texte visible). `screenshots/10-audit-coupure-urgence.png` |
+| Plafond journalier dépassé → même comportement | ✅ | Réponse `/audit` interceptée (429, message réel du plafond) : même résultat, bouton fixture proposé, aucun code technique brut affiché. `screenshots/11-audit-plafond-journalier.png` |
+| Refus de consentement → 3 parcours fonctionnels, zéro requête (onglet réseau) | ✅ | Parcours arbre complet + catalogue (filtre + détail) + audit (fixture, validation, confirmation) après clic sur "Refuser" : 0 requête vers le Worker sur les trois, tous fonctionnels de bout en bout |
+| Document hors sujet soumis à l'audit réel | 🚫 bloqué | Nécessite `ANTHROPIC_API_KEY` posée sur le Worker déployé (action qui vous revient, `wrangler secret put ANTHROPIC_API_KEY --config worker/wrangler.toml`) — pas encore fait à ma connaissance. Le garde-fou de pertinence lui-même (bannière non bloquante, "Continuer quand même"/"Recommencer") est déjà vérifié en §4 via une réponse mockée réaliste ; seul le test avec un vrai appel au modèle reste bloqué |
 
 ## §7 — Navigateurs
 
 | Vérification | Chromium | Firefox | WebKit |
 |---|---|---|---|
-| Télémétrie de fin de session (`sendBeacon`) | 🚫 | 🚫 | 🚫 |
-| Bandeau de consentement | 🚫 | 🚫 | 🚫 |
-| Rendu de la matrice | 🚫 | 🚫 | 🚫 |
+| Télémétrie de fin de session (`sendBeacon`) | ✅ 2 requêtes `POST /events` au `visibilitychange→hidden` | ✅ idem | ✅ idem |
+| Bandeau de consentement | ✅ affiché et fonctionnel | ✅ idem | ✅ idem |
+| Rendu de la matrice | ✅ grille 48×21, scores par famille×zone, légende, filtres | ✅ idem | ✅ idem |
+
+Captures : `screenshots/12-chromium-cartographie.png`, `12-firefox-cartographie.png`, `12-webkit-cartographie.png`.
 
 ## §8 — Relecture des explications d'outils
 
