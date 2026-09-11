@@ -83,7 +83,11 @@ la base est vide et prête pour le vrai test enseignants.
 | Refus de consentement → 3 parcours fonctionnels, zéro requête (onglet réseau) | ✅ | Parcours arbre complet + catalogue (filtre + détail) + audit (fixture, validation, confirmation) après clic sur "Refuser" : 0 requête vers le Worker sur les trois, tous fonctionnels de bout en bout |
 | Document hors sujet soumis à l'audit réel | ✅ | `ANTHROPIC_API_KEY` posée, testé avec un vrai document de cuisine romande contre le vrai modèle : réponse réelle `relevance_confidence: high` (confiance élevée que ce n'est pas de la programmation), bannière non bloquante affichée, "Continuer quand même" a repris jusqu'à un vrai écran de résultat. `audit_relevance_check` confirmé en base avec `user_confirmed: true` |
 | Document réel de programmation, jusqu'au résultat | ✅ | Testé avec un vrai cours de POO Python (7 sections), 1 appel réel, classification correcte, une vraie correction appliquée (`audit_classification_edited`), résultat affiché |
-| Document volumineux (146 809 caractères, 43 pages) | ⚠️ voir constat | Aucun refus explicite via l'interface normale : 4 appels réels enchaînés (plafond client `CHUNK_LIMIT=4`), texte au-delà de ~148 000 caractères tronqué silencieusement, sans avertissement affiché. Le refus serveur `size_exceeded` existe et fonctionne (vérifié séparément par un appel direct au Worker hors interface : 400, message propre, aucun appel au modèle consommé) mais l'interface normale ne l'atteint jamais. Signalé, non corrigé sans votre accord — voir `worker/README.md` section "Coût maximal théorique" |
+| Document volumineux (146 809 caractères, 43 pages) | ✅ corrigé | **Correctif d'une imprécision de cette grille** : ce document (146 809 caractères) est en réalité *sous* la capacité totale (160 000), donc traité en entier sur ses 4 appels réels — il n'y a pas eu de troncature ici, contrairement à ce qu'affirmait une version précédente de cette ligne. La vraie troncature ne commence qu'au-delà de 160 000 caractères ; elle est désormais **visible** : voir la ligne suivante. |
+| Troncature réellement mesurée et rendue visible (> 160 000 caractères) | ✅ | Document de test à 226 243 caractères extraits (58 pages) : **mesuré** sur le site publié, appel réel — exactement 4 requêtes `/audit`, chacune de 40 000 caractères, soit 160 000 caractères transmis au total (confirme au caractère près la valeur codée `VITE_AUDIT_MAX_DOCUMENT_CHARS=160000`, aucun ajustement nécessaire). Bannière "Analyse partielle" affichée sur le résultat : "environ 71 % du contenu a été pris en compte (160 000 caractères sur 226 243). Les manques signalés plus bas peuvent provenir de la partie non analysée, pas d'un manque réel dans votre cours." Persiste après rechargement de la page. Événement `audit_truncated` confirmé en base : `{"characters_submitted":160000,"characters_total":226243,"coverage_ratio":0.71}` |
+| Régression : document sous la capacité, multi-tranches | ✅ | Rejoué avec le même document de 146 809 caractères : 4 appels réels, aucune bannière affichée, 0 événement `audit_truncated` en base — le cas ambigu (plusieurs appels sans perte) ne déclenche pas de faux positif |
+| Régression : refus serveur `size_exceeded` pour un appel hors interface | ✅ | Rejoué avec un texte de 206 400 caractères envoyé directement au Worker (hors interface, comme lors de la clôture précédente) : toujours `400 {"reason":"size_exceeded"}`, aucun appel au modèle consommé, comportement identique à avant le correctif |
+| Anti-fuite sur les 4 sessions de test de cette section | ✅ | Recherche de sous-chaînes du contenu/nom de fichier des documents de test dans `events.payload` : 0 résultat |
 | Aucune fuite de contenu de document ou de nom de fichier dans `events`/`audit_calls` | ✅ | `audit_calls` n'a structurellement aucune colonne de contenu (id/session_id/ts_server/day) ; recherche de sous-chaînes distinctives des 3 documents de test dans `events.payload` (mots-clés + noms de fichiers) sur les 4 sessions réelles : 0 résultat |
 
 ## §7 — Navigateurs
@@ -174,10 +178,13 @@ l'environnement réellement déployé.
 - `ts_server` est assigné une fois par lot de flush, pas par événement : plusieurs événements
   d'une session partagent le même `ts_server`. `ts_client` reste la seule colonne fiable pour
   l'ordre chronologique fin (documenté dans la recette et dans `worker/scripts/session-replay.mjs`).
-- Un document dont le texte extrait dépasse ~148 000 caractères est silencieusement tronqué côté
-  client (4 appels `/audit` au maximum, `CHUNK_LIMIT`) sans aucun refus ni avertissement visible
-  par l'enseignant. Le refus serveur `size_exceeded` existe et fonctionne (vérifié par un appel
-  direct hors interface), mais l'interface normale ne l'atteint jamais. Signalé, non corrigé.
+- Un document dont le texte extrait dépasse 160 000 caractères était silencieusement tronqué côté
+  client sans aucun refus ni avertissement visible par l'enseignant. **Corrigé** : la capacité
+  totale (160 000, mesurée et confirmée au caractère près par un test réel) est désormais explicite
+  (`VITE_AUDIT_MAX_DOCUMENT_CHARS`), et un document qui la dépasse affiche une bannière neutre et
+  persistante sur l'écran de résultat indiquant la proportion réellement couverte, avec un
+  événement `audit_truncated` dédié. Le refus serveur `size_exceeded` reste inchangé (plafond par
+  requête, sans lien avec ce correctif).
 
 ## Recette
 
@@ -197,8 +204,6 @@ pilote avant l'envoi aux 22 enseignants.
 - Limite de dépense sur la console Anthropic.
 - Alerte d'usage sur le tableau de bord Cloudflare.
 - Redescendre `AUDIT_DAILY_GLOBAL_CAP` à 40-50 après la semaine de lancement.
-- Décider si le comportement de troncature silencieuse des documents volumineux doit être corrigé
-  (afficher un avertissement explicite plutôt que de tronquer sans le dire).
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
