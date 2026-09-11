@@ -4,6 +4,15 @@
 --
 -- Toutes les requêtes lisent la table `events` (schéma dans worker/schema.sql). `payload` est
 -- du JSON texte ; json_extract() est la fonction JSON1 de SQLite, disponible nativement dans D1.
+--
+-- ts_client vs ts_server : ts_client est pris côté navigateur à chaque appel de track(), donc
+-- strictement croissant et fiable pour reconstituer l'ordre chronologique réel des événements
+-- d'une session. ts_server est assigné une fois par lot de flush (handleEvents dans
+-- worker/src/events.js), donc identique pour tous les événements d'un même lot : ne jamais
+-- trier dessus pour reconstituer un ordre, il ne sert qu'à la rétention/purge (voir
+-- worker/src/index.js, fonction scheduled()). Aucune des requêtes ci-dessous n'a besoin de trier
+-- par timestamp (agrégats), mais toute requête de reconstitution de session doit trier sur
+-- ts_client (voir worker/scripts/session-replay.mjs).
 
 -- 1. Taux de complétion du tunnel de recommandation, étape par étape.
 -- Funnel par session (une session peut relancer le tunnel plusieurs fois ; on mesure ici

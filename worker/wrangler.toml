@@ -19,8 +19,9 @@ database_id = "d971299e-becb-4605-ac50-313aba36dfba"
 ALLOWED_ORIGINS = "https://neatlovin.github.io,http://localhost:5173,http://localhost:4173"
 AUDIT_KILL_SWITCH = "false"
 AUDIT_MAX_CHARS = "160000"
-# Dimensionnés pour ~25 enseignants sur 3 mois, pas un service ouvert : voir worker/README.md
-# section "Coût maximal théorique" pour le calcul.
 AUDIT_RATE_LIMIT_PER_SESSION_HOUR = "5"
-AUDIT_DAILY_GLOBAL_CAP = "40"
+# Valeur de lancement (22 enseignants pouvant tous essayer le même jour) : voir
+# worker/README.md section "Coût maximal théorique" pour le calcul mesuré. À redescendre à
+# 40-50 après la semaine de lancement (redéploiement manuel requis, pas automatique).
+AUDIT_DAILY_GLOBAL_CAP = "120"
 RETENTION_DAYS = "365"

@@ -82,19 +82,47 @@ toucher au reste du site (la télémétrie et les parcours 1/2 continuent de fon
 ### Coût maximal théorique
 
 Modèle utilisé : `claude-haiku-4-5-20251001`, tarif 1,00 $ / 5,00 $ par million de tokens en
-entrée/sortie (écriture cache ≈1,25×, lecture cache ≈0,10×). Un document peut se découper en
-jusqu'à 4 appels `/audit` côté client (`CHUNK_LIMIT` dans `stores/audit.js`, un par tranche de
-`CHUNK_MAX` = 40 000 caractères). Coût maximal par appel (une tranche à `AUDIT_MAX_CHARS`, sans
-bénéfice de cache) : environ 0,025 $. Coût maximal par document (4 appels) : environ 0,10 $.
+entrée/sortie (écriture cache ≈1,25×, lecture cache ≈0,10×).
 
-Avec `AUDIT_DAILY_GLOBAL_CAP=40`, le coût théorique maximal est de 40 × 0,025 $ ≈ **1 $/jour**,
-soit environ **90 $ sur 3 mois** si le plafond journalier était atteint chaque jour — un scénario
-d'abus soutenu, pas un usage normal. Pour comparaison, l'usage réaliste attendu (~25 enseignants,
-quelques documents chacun sur la durée du test) reste de l'ordre de **10 à 20 $ au total**.
+**Nombre d'appels par audit, mesuré (pas déduit) en conditions réelles contre le Worker déployé** :
+un document normal (quelques milliers de caractères, un plan de cours typique) déclenche
+**1 appel `/audit`**, vérification de pertinence comprise (même appel, même prompt en deux
+étapes). Un document volumineux (testé avec 146 809 caractères extraits, 43 pages) déclenche
+**4 appels** — le plafond client (`CHUNK_LIMIT` dans `stores/audit.js`, tranches de
+`CHUNK_MAX` = 40 000 caractères) : le texte au-delà de ~148 000 caractères est silencieusement
+tronqué côté client, sans refus explicite ni avertissement affiché à l'enseignant (le refus
+serveur `size_exceeded` existe et fonctionne, mais protège un appel direct au Worker avec un texte
+non découpé — un chemin que l'interface normale n'emprunte jamais).
+
+Coût mesuré par appel (chunk ~40 000 caractères, `max_tokens=2000`) : environ 0,02 $ maximum.
+Coût maximal par document volumineux (4 appels) : environ 0,08 $. Un document normal (1 appel) :
+environ 0,02 $.
+
+Avec `AUDIT_DAILY_GLOBAL_CAP=120` (valeur de lancement, dimensionnée pour permettre a 22
+enseignants d'essayer le meme jour) : coût théorique maximal si le plafond est atteint chaque jour
+uniquement avec des documents normaux, 120 × 0,02 $ ≈ **2,40 $/jour** ; si atteint uniquement avec
+des documents volumineux, 120 × 0,08 $ ≈ **9,60 $/jour** (scénario d'abus soutenu improbable, pas
+un usage normal). **À redescendre à 40-50 après la semaine de lancement** (modifier
+`AUDIT_DAILY_GLOBAL_CAP` dans `worker/wrangler.toml` puis `npm run worker:deploy` — action
+manuelle, pas automatique).
+
+Le plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR=5`) a été vérifié ne pas
+bloquer un usage légitime : un parcours réel de deux documents suivi d'une relance (3 tentatives
+dans la même session, la même heure) passe sans être bloqué.
 
 Ces plafonds bornent le risque côté code, mais restent une limite applicative : ajouter en
 complément, hors de portée du code, une limite de dépense sur la console Anthropic et une alerte
 d'usage côté tableau de bord Cloudflare.
+
+## ts_client vs ts_server
+
+`ts_client` est pris côté navigateur à chaque appel de `track()` : strictement croissant, c'est la
+seule colonne fiable pour reconstituer l'ordre chronologique réel des événements d'une session.
+`ts_server` est assigné une fois par lot de flush (`handleEvents` dans `worker/src/events.js`), donc
+identique pour tous les événements d'un même lot reçu par le Worker : il ne sert qu'à la
+rétention/purge (`scheduled()` dans `worker/src/index.js`), jamais à trier pour reconstituer un
+déroulé. Voir le commentaire d'en-tête de `worker/analysis.sql` et `worker/scripts/
+session-replay.mjs` pour un exemple de tri sur `ts_client`.
 
 ## Export des données collectées
 

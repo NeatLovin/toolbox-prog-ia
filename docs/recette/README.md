@@ -6,14 +6,15 @@ aucune ligne n'est marquée conforme sans avoir été observée sur l'environnem
 sur `localhost` ne compte pas ici, précisément parce que les bugs les plus graves de l'itération
 précédente n'étaient visibles qu'à la frontière dev/prod.
 
-État au moment de la rédaction de cette grille : `origin/gh-pages` sert encore le build de
-l'Itération 1 (`assets/index-Da7boQFs.js`, sans Worker ni télémétrie). Toutes les lignes des
-sections 2/4/5/6/7 sont donc `bloqué` tant qu'un build de cette branche n'a pas été publié en test
-(accord explicite requis, voir le message qui accompagne ce document) et que le Worker n'est pas
-déployé.
+État au moment de la mise à jour de cette grille (clôture de l'itération 2) : `origin/gh-pages`
+sert désormais le build de cette branche (`assets/index-CT-YIDU9.js`, vérifié en direct par
+`curl`, différent du hash de l'Itération 1 `index-Da7boQFs.js`), le Worker répond
+(`toolbox-prog-ia-api.toolbox-prog-ia.workers.dev`, testé en direct), et D1 est vide. La quasi-
+totalité des sections ci-dessous a des preuves recueillies contre cet environnement ; les lignes
+encore marquées 🚫 le sont pour une raison précise indiquée dans leur propre cellule (clé API pas
+encore posée, fusion pas encore accordée), plus pour la fusion elle-même.
 
-Légende statut : ✅ conforme · ⚠️ partiel · ❌ absent · 🚫 bloqué — nécessite le Worker déployé et/ou
-un build de test publié.
+Légende statut : ✅ conforme · ⚠️ partiel · ❌ absent · 🚫 bloqué — raison précisée dans la cellule.
 
 ## §2 — Chaîne de configuration
 
@@ -80,7 +81,10 @@ la base est vide et prête pour le vrai test enseignants.
 | Coupure d'urgence (`AUDIT_KILL_SWITCH`) → message convivial + fixture proposée | ✅ | Réponse `/audit` interceptée (503, message réel renvoyé par le Worker en cas de coupure) sur le site publié : bouton "Charger le cours exemple" proposé, aucun code technique brut affiché (503/error/NetworkError absents du texte visible). `screenshots/10-audit-coupure-urgence.png` |
 | Plafond journalier dépassé → même comportement | ✅ | Réponse `/audit` interceptée (429, message réel du plafond) : même résultat, bouton fixture proposé, aucun code technique brut affiché. `screenshots/11-audit-plafond-journalier.png` |
 | Refus de consentement → 3 parcours fonctionnels, zéro requête (onglet réseau) | ✅ | Parcours arbre complet + catalogue (filtre + détail) + audit (fixture, validation, confirmation) après clic sur "Refuser" : 0 requête vers le Worker sur les trois, tous fonctionnels de bout en bout |
-| Document hors sujet soumis à l'audit réel | 🚫 bloqué | Nécessite `ANTHROPIC_API_KEY` posée sur le Worker déployé (action qui vous revient, `wrangler secret put ANTHROPIC_API_KEY --config worker/wrangler.toml`) — pas encore fait à ma connaissance. Le garde-fou de pertinence lui-même (bannière non bloquante, "Continuer quand même"/"Recommencer") est déjà vérifié en §4 via une réponse mockée réaliste ; seul le test avec un vrai appel au modèle reste bloqué |
+| Document hors sujet soumis à l'audit réel | ✅ | `ANTHROPIC_API_KEY` posée, testé avec un vrai document de cuisine romande contre le vrai modèle : réponse réelle `relevance_confidence: high` (confiance élevée que ce n'est pas de la programmation), bannière non bloquante affichée, "Continuer quand même" a repris jusqu'à un vrai écran de résultat. `audit_relevance_check` confirmé en base avec `user_confirmed: true` |
+| Document réel de programmation, jusqu'au résultat | ✅ | Testé avec un vrai cours de POO Python (7 sections), 1 appel réel, classification correcte, une vraie correction appliquée (`audit_classification_edited`), résultat affiché |
+| Document volumineux (146 809 caractères, 43 pages) | ⚠️ voir constat | Aucun refus explicite via l'interface normale : 4 appels réels enchaînés (plafond client `CHUNK_LIMIT=4`), texte au-delà de ~148 000 caractères tronqué silencieusement, sans avertissement affiché. Le refus serveur `size_exceeded` existe et fonctionne (vérifié séparément par un appel direct au Worker hors interface : 400, message propre, aucun appel au modèle consommé) mais l'interface normale ne l'atteint jamais. Signalé, non corrigé sans votre accord — voir `worker/README.md` section "Coût maximal théorique" |
+| Aucune fuite de contenu de document ou de nom de fichier dans `events`/`audit_calls` | ✅ | `audit_calls` n'a structurellement aucune colonne de contenu (id/session_id/ts_server/day) ; recherche de sous-chaînes distinctives des 3 documents de test dans `events.payload` (mots-clés + noms de fichiers) sur les 4 sessions réelles : 0 résultat |
 
 ## §7 — Navigateurs
 
@@ -99,12 +103,31 @@ confiance moyenne (T09, I09, I10, I12), aucun lien de tutoriel inventé.
 
 ## §3 — Plafonds de coût
 
-✅ Option "Conservatrice" retenue : `AUDIT_RATE_LIMIT_PER_SESSION_HOUR=5`,
-`AUDIT_DAILY_GLOBAL_CAP=40`. Calcul détaillé dans `worker/README.md` section "Coût maximal
-théorique" : ~90 $ de coût maximal théorique sur 3 mois si le plafond journalier était atteint
-chaque jour, ~10-20 $ pour un usage réaliste sur la durée du test. Reste hors de mon accès : une
-limite de dépense côté console Anthropic et une alerte d'usage côté Cloudflare (rappelé dans le
-compte rendu final).
+✅ Révisé à la clôture de l'itération 2, avec des valeurs mesurées plutôt qu'estimées.
+`AUDIT_RATE_LIMIT_PER_SESSION_HOUR=5` conservé (vérifié ne pas bloquer un usage légitime de 3
+tentatives en une heure). `AUDIT_DAILY_GLOBAL_CAP` relevé de 40 à **120 pour la semaine de
+lancement** (22 enseignants pouvant tous essayer le même jour), à redescendre à **40-50 en
+croisière** une fois le pic initial passé (action manuelle : modifier `worker/wrangler.toml` puis
+`npm run worker:deploy`). Mesuré sur le Worker déployé : 1 appel `/audit` pour un document normal,
+jusqu'à 4 pour un document volumineux (`CHUNK_LIMIT`). Coût maximal théorique au plafond de
+lancement : ~2,40 $/jour si tous les audits sont normaux, ~9,60 $/jour dans le pire cas improbable
+où tous seraient volumineux. Détail dans `worker/README.md` section "Coût maximal théorique".
+Reste hors de mon accès : une limite de dépense côté console Anthropic et une alerte d'usage côté
+Cloudflare (rappelé dans le compte rendu final).
+
+## Cohérence de la durée de conservation (clôture de l'itération 2)
+
+- `RETENTION_DAYS=365` (`worker/wrangler.toml`) et `TransparenceView.vue` annoncent « conservées
+  12 mois, puis supprimées automatiquement » : les deux correspondent (365 jours ≈ 12 mois), aucun
+  écart constaté.
+- La purge planifiée (`worker/src/index.js`, fonction `scheduled()`) lit `env.RETENTION_DAYS`, pas
+  de valeur codée en dur pour la table `events`.
+- `audit_calls` (compteur de plafond, aucune donnée d'évaluation) est purgée après 7 jours, valeur
+  codée en dur et volontairement distincte. Ce choix ne contredit aucune affirmation de la page de
+  transparence : celle-ci décrit les catégories de données mesurées pour l'évaluation du
+  prototype (parcours, corrections, sondage), et `audit_calls` n'en fait explicitement pas partie
+  (« Ce qui n'est jamais collecté » ne s'applique pas non plus, la table ne contenant que
+  `session_id`/`ts_server`/`day`, aucun contenu). Aucun changement nécessaire.
 
 ## §9 — Publication
 
