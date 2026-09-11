@@ -173,23 +173,32 @@ l'environnement réellement déployé.
   initiale de vue-router, confondue avec une navigation réelle.
 - `ts_server` est assigné une fois par lot de flush, pas par événement : plusieurs événements
   d'une session partagent le même `ts_server`. `ts_client` reste la seule colonne fiable pour
-  l'ordre chronologique fin (documenté dans la recette).
+  l'ordre chronologique fin (documenté dans la recette et dans `worker/scripts/session-replay.mjs`).
+- Un document dont le texte extrait dépasse ~148 000 caractères est silencieusement tronqué côté
+  client (4 appels `/audit` au maximum, `CHUNK_LIMIT`) sans aucun refus ni avertissement visible
+  par l'enseignant. Le refus serveur `size_exceeded` existe et fonctionne (vérifié par un appel
+  direct hors interface), mais l'interface normale ne l'atteint jamais. Signalé, non corrigé.
 
 ## Recette
 
 Détail complet dans `docs/recette/README.md` : chaîne de configuration, ergonomie (captures),
 données analysables (parcours réels + `analysis.sql` en `--remote`), chemins de secours (coupure
-d'urgence, plafond, refus de consentement), navigateurs (Chromium/Firefox/WebKit).
+d'urgence, plafond, refus de consentement), navigateurs (Chromium/Firefox/WebKit), et désormais un
+audit réel de bout en bout contre l'API Anthropic (document de programmation, document hors sujet,
+document volumineux) avec vérification qu'aucun contenu ni nom de fichier ne remonte en base.
 
-**Reste non vérifiable pour l'instant** : le test avec un document hors sujet contre l'API
-Anthropic réelle est bloqué tant que `ANTHROPIC_API_KEY` n'est pas posée sur le Worker
-(action qui revient au porteur du projet, jamais partagée dans cette conversation).
+Plafond journalier (`AUDIT_DAILY_GLOBAL_CAP`) mesuré et relevé à 120 pour la semaine de lancement
+(22 enseignants pouvant essayer le même jour), à redescendre à 40-50 en croisière — voir
+`worker/README.md` section "Coût maximal théorique" et `docs/recette/pilote.md` pour le passage
+pilote avant l'envoi aux 22 enseignants.
 
 ## Hors de portée de ce PR (à faire séparément par le porteur du projet)
 
-- Poser `ANTHROPIC_API_KEY` (`wrangler secret put ANTHROPIC_API_KEY --config worker/wrangler.toml`).
 - Limite de dépense sur la console Anthropic.
 - Alerte d'usage sur le tableau de bord Cloudflare.
+- Redescendre `AUDIT_DAILY_GLOBAL_CAP` à 40-50 après la semaine de lancement.
+- Décider si le comportement de troncature silencieuse des documents volumineux doit être corrigé
+  (afficher un avertissement explicite plutôt que de tronquer sans le dire).
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
