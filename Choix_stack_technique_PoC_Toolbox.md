@@ -42,7 +42,7 @@ Le choix de **Vue 3 avec la Composition API** s'impose par le critère de compé
 
 ### 3.2 Gestion des données
 
-Les données du PoC sont les 49 fiches d'outils, les 21 sous-concepts, la matrice de pertinence et les 16 combinatoires. Elles sont **statiques** : elles ne changent pas pendant l'utilisation et proviennent directement de la cartographie.
+Les données du PoC sont les 48 fiches d'outils, les 21 sous-concepts, la matrice de pertinence et les 16 combinatoires. Elles sont **statiques** : elles ne changent pas pendant l'utilisation et proviennent directement de la cartographie.
 
 Le choix retenu est le **fichier JSON statique** chargé au démarrage de l'application. Aucune base de données ni backend n'est nécessaire. Cette solution est la plus simple, la plus robuste en démonstration (pas de serveur à maintenir) et la plus cohérente avec le caractère démonstratif. Les données sont versionnables dans le dépôt Git, donc traçables et modifiables sans recompilation lourde.
 

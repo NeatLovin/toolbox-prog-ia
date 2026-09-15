@@ -212,6 +212,10 @@ Bouton "Exporter en PDF" (classe `no-print`) present dans CourseAudit et ArboreV
 - `npm run build` genere le bundle statique pour GitHub Pages (mode production : télémetrie reseau active, cible `.env.production`).
 - `npm run deploy` publie dist/ sur GitHub Pages via gh-pages.
 - `node worker/scripts/verify-e2e.mjs` verifie bout en bout que les evenements attendus arrivent en base (voir `worker/README.md` pour les prerequis).
+- `npm run prebuild` (automatique avant chaque `build`) verifie que tout evenement emis cote client est dans la liste blanche du Worker, et que `AUDIT_MAX_CHARS` reste au-dessus de `CHUNK_MAX`.
+- `npm run preflight` verifie en une commande que le site deploye est sain avant d'envoyer un lien (voir `worker/README.md`).
+- `npm run pilot:replay` reconstitue chronologiquement la session la plus recente en base (ou une session precise en argument).
+- `npm run pilot:purge -- <session_id>` supprime une session de test de la base.
 
 ## Convention de rédaction
 
