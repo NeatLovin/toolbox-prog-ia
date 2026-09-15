@@ -23,34 +23,30 @@ Aucune autre consigne technique n'est nécessaire — le but est un usage nature
 
 ## Vérifier sa session après son passage
 
-Récupérer son identifiant de session (ouvrir les outils de développement du navigateur pendant ou
-juste après son passage, onglet Application/Stockage, `sessionStorage`, clé `tb_session_id`), puis :
+Une seule commande, sans avoir besoin de récupérer son `session_id` : elle cible automatiquement
+la session la plus récente en base.
 
 ```bash
-node worker/scripts/session-replay.mjs <son_session_id>
+npm run pilot:replay
 ```
 
-Ce script trie explicitement sur `ts_client` (l'horodatage pris côté navigateur), la seule colonne
+Le script trie explicitement sur `ts_client` (l'horodatage pris côté navigateur), la seule colonne
 fiable pour reconstituer l'ordre réel des événements — voir `worker/README.md` section
-"ts_client vs ts_server". Vérifier que la séquence affichée correspond bien à son parcours réel
-(consentement, étapes de l'arbre, ouverture d'outil, dépôt de document, classification, validation,
-résultat, sondage) sans trou ni doublon suspect.
+"ts_client vs ts_server". Il affiche directement ce qu'il faut vérifier : la durée totale du
+parcours, le premier et le dernier événement, la présence (ou non) du marqueur de campagne
+`tb2026`, et le déroulé chronologique complet. Vérifier que la séquence correspond bien à son
+parcours réel (consentement, étapes de l'arbre, ouverture d'outil, dépôt de document,
+classification, validation, résultat, sondage) sans trou ni doublon suspect.
+
+Pour cibler une session précise plutôt que la plus récente : `npm run pilot:replay -- <session_id>`.
 
 ## Purger sa session de test ensuite
 
 Une fois la vérification faite, purger sa session pour que la base reparte vierge avant le vrai
-lancement (remplacer `<son_session_id>`) :
+lancement — `session_id` obligatoire, affiché en tête de la sortie de `npm run pilot:replay` :
 
 ```bash
-npx wrangler d1 execute toolbox-telemetry --remote --config worker/wrangler.toml \
-  --command "DELETE FROM events WHERE session_id = '<son_session_id>'"
-npx wrangler d1 execute toolbox-telemetry --remote --config worker/wrangler.toml \
-  --command "DELETE FROM audit_calls WHERE session_id = '<son_session_id>'"
+npm run pilot:purge -- <son_session_id>
 ```
 
-Vérifier ensuite que la base est bien revenue à zéro ligne avant l'envoi aux 22 enseignants :
-
-```bash
-npx wrangler d1 execute toolbox-telemetry --remote --config worker/wrangler.toml \
-  --command "SELECT COUNT(*) FROM events"
-```
+Le script confirme lui-même que 0 ligne reste pour cette session dans `events` et `audit_calls`.
