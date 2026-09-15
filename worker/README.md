@@ -72,7 +72,8 @@ Toutes dans `worker/wrangler.toml [vars]`, sauf la clé API (secret).
 | `AUDIT_KILL_SWITCH` | `"true"` coupe `/audit` sans redéployer le code | `"false"` |
 | `AUDIT_MAX_CHARS` | Taille max du texte extrait envoyé au modèle | `160000` |
 | `AUDIT_RATE_LIMIT_PER_SESSION_HOUR` | Appels `/audit` max par session et par heure | `5` |
-| `AUDIT_DAILY_GLOBAL_CAP` | Appels `/audit` max, tous visiteurs confondus, par jour UTC | `40` |
+| `AUDIT_DAILY_GLOBAL_CAP` | Appels `/audit` max, tous visiteurs confondus, par jour UTC | `120` (valeur de lancement, à redescendre à 40-50 ensuite) |
+| `AUDIT_DAILY_CAP_REVIEW_DATE` | Date au-delà de laquelle le Worker signale (jamais ne modifie) que le plafond ci-dessus mérite d'être révisé | `2026-09-21` |
 | `RETENTION_DAYS` | Ancienneté au-delà de laquelle les `events` sont purgés | `365` |
 
 Modifier une variable puis `npm run worker:deploy` pour l'appliquer. `AUDIT_KILL_SWITCH=true` est la
@@ -167,3 +168,34 @@ node worker/scripts/verify-e2e.mjs                                          # te
 `--mode development` ne change que les fichiers `.env` chargés (donc `VITE_API_BASE` pointe sur
 `localhost:8787`), pas le mode DEV/PROD de Vite lui-même : la télémétrie envoie donc bien sur le
 réseau, contrairement à `npm run dev`.
+
+## Contrôle avant envoi (`npm run preflight`)
+
+`worker/scripts/preflight.mjs` vérifie en une commande, contre l'environnement **réellement
+déployé** (jamais localhost), que le site est sain avant d'envoyer un lien à des enseignants :
+le site publié répond, `VITE_API_BASE` n'est pas le placeholder, `POST /events` accepte un
+événement de test (nettoyé ensuite), `POST /audit` répond sans consommer d'appel au modèle (texte
+vide → même chemin que `size_exceeded`, distingue au passage une coupure d'urgence active), et
+`GET /health` confirme que les plafonds réellement déployés correspondent à `worker/wrangler.toml`
+local — sinon c'est une dérive entre le code et ce qui tourne, exactement le risque que cette
+vérification existe pour attraper. Sort en erreur (code 1) si un contrôle échoue.
+
+```bash
+npm run preflight
+```
+
+`GET /health` (non authentifié, aucune donnée sensible : les mêmes valeurs sont déjà visibles en
+clair dans ce fichier et dans la sortie de `wrangler deploy`) retourne l'état de la coupure
+d'urgence, les deux plafonds en vigueur, et si la date de révision du plafond de lancement
+(`AUDIT_DAILY_CAP_REVIEW_DATE`) est dépassée. Le Worker log aussi un avertissement dans ce dernier
+cas à chaque appel réel à `/audit` (visible via `wrangler tail`) — dans les deux cas, un
+signalement, jamais une modification automatique du plafond.
+
+## Séquence de passage du pilote
+
+`npm run pilot:replay` (sans argument, cible automatiquement la session la plus récente, ou
+`npm run pilot:replay -- <session_id>` pour une session précise) reconstitue le parcours
+chronologique complet, affiche sa durée, son premier et son dernier événement, et vérifie la
+présence du marqueur de campagne. `npm run pilot:purge -- <session_id>` supprime ensuite cette
+session (`events` + `audit_calls`) et confirme 0 ligne restante. Voir `docs/recette/pilote.md`
+pour la séquence complète à faire suivre au pilote.

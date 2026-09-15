@@ -1,4 +1,5 @@
 import { jsonResponse, safeStr, todayUTC } from './util.js'
+import { isCapReviewDue } from './health.js'
 import conceptsData from '../../src/data/concepts.json'
 
 const MODEL = 'claude-haiku-4-5-20251001'
@@ -50,6 +51,10 @@ Règles strictes :
 }
 
 export async function handleAudit(request, env) {
+  if (isCapReviewDue(env)) {
+    console.warn(`[toolbox] AUDIT_DAILY_GLOBAL_CAP (${env.AUDIT_DAILY_GLOBAL_CAP}) : la date de révision (${env.AUDIT_DAILY_CAP_REVIEW_DATE}) est dépassée — reconsidérer une valeur de croisière.`)
+  }
+
   if (String(env.AUDIT_KILL_SWITCH || '').toLowerCase() === 'true') {
     await logUnavailable(env, null, 'kill_switch')
     return jsonResponse({ error: 'unavailable', reason: 'kill_switch' }, 503)

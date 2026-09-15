@@ -24,4 +24,7 @@ AUDIT_RATE_LIMIT_PER_SESSION_HOUR = "5"
 # worker/README.md section "Coût maximal théorique" pour le calcul mesuré. À redescendre à
 # 40-50 après la semaine de lancement (redéploiement manuel requis, pas automatique).
 AUDIT_DAILY_GLOBAL_CAP = "120"
+# Date au-delà de laquelle le Worker signale (journaux + `npm run preflight`, jamais une
+# modification automatique) que le plafond de lancement ci-dessus mérite d'être reconsidéré.
+AUDIT_DAILY_CAP_REVIEW_DATE = "2026-09-21"
 RETENTION_DAYS = "365"

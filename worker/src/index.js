@@ -1,6 +1,7 @@
 import { resolveCors } from './cors.js'
 import { handleEvents } from './events.js'
 import { handleAudit } from './audit.js'
+import { handleHealth } from './health.js'
 import { jsonResponse } from './util.js'
 
 export default {
@@ -25,6 +26,8 @@ export default {
       response = await handleEvents(request, env)
     } else if (request.method === 'POST' && url.pathname === '/audit') {
       response = await handleAudit(request, env)
+    } else if (request.method === 'GET' && url.pathname === '/health') {
+      response = await handleHealth(request, env)
     } else {
       response = jsonResponse({ error: 'not_found' }, 404)
     }
