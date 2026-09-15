@@ -29,23 +29,22 @@ test d'usage, pour être citée telle quelle dans un document externe au dépôt
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
 | **Tag** | `v0.2.1` |
-| **Commit** | `c23bd16` (`c23bd16f9c5a4ded7fb55f015010ac3e1828d3d6`) |
+| **Commit republié** | `a59b482` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-D4bCTV7A.js`, vérifié en direct (`curl`) au moment de la pose du tag |
+| **Fichier JavaScript principal servi** | `assets/index-D01DZfx1.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `a59b482` — vérifié dans une vraie requête `POST /events` capturée en direct puis dans les lignes correspondantes de D1, pas déduit du code |
 | **Date de mise en service pour le pilote** | 2026-09-15 |
+| **Date de republication (alignement `app_version`)** | 2026-09-15 |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 (valeur de lancement ; date de révision prévue `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21`, au-delà de laquelle une valeur de croisière de 40-50 est envisagée — voir `worker/README.md`) |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
-**Note technique sur l'identifiant de version dans la télémétrie** : chaque événement de
-télémétrie collecté porte un champ `app_version` fixé au moment du *build* du site (court hash Git
-de la tête de `main` à cet instant, injecté par `vite.config.js`), pas au moment où l'événement est
-émis. Le site n'a pas été reconstruit depuis le commit `a137440` (aucun changement du code source
-de l'application — `src/` — depuis lors, seuls l'outillage et la documentation ont évolué), si bien
-que les événements réellement collectés pendant le pilote porteront `app_version: "a137440"`, et
-non `c23bd16` ni `v0.2.1`. Les deux commits désignent la même version fonctionnelle du site (aucun
-fichier de `src/` ne diffère entre eux) ; cette précision évite qu'une lecture croisée future de la
-base de données soit prise au dépourvu par cet écart de valeur.
+Le tag `v0.2.1` pointe sur le commit `c23bd16`, un ancêtre direct de `a59b482` sans aucune
+différence de `src/` entre les deux (seule de la documentation s'est ajoutée) : les deux désignent
+la même version fonctionnelle du site. Le commit effectivement republié (`a59b482`) est celui
+retenu ci-dessus, précisément parce que c'est lui que `app_version` désigne dans les données
+réellement collectées — c'est ce couple (tag `v0.2.1`, commit publié `a59b482`) qui identifie sans
+ambiguïté la version évaluée par les enseignants.
 
 ## §2 — Chaîne de configuration
 
