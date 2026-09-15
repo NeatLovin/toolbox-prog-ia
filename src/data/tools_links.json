@@ -61,15 +61,15 @@
   },
   "T03": {
     "explainer": "Un outil qui compare le code de tous les étudiants entre eux pour repérer les similitudes suspectes de plagiat inter-étudiants ; il ne détecte pas le code généré par IA.",
-    "tutorial_link": null
+    "tutorial_link": "https://github.com/jplag/JPlag/wiki/1.-How-to-Use-JPlag"
   },
   "T04": {
     "explainer": "Comme JPlag, un outil gratuit de détection de similitudes entre codes d'étudiants, déjà utilisé à grande échelle dans une HES romande.",
-    "tutorial_link": null
+    "tutorial_link": "https://dolos.ugent.be/docs/"
   },
   "T05": {
     "explainer": "La version enseignement de GitHub : distribuer des exercices, suivre qui a rendu quoi, et faire tourner automatiquement des tests sur chaque rendu.",
-    "tutorial_link": null
+    "tutorial_link": "https://docs.github.com/en/education/manage-coursework-with-github-classroom/get-started-with-github-classroom"
   },
   "T06": {
     "explainer": "Une application développée en interne dans une HES romande pour faire passer des examens sur machine avec surveillance d'écran et accès réseau contrôlé.",
@@ -121,7 +121,7 @@
   },
   "I07": {
     "explainer": "Une IA conversationnelle qu'on limite à un ensemble de documents qu'on lui fournit soi-même (cours, guides, normes) : elle répond en s'appuyant sur ce corpus, ce qui réduit le risque qu'elle invente des réponses.",
-    "tutorial_link": null
+    "tutorial_link": "https://support.google.com/notebooklm/answer/14276471"
   },
   "I08": {
     "explainer": "Un mode spécial de ChatGPT, pensé pour accompagner l'apprentissage plutôt que donner directement la réponse, mais qui reste contournable par l'étudiant.",
@@ -161,7 +161,7 @@
   },
   "A01": {
     "explainer": "Un éditeur de code, dérivé de VS Code, avec une IA capable d'agir directement dans le projet ; très répandu chez les développeurs professionnels.",
-    "tutorial_link": null
+    "tutorial_link": "https://cursor.com/docs/get-started/installation"
   },
   "A02": {
     "explainer": "Un assistant de code IA intégré à l'éditeur, capable d'agir de façon autonome sur le code, comparable à Cursor.",
@@ -169,7 +169,7 @@
   },
   "A03": {
     "explainer": "Un agent IA en ligne de commande d'Anthropic, utile pour explorer rapidement une architecture logicielle, mais à réserver aux étudiants ayant déjà les bases : un débutant risque de générer des choix de conception sans les comprendre.",
-    "tutorial_link": null
+    "tutorial_link": "https://code.claude.com/docs/en/quickstart"
   },
   "A04": {
     "explainer": "L'équivalent chez OpenAI de Claude Code : un agent en ligne de commande capable d'écrire et modifier du code de façon autonome.",

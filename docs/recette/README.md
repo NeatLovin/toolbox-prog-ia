@@ -22,8 +22,8 @@ Légende statut : ✅ conforme · ⚠️ partiel · ❌ absent · 🚫 bloqué �
 
 ## Version évaluée
 
-Cette section identifie précisément le code que les enseignants ont utilisé pendant le pilote et le
-test d'usage, pour être citée telle quelle dans un document externe au dépôt.
+Cette section identifie précisément le code republié et vérifié pour le test d'usage envoyé aux 22
+enseignants participants, pour être citée telle quelle dans un document externe au dépôt.
 
 | | |
 |---|---|
@@ -33,7 +33,7 @@ test d'usage, pour être citée telle quelle dans un document externe au dépôt
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
 | **Fichier JavaScript principal servi** | `assets/index-D01DZfx1.js`, vérifié en direct (`curl`) après republication |
 | **`app_version` transmis par la télémétrie** | `a59b482` — vérifié dans une vraie requête `POST /events` capturée en direct puis dans les lignes correspondantes de D1, pas déduit du code |
-| **Date de mise en service pour le pilote** | 2026-09-15 |
+| **Date de mise en service pour le test d'usage** | 2026-09-15 |
 | **Date de republication (alignement `app_version`)** | 2026-09-15 |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 (valeur de lancement ; date de révision prévue `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21`, au-delà de laquelle une valeur de croisière de 40-50 est envisagée — voir `worker/README.md`) |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
