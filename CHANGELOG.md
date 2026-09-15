@@ -31,9 +31,16 @@ l'usage du prototype pour alimenter l'évaluation de l'artefact et une publicati
   (`worker/scripts/verify-e2e.mjs`).
 - **Correctif** : l'audit de plan de cours était masqué hors `localhost` depuis l'itération
   précédente (dépendance au proxy local) ; rendu accessible partout, désormais adossé au Worker.
+- **Limite connue** : la couche optionnelle de génération par modèle de langage décrite dans le
+  rapport (voie hybride, `Choix_stack_technique_PoC_Toolbox.md` section 4.3) n'est pas implémentée
+  à ce stade. Seul l'audit de plan de cours appelle un modèle de langage, pour la classification ;
+  le moteur de recommandation reste entièrement déterministe. Ce n'est pas une régression : le
+  socle déterministe a toujours été le choix obligatoire, la couche générative une extension
+  facultative jamais développée faute de calendrier.
 
 Voir `Choix_stack_technique_PoC_Toolbox.md` section 7 pour la justification argumentée du Worker
-et du module de télémétrie, et `worker/README.md` pour le déploiement.
+et du module de télémétrie, section 4.5 pour l'état de la couche générative, et `worker/README.md`
+pour le déploiement.
 
 ## Itération 1
 

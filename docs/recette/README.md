@@ -1,18 +1,22 @@
 # Grille de recette — Itération 2
 
-Branche `feat/telemetry-and-ux`, tag local `v0.2.0`. Cette grille suit la mission de recette :
-aucune ligne n'est marquée conforme sans avoir été observée sur l'environnement **déployé**
+Cette grille a suivi la mission de recette de l'itération 2 : aucune ligne n'a été marquée
+conforme sans avoir été observée sur l'environnement **déployé**
 (`https://neatlovin.github.io/toolbox-prog-ia/`, paramètre `?src=tb2026`) — une vérification faite
-sur `localhost` ne compte pas ici, précisément parce que les bugs les plus graves de l'itération
+sur `localhost` ne comptait pas, précisément parce que les bugs les plus graves de l'itération
 précédente n'étaient visibles qu'à la frontière dev/prod.
 
-État au moment de la mise à jour de cette grille (clôture de l'itération 2) : `origin/gh-pages`
-sert désormais le build de cette branche (`assets/index-CT-YIDU9.js`, vérifié en direct par
-`curl`, différent du hash de l'Itération 1 `index-Da7boQFs.js`), le Worker répond
-(`toolbox-prog-ia-api.toolbox-prog-ia.workers.dev`, testé en direct), et D1 est vide. La quasi-
-totalité des sections ci-dessous a des preuves recueillies contre cet environnement ; les lignes
-encore marquées 🚫 le sont pour une raison précise indiquée dans leur propre cellule (clé API pas
-encore posée, fusion pas encore accordée), plus pour la fusion elle-même.
+**État au 2026-09-15** (mise à jour de cohérence documentaire, après la fusion et le durcissement
+qui l'ont suivie) : l'itération 2 est **fusionnée dans `main`** (fast-forward local, `gh` étant
+indisponible sur cette machine — voir §9), le tag `v0.2.0` est **poussé sur `origin`**, et
+`origin/gh-pages` sert le build issu de `main` (`assets/index-D4bCTV7A.js`, vérifié en direct par
+`curl` au moment de cette mise à jour). D1 est confirmée à **zéro ligne** par une requête directe
+faite pour cette même mise à jour, pas recopiée d'une mission antérieure. Deux missions de
+durcissement ont suivi la fusion (correctif de troncature visible, puis outillage anti-dérive —
+`npm run preflight`, `npm run prebuild`, séquence pilote) : voir l'historique Git et
+`worker/README.md` pour leur détail, cette grille reste centrée sur la recette de l'itération 2
+elle-même. Les lignes encore marquées 🚫 le sont pour une raison précise indiquée dans leur propre
+cellule.
 
 Légende statut : ✅ conforme · ⚠️ partiel · ❌ absent · 🚫 bloqué — raison précisée dans la cellule.
 
@@ -137,14 +141,16 @@ Cloudflare (rappelé dans le compte rendu final).
 
 | Étape | Statut |
 |---|---|
-| Branche poussée sur `origin` | ✅ `feat/telemetry-and-ux` poussée, suit `origin/feat/telemetry-and-ux` |
-| Pull request ouverte | 🚫 `gh` indisponible sur cette machine — corps de PR rédigé ci-dessous, lien à ouvrir manuellement : https://github.com/NeatLovin/toolbox-prog-ia/pull/new/feat/telemetry-and-ux |
-| Fusion | 🚫 attend votre accord explicite |
-| Tag `v0.2.0` déplacé sur `main` | 🚫 après fusion uniquement |
+| Branche poussée sur `origin` | ✅ `feat/telemetry-and-ux` a été poussée, puis fusionnée |
+| Pull request ouverte | Jamais ouverte — `gh` étant indisponible sur cette machine, la fusion a été faite par un fast-forward local (`git merge feat/telemetry-and-ux --ff-only` sur `main`, puis `git push origin main`) après votre accord explicite, plutôt que par une PR GitHub. Le texte ci-dessous, rédigé à l'origine comme corps de PR à soumettre, est conservé tel quel comme résumé rétrospectif de ce qui a été fusionné |
+| Fusion | ✅ fast-forward de `feat/telemetry-and-ux` dans `main`, poussée sur `origin/main` |
+| Tag `v0.2.0` déplacé sur `main` | ✅ déplacé sur le commit de fusion et **poussé** sur `origin` (`git push origin v0.2.0`) |
 
-### Corps de PR proposé
+### Résumé de ce qui a été fusionné
 
-**Titre :** `Itération 2 : service serveur, télémétrie et recette avant test enseignants`
+*(rédigé à l'origine comme corps de pull request ; conservé tel quel malgré la fusion directe, sans PR)*
+
+**Titre prévu :** `Itération 2 : service serveur, télémétrie et recette avant test enseignants`
 
 **Corps :**
 

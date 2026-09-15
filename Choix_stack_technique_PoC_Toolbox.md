@@ -108,6 +108,18 @@ La couche de génération par modèle de langage (volet de l'approche hybride) e
 
 Cette décision présente l'avantage d'être défendable en soutenance : le PoC fonctionne de bout en bout sans IA générative (ce qui est paradoxalement rassurant pour un outil destiné à encadrer l'usage de l'IA), et l'éventuelle couche générative est présentée comme un raffinement contrôlé plutôt que comme le cœur du système.
 
+### 4.5 État à l'itération 2
+
+La voie hybride décrite ci-dessus reste le choix d'architecture retenu ; rien n'est rouvert dans cet
+arbitrage. À l'itération 2, la couche optionnelle de génération par modèle de langage (sections 4.2
+et 4.3) **n'est pas implémentée**. Le socle déterministe (approche A) assure seul la production des
+recommandations en production : aucun appel à un modèle de langage n'intervient dans le chemin de
+décision de l'arbre de recommandation. Le seul appel à un modèle de langage du prototype se trouve
+dans l'extension d'audit de plan de cours (section 7), pour la classification d'un document déposé,
+une fonctionnalité distincte de la recommandation elle-même. L'événement de télémétrie
+`reco_generative_used` reste défini dans la taxonomie (`worker/src/events.js`) pour le jour où cette
+couche serait implémentée, mais n'est aujourd'hui émis nulle part dans le code.
+
 ---
 
 ## 5. Stack retenue (synthèse)
