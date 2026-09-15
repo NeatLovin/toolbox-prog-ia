@@ -140,6 +140,16 @@ if (!isPlaceholder) {
   }
 }
 
+// --- 7. État global de la base (informatif, jamais un échec : des lignes en base sont normales
+// pendant la période de test) ---
+try {
+  const eventsCount = d1('SELECT COUNT(*) as n FROM events')[0]?.n ?? '?'
+  const auditCallsCount = d1('SELECT COUNT(*) as n FROM audit_calls')[0]?.n ?? '?'
+  console.log(`ℹ état de D1 : ${eventsCount} ligne(s) dans events, ${auditCallsCount} ligne(s) dans audit_calls`)
+} catch (e) {
+  warn(`lecture de l'état de D1 échouée : ${e.message}`)
+}
+
 console.log('')
 if (failed) {
   console.error('Préflight : ÉCHEC — ne pas envoyer le lien avant correction.')

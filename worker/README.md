@@ -191,6 +191,10 @@ d'urgence, les deux plafonds en vigueur, et si la date de révision du plafond d
 cas à chaque appel réel à `/audit` (visible via `wrangler tail`) — dans les deux cas, un
 signalement, jamais une modification automatique du plafond.
 
+Le préflight affiche enfin, à titre purement informatif (jamais un échec : des lignes en base sont
+normales pendant une période de test), le nombre de lignes dans `events` et dans `audit_calls` —
+pour voir l'état global de la base sans avoir à l'interroger à la main.
+
 ## Séquence de passage du pilote
 
 `npm run pilot:replay` (sans argument, cible automatiquement la session la plus récente, ou
