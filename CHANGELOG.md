@@ -2,6 +2,24 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## v0.2.1 — 2026-09-15
+
+Tag posé sur `main` (commit `c23bd16`) pour désigner sans ambiguïté la version soumise au pilote
+puis aux 22 enseignants. Version de correctif : les commits depuis `v0.2.0` ne touchent que
+l'outillage de vérification et la documentation, jamais le comportement applicatif visible par un
+enseignant. Voir `docs/recette/README.md` section « Version évaluée » pour l'identité complète de
+l'artefact (tag, commit, hash de bundle, plafonds en vigueur).
+
+- Contrôle de cohérence taxonomie client/Worker + valeurs partagées, lancé automatiquement avant
+  chaque build (`npm run prebuild`).
+- Route `GET /health` et `npm run preflight` : vérification en une commande de l'environnement
+  déployé avant l'envoi d'un lien (site, configuration, routes, plafonds réellement en vigueur,
+  fraîcheur du plafond de lancement, état global de la base).
+- Séquence de passage du pilote simplifiée (`npm run pilot:replay`, `npm run pilot:purge`).
+- Correction de mentions devenues fausses dans `docs/recette/README.md` (état de la fusion) et
+  clarification, dans `CLAUDE.md` et `Choix_stack_technique_PoC_Toolbox.md`, que la couche
+  générative optionnelle de reformulation de la recommandation n'est pas implémentée.
+
 ## Itération 2 — 2026-09-10
 
 Préparation du prototype pour un test d'usage réel auprès de 22 enseignants de 7 institutions de

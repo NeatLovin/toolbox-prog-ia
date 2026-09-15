@@ -20,6 +20,33 @@ cellule.
 
 Légende statut : ✅ conforme · ⚠️ partiel · ❌ absent · 🚫 bloqué — raison précisée dans la cellule.
 
+## Version évaluée
+
+Cette section identifie précisément le code que les enseignants ont utilisé pendant le pilote et le
+test d'usage, pour être citée telle quelle dans un document externe au dépôt.
+
+| | |
+|---|---|
+| **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
+| **Tag** | `v0.2.1` |
+| **Commit** | `c23bd16` (`c23bd16f9c5a4ded7fb55f015010ac3e1828d3d6`) |
+| **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
+| **Fichier JavaScript principal servi** | `assets/index-D4bCTV7A.js`, vérifié en direct (`curl`) au moment de la pose du tag |
+| **Date de mise en service pour le pilote** | 2026-09-15 |
+| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 (valeur de lancement ; date de révision prévue `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21`, au-delà de laquelle une valeur de croisière de 40-50 est envisagée — voir `worker/README.md`) |
+| **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
+| **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
+
+**Note technique sur l'identifiant de version dans la télémétrie** : chaque événement de
+télémétrie collecté porte un champ `app_version` fixé au moment du *build* du site (court hash Git
+de la tête de `main` à cet instant, injecté par `vite.config.js`), pas au moment où l'événement est
+émis. Le site n'a pas été reconstruit depuis le commit `a137440` (aucun changement du code source
+de l'application — `src/` — depuis lors, seuls l'outillage et la documentation ont évolué), si bien
+que les événements réellement collectés pendant le pilote porteront `app_version: "a137440"`, et
+non `c23bd16` ni `v0.2.1`. Les deux commits désignent la même version fonctionnelle du site (aucun
+fichier de `src/` ne diffère entre eux) ; cette précision évite qu'une lecture croisée future de la
+base de données soit prise au dépourvu par cet écart de valeur.
+
 ## §2 — Chaîne de configuration
 
 | Vérification | Statut | Preuve |
