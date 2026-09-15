@@ -7,10 +7,14 @@
     "dev:full": "concurrently \"npm run dev\" \"npm run worker:dev\"",
     "worker:dev": "wrangler dev --local --config worker/wrangler.toml",
     "worker:deploy": "wrangler deploy --config worker/wrangler.toml",
+    "prebuild": "node worker/scripts/check-event-taxonomy.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dotfiles"
+    "deploy": "gh-pages -d dist --dotfiles",
+    "preflight": "node worker/scripts/preflight.mjs",
+    "pilot:replay": "node worker/scripts/session-replay.mjs",
+    "pilot:purge": "node worker/scripts/purge-session.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",

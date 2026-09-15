@@ -2,6 +2,14 @@ import { jsonResponse, safeStr, safeJsonStr } from './util.js'
 
 // Liste blanche exacte de la taxonomie (section 5 du brief). Tout événement hors de cette
 // liste est silencieusement écarté avant insertion, jamais stocké.
+//
+// MODIFIER CETTE LISTE EXIGE npm run worker:deploy, PAS SEULEMENT UNE PUBLICATION DU SITE.
+// Le Worker et le site GitHub Pages sont deux déploiements indépendants : publier le front sans
+// redéployer le Worker laisse cette liste inchangée en production, et tout événement ajouté côté
+// client sera rejeté silencieusement (vécu avec audit_truncated avant son redéploiement).
+// worker/scripts/check-event-taxonomy.mjs (lancé automatiquement avant chaque build) détecte un
+// événement émis côté client mais absent d'ici — il ne détecte pas un Worker déployé qui n'a pas
+// encore cette liste à jour : penser au redéploiement reste manuel.
 export const ALLOWED_EVENTS = new Set([
   // Session et accueil
   'session_start', 'consent_choice', 'home_entry_click',
