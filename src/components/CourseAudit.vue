@@ -193,63 +193,65 @@
         avec le contexte « {{ courseContext }} » appliqué à l'ensemble du cours.
       </p>
 
-      <div v-for="rec in recommendations" :key="rec.section_index" class="rec-block">
-        <div class="rec-header">
+      <details v-for="rec in recommendations" :key="rec.section_index" class="rec-block ui-collapsible">
+        <summary class="rec-header">
           <span class="rec-section-title">{{ sectionTitle(rec.section_index) }}</span>
           <span class="ui-badge" :class="sourceBadgeClass(rec.source)">
             {{ sourceLabel(rec.source) }}
           </span>
-        </div>
+        </summary>
 
-        <p v-if="rec.justification" class="rec-justification">{{ rec.justification }}</p>
+        <div class="ui-collapsible-body">
+          <p v-if="rec.justification" class="rec-justification">{{ rec.justification }}</p>
 
-        <div class="rec-tools">
-          <button
-            v-for="tool in rec.tools"
-            :key="tool.id"
-            type="button"
-            class="rec-tool-card"
-            :aria-label="`Voir l'outil ${tool.name}`"
-            @click="openRecommendedTool(tool)"
-          >
-            <div class="rtc-header">
-              <span class="rtc-id">{{ tool.id }}</span>
-              <span class="ui-badge" :class="familyClass(tool.family)">{{ familyLabel(tool.family) }}</span>
-              <span class="rtc-function">{{ functionLabel(tool.function) }}</span>
-            </div>
-            <p class="rtc-name">{{ tool.name }}</p>
-            <p class="rtc-desc">{{ tool.description }}</p>
-            <span class="rtc-open-hint" aria-hidden="true">Voir la fiche</span>
-          </button>
-        </div>
+          <div class="rec-tools">
+            <button
+              v-for="tool in rec.tools"
+              :key="tool.id"
+              type="button"
+              class="rec-tool-card"
+              :aria-label="`Voir l'outil ${tool.name}`"
+              @click="openRecommendedTool(tool)"
+            >
+              <div class="rtc-header">
+                <span class="rtc-id">{{ tool.id }}</span>
+                <span class="ui-badge" :class="familyClass(tool.family)">{{ familyLabel(tool.family) }}</span>
+                <span class="rtc-function">{{ functionLabel(tool.function) }}</span>
+              </div>
+              <p class="rtc-name">{{ tool.name }}</p>
+              <p class="rtc-desc">{{ tool.description }}</p>
+              <span class="rtc-open-hint" aria-hidden="true">Voir la fiche</span>
+            </button>
+          </div>
 
-        <template v-for="cid in (validatedBySection[rec.section_index]?.concept_ids || [])" :key="cid">
-          <template v-if="patronsForSectionConcept(rec.section_index, cid).hasExact">
-            <PatronBlock
-              v-for="p in patronsForSectionConcept(rec.section_index, cid).exact"
-              :key="p.id"
-              :patron="p"
-            />
+          <template v-for="cid in (validatedBySection[rec.section_index]?.concept_ids || [])" :key="cid">
+            <template v-if="patronsForSectionConcept(rec.section_index, cid).hasExact">
+              <PatronBlock
+                v-for="p in patronsForSectionConcept(rec.section_index, cid).exact"
+                :key="p.id"
+                :patron="p"
+              />
+            </template>
+            <template v-else-if="patronsForSectionConcept(rec.section_index, cid).all.length">
+              <p class="patron-ctx-note">
+                Variantes disponibles pour « {{ courseContext }} » :
+              </p>
+              <PatronBlock
+                v-for="p in patronsForSectionConcept(rec.section_index, cid).all"
+                :key="p.id"
+                :patron="p"
+              />
+            </template>
           </template>
-          <template v-else-if="patronsForSectionConcept(rec.section_index, cid).all.length">
-            <p class="patron-ctx-note">
-              Variantes disponibles pour « {{ courseContext }} » :
-            </p>
-            <PatronBlock
-              v-for="p in patronsForSectionConcept(rec.section_index, cid).all"
-              :key="p.id"
-              :patron="p"
-            />
-          </template>
-        </template>
-      </div>
+        </div>
+      </details>
 
       <div v-if="recommendations.length === 0" class="ui-empty-state">
         Aucune section avec notions et niveau cognitif identifiés.
       </div>
     </section>
 
-    <UsabilitySurvey />
+    <UsabilitySurvey parcours="audit" />
 
     <ToolDetailModal :tool="selectedTool" @close="selectedTool = null" />
 
@@ -734,19 +736,18 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
 
 .rec-block {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  padding: 1.1rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .rec-header {
-  display: flex;
-  align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.rec-block .ui-collapsible-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .rec-section-title {

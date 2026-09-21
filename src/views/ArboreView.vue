@@ -32,7 +32,7 @@
 
     <!-- Etape 1 : Zone -->
     <section v-if="step === 'zone'" class="step-section">
-      <h2 class="step-title">Quelle zone conceptuelle travaillez-vous ?</h2>
+      <h2 class="step-title">Quelle zone travaillez-vous ?</h2>
 
       <div class="zone-grid">
         <button
@@ -57,7 +57,7 @@
       <div class="concept-list">
         <button class="concept-btn concept-btn--all" @click="chooseConcept(null)">
           <span class="cb-name">Toute la zone {{ selectedZone }}</span>
-          <span class="cb-desc">Vue d'ensemble de la famille, sans patron spécifique</span>
+          <span class="cb-desc">Vue d'ensemble de la famille, sans modèle spécifique</span>
         </button>
         <button
           v-for="c in conceptsInZone"
@@ -120,7 +120,7 @@
     <!-- Resultat -->
     <section v-else-if="step === 'result' && result" class="result-section reveal">
 
-      <DisclosureCard details-label="Patron et outils" deep-label="Sources" @toggle="onResultToggle">
+      <DisclosureCard details-label="Modèle et outils" deep-label="Sources" @toggle="onResultToggle">
 
         <!-- ── Niveau 1 : l'essentiel ── -->
         <template #summary>
@@ -134,9 +134,6 @@
               <span class="zp-action-label">À faire maintenant</span> {{ immediateAction }}
             </p>
           </div>
-
-          <!-- Profil de zone : risque IA uniquement, sans exigence cognitive -->
-          <ZoneProfile :zone="selectedZone" :show-posture="false" :show-cognitive="false" class="result-zone-profile" />
 
           <!-- Concept ciblé (cliquable si un concept précis a été choisi) -->
           <div v-if="selectedConcept" class="result-concept-row">
@@ -175,13 +172,16 @@
 
           <!-- Invitation si "toute la zone" -->
           <p v-if="!selectedConcept" class="zone-invite">
-            Choisissez un concept précis (étape 2) pour obtenir un patron d'activité pédagogique adapté.
+            Choisissez un concept précis (étape 2) pour obtenir un modèle d'activité adapté.
           </p>
 
         </template>
 
-        <!-- ── Niveau 2 : patron + outils complets + justification ── -->
+        <!-- ── Niveau 2 : profil de zone + patron + outils complets + justification ── -->
         <template #details>
+
+          <!-- Profil de zone : risque IA uniquement, sans exigence cognitive -->
+          <ZoneProfile :zone="selectedZone" :show-posture="false" :show-cognitive="false" class="result-zone-profile" />
 
           <!-- Patron pédagogique -->
           <template v-if="selectedConcept && patronForResult?.all?.length">
@@ -193,8 +193,8 @@
                 {{ patronForResult.hasExact ? `Contexte : ${selectedContext}` : 'Autre contexte' }}
               </span>
               {{ patronForResult.hasExact
-                ? `Ce patron correspond à votre contexte d'usage.`
-                : `Aucun patron disponible pour « ${selectedContext} ». Voici les variantes pour d'autres contextes :` }}
+                ? `Ce modèle correspond à votre contexte d'usage.`
+                : `Aucun modèle disponible pour « ${selectedContext} ». Voici les variantes pour d'autres contextes :` }}
             </div>
             <PatronBlock
               v-for="p in (patronForResult.hasExact ? patronForResult.exact : patronForResult.all)"
@@ -260,7 +260,7 @@
         <button class="ui-btn ui-btn-ghost no-print" @click="exportPDF" aria-label="Exporter en PDF via l'impression du navigateur">Exporter en PDF</button>
       </div>
 
-      <UsabilitySurvey />
+      <UsabilitySurvey parcours="arbre" />
 
     </section>
 
@@ -389,9 +389,9 @@ const sourceBadgeClass = computed(() => {
 
 const sourceLabel = computed(() => {
   const s = result.value?.source
-  if (s === 'combo') return 'Combinatoire exacte'
-  if (s === 'combo-approche') return 'Combinatoire approchée'
-  return 'Score matriciel'
+  if (s === 'combo') return 'Correspondance exacte'
+  if (s === 'combo-approche') return 'Correspondance approchée'
+  return 'Estimation par pertinence'
 })
 
 const sourceDescription = computed(() => {

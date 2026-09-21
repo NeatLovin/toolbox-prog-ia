@@ -1,7 +1,7 @@
 <template>
   <div class="patron-block">
     <div class="patron-header">
-      <span class="ui-badge ui-badge--patron">Patron pédagogique</span>
+      <span class="ui-badge ui-badge--patron">Modèle d'activité</span>
       <span v-if="patron.contexte" class="ui-badge" :class="contexteClass(patron.contexte)">
         {{ patron.contexte }}
       </span>

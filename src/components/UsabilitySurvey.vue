@@ -2,7 +2,7 @@
   <div v-if="visible" class="usability-survey ui-card no-print">
     <template v-if="!submitted">
       <h3 class="us-title">Votre avis nous aide</h3>
-      <p class="us-hint">Deux questions rapides, facultatives, une seule fois.</p>
+      <p class="us-hint">{{ introHint }}</p>
 
       <div class="us-question">
         <p class="us-label" id="us-needs-label">Cet outil répond à mes besoins</p>
@@ -43,6 +43,9 @@
         <button type="button" class="ui-btn ui-btn-ghost" @click="dismiss">Passer</button>
         <button type="button" class="ui-btn ui-btn-primary" :disabled="!canSubmit" @click="submit">Envoyer</button>
       </div>
+      <p v-if="consentStatus !== 'granted'" class="us-consent-note">
+        Vous n'avez pas activé (ou avez refusé) la mesure d'audience : seule cette réponse sera transmise, rien d'autre.
+      </p>
     </template>
     <p v-else class="us-thanks">Merci pour votre retour.</p>
   </div>
@@ -51,9 +54,23 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { consentStatus } from '../lib/consent.js'
-import { track } from '../lib/telemetry.js'
+import { submitSurveyResponse } from '../lib/telemetry.js'
 
-const SHOWN_KEY = 'tb_survey_shown'
+const props = defineProps({
+  // 'arbre' | 'audit' : détermine le marqueur de session (un questionnaire par parcours) et
+  // l'intitulé d'introduction. Les deux items notés restent identiques quel que soit le parcours,
+  // pour rester comparables sur l'échelle UMUX-Lite/SUS.
+  parcours: {
+    type: String,
+    required: true,
+    validator: v => ['arbre', 'audit'].includes(v)
+  }
+})
+
+const SHOWN_KEY = computed(() => `tb_survey_shown_${props.parcours}`)
+const introHint = computed(() => props.parcours === 'audit'
+  ? 'Deux questions rapides sur l\'analyse de votre plan de cours, facultatives, une seule fois.'
+  : 'Deux questions rapides sur la recommandation obtenue, facultatives, une seule fois.')
 
 const localMarkedShown = ref(false)
 const dismissed = ref(false)
@@ -62,13 +79,14 @@ const needsScore = ref(null)
 const easeScore = ref(null)
 const comment = ref('')
 
-// Une seule fois par session, quelle que soit la page (arbre ou audit) qui l'atteint en
-// premier : le marqueur sessionStorage est partagé entre les deux points de montage possibles.
+// Indépendant du consentement à la télémétrie générale (voir submitSurveyResponse dans
+// telemetry.js) : un enseignant qui refuse ou ignore le bandeau peut quand même répondre. Un
+// marqueur de session distinct par parcours permet de répondre une fois à l'arbre et une fois à
+// l'audit.
 const eligible = computed(() => {
-  if (consentStatus.value !== 'granted') return false
   if (localMarkedShown.value) return true
   try {
-    if (sessionStorage.getItem(SHOWN_KEY)) return false
+    if (sessionStorage.getItem(SHOWN_KEY.value)) return false
   } catch {
     // pas de sessionStorage : autant l'afficher, pas de moyen de dédupliquer entre pages
   }
@@ -78,7 +96,7 @@ const eligible = computed(() => {
 watch(eligible, (val) => {
   if (val && !localMarkedShown.value) {
     localMarkedShown.value = true
-    try { sessionStorage.setItem(SHOWN_KEY, '1') } catch {}
+    try { sessionStorage.setItem(SHOWN_KEY.value, '1') } catch {}
   }
 }, { immediate: true })
 
@@ -91,7 +109,8 @@ function dismiss() {
 
 function submit() {
   if (!canSubmit.value) return
-  track('survey_submitted', {
+  submitSurveyResponse({
+    parcours: props.parcours,
     needs_score: needsScore.value,
     ease_score: easeScore.value,
     comment: comment.value.trim().slice(0, 500) || null
@@ -183,5 +202,11 @@ function submit() {
 .us-thanks {
   font-size: var(--text-base);
   color: var(--color-text-muted);
+}
+
+.us-consent-note {
+  font-size: var(--text-2xs);
+  color: var(--color-text-faint);
+  text-align: right;
 }
 </style>

@@ -46,6 +46,85 @@ retenu ci-dessus, précisément parce que c'est lui que `app_version` désigne d
 réellement collectées — c'est ce couple (tag `v0.2.1`, commit publié `a59b482`) qui identifie sans
 ambiguïté la version évaluée par les enseignants.
 
+## Itération 3 — questionnaire, clarté, accessibilité (2026-09-21)
+
+Demandes du directeur de Travail de Bachelor avant l'envoi du lien aux 22 enseignants. Contrainte
+de cadrage : modifications incrémentales et à faible risque, aucune touche à l'infrastructure
+(Worker/D1/plafonds/déploiement), au moteur de recommandation ni à `src/data/` — respectée, voir
+`CHANGELOG.md` entrée « Itération 3 » pour le détail des changements. **Republication non encore
+effectuée au moment de la rédaction de cette section** : elle nécessite un accord explicite séparé
+de l'accord donné pour le plan d'implémentation. Cette section distingue donc ce qui est vérifié en
+local de ce qui reste à vérifier sur l'environnement déployé une fois cet accord obtenu.
+
+### Vérifié en local (`npm run dev`, Playwright, mode console développement)
+
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Questionnaire répondable une fois par parcours (arbre ET audit, même session) | ✅ | Parcours complet arbre → questionnaire affiché → « Passer » → audit (fixture) → questionnaire ré-affiché avec un intitulé différent ; marqueurs `sessionStorage` distincts (`tb_survey_shown_arbre`, `tb_survey_shown_audit`) |
+| Questionnaire visible et envoyable sans consentement télémétrie | ✅ | Bandeau « Refuser » cliqué, questionnaire affiché quand même avec la ligne « seule cette réponse sera transmise », soumission confirmée (message de remerciement affiché) |
+| Payload de soumission correct et indépendant de `track()` | ✅ | Mode console développement : `[telemetry:survey] {parcours: arbre, needs_score: 6, ease_score: 6, comment: null}` — capturé directement, pas déduit du code |
+| Items notés identiques dans les deux parcours | ✅ | Libellé `#us-needs-label` comparé littéralement entre les deux montages : identique |
+| Navigation hiérarchisée (2 liens d'action / 4 de consultation) | ✅ | `nav-links--primary` → [Recommandation, Audit PDF], `nav-links--secondary` → [Catalogue, Concepts, Matrice, Méthodologie] |
+| Orientation immédiate à l'accueil | ✅ | Phrase « Deux façons de démarrer, sans préparation nécessaire : » confirmée juste après le titre, avant les deux cartes |
+| Densité réduite sans perte d'information (audit) | ✅ | 6 blocs de recommandation par section rendus en `<details>` repliés par défaut, ouverture au clic sur le résumé confirmée |
+| Contraste des nouveaux traitements visuels (nav primaire/secondaire, ligne d'orientation) | ✅ | Mesuré (formule de luminance relative WCAG), clair + sombre : le plus bas 6,13:1 (lien secondaire par défaut), seuil 4,5:1 — voir tableau détaillé plus bas |
+| `ToolDetailModal` : piège de focus, Échap, focus initial, retour de focus | ✅ | Ouverture réelle, 10 pressions Tab consécutives restent dans la modale, Échap ferme, focus revient sur `.tool-card` déclencheur (pas `BODY`) |
+| `ConceptDetailModal` : mêmes quatre mécaniques | ✅ | Même test, focus revient sur `.result-concept-btn` déclencheur |
+| Cellules de la matrice (`HeatmapMatrix`) clavier-opérables | ✅ | `Enter` sur une cellule après `.focus()` ouvre bien la modale outil |
+| `ToolCard` clavier-opérable (lacune trouvée pendant cette vérification, pas anticipée dans le plan) | ✅ corrigé | Voir note ci-dessous |
+| Hiérarchie de titres sans saut sur `/catalogue` et `/concepts` | ✅ | Liste réelle des balises de titre extraite du DOM : `H1>H2>H3>H3>H2>H3>H3...` et `H1>H2>H2>H2>H2>H3>H4>H3>H4...` — aucun saut de plus d'un niveau vers le bas |
+| `npm run prebuild` (taxonomie client/Worker) | ✅ | 34 événements client dans la liste blanche, `AUDIT_MAX_CHARS` toujours au-dessus de `CHUNK_MAX` |
+| `npm run build` | ✅ | Deux exécutions complètes (après l'implémentation, puis après la correction `ToolCard`), zéro erreur |
+
+**Note sur la lacune `ToolCard`** : le plan initial (section 3.2) avait identifié les cellules de la
+matrice et les deux modales comme les seules lacunes clavier, en confirmant explicitement que les
+en-têtes de colonnes de la matrice étaient déjà accessibles (vrais `<button>`). Cette vérification a
+révélé une quatrième lacune du même type sur `ToolCard.vue` (carte outil cliquable utilisée dans le
+niveau « Détails » du résultat de l'arbre) : `@click` seul, sans `tabindex` ni rôle, découverte en
+observant que le focus ne revenait pas correctement sur le déclencheur après fermeture de
+`ToolDetailModal` (le vrai problème : le déclencheur n'était jamais focalisable, donc jamais
+focalisé à l'ouverture). Corrigée par le même geste mécanique que la matrice (`role="button"`,
+`tabindex="0"`, activation `Entrée`/`Espace`), sans changement visuel ni changement du moteur de
+recommandation.
+
+**Effet de bord découvert sur `npm run prebuild`, non corrigé** : le contrôle de taxonomie signale
+désormais `survey_submitted` comme « jamais émis côté client » alors qu'il l'est bel et bien, via
+`submitSurveyResponse()`. Le script (`worker/scripts/check-event-taxonomy.mjs`) détecte les
+événements par une recherche des appels `track('...')` ; il ne voit pas le nom d'événement fixé en
+dur dans la nouvelle fonction dédiée, qui contourne volontairement `track()` (voir §1.3 du plan).
+Ce n'est qu'une information (`ℹ`, pas un `✗`) et le contrôle reste au vert — signalé ici sans
+correction, une modification du script de vérification n'étant pas nécessaire pour cette itération
+et sortant du périmètre incrémental demandé.
+
+Détail des mesures de contraste (formule de luminance relative WCAG, clair + sombre) :
+
+| Élément | Défaut | Survol | Actif |
+|---|---|---|---|
+| Lien nav primaire (clair) | 6,13:1 | 16,15:1 | 17,93:1 |
+| Lien nav primaire (sombre) | 7,50:1 | 13,89:1 | 17,93:1 |
+| Lien nav secondaire (clair) | 6,81:1 | — | — |
+| Lien nav secondaire (sombre) | 8,05:1 | — | — |
+| Phrase d'orientation accueil (clair) | 17,19:1 | — | — |
+| Phrase d'orientation accueil (sombre) | 16,27:1 | — | — |
+
+Seuil applicable : 4,5:1 (texte normal). Toutes les valeurs ci-dessus, ainsi que les 34 mesures
+faites en préparation du plan (badges, boutons, cellules de matrice, boutons d'échelle du
+questionnaire), sont conformes. `prefers-reduced-motion` et le zoom 200 % restent conformes sans
+changement (déjà vérifiés en préparation du plan, aucune des modifications de cette itération n'a
+touché aux animations ni à la mise en page responsive).
+
+### Encore à vérifier sur l'environnement déployé (après republication, accord explicite requis)
+
+| Point du brief | Statut |
+|---|---|
+| Les deux parcours affichent chacun leur questionnaire sur le site publié, répondable deux fois | 🚫 en attente de republication |
+| Envoi du questionnaire sans consentement confirmé dans l'onglet réseau (aucune autre requête ne part) | 🚫 en attente de republication |
+| `survey_submitted` arrive réellement en D1 avec le bon `parcours` | 🚫 en attente de republication |
+| `npm run preflight` sur le site republié | 🚫 en attente de republication |
+| Les trois parcours restent fonctionnels avec et sans consentement, en conditions réelles | 🚫 en attente de republication |
+| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | 🚫 en attente de republication |
+| Mise à jour du tableau « Version évaluée » (nouveau commit, nouveau hash de bundle, nouvel `app_version`) | 🚫 en attente de republication |
+
 ## §2 — Chaîne de configuration
 
 | Vérification | Statut | Preuve |

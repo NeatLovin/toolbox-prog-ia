@@ -44,7 +44,7 @@
       <div class="ui-collapsible-body legend-body">
 
         <div class="legend-section">
-          <h3>Taxonomie de Bloom en programmation</h3>
+          <h2>Taxonomie de Bloom en programmation</h2>
           <p class="legend-intro">
             Grille institutionnelle HES-SO (Guide IA 2024). Chaque sous-concept est annoté par le ou
             les niveaux Bloom qu'il mobilise principalement. L'IA générative perturbe différemment
@@ -63,7 +63,7 @@
         </div>
 
         <div class="legend-section">
-          <h3>Risque IA par famille de concepts</h3>
+          <h2>Risque IA par famille de concepts</h2>
           <p class="legend-intro">
             Niveau de risque que l'étudiant délègue à l'IA sans construire de compréhension réelle.
             Dérivé de la littérature (Bastani 2025 PNAS, Lister 2004, Fuller 2007) et des 22
@@ -96,7 +96,7 @@
         </div>
 
         <div class="legend-section">
-          <h3>Dimension Fuller (Fuller et al. 2007)</h3>
+          <h2>Dimension Fuller (Fuller et al. 2007)</h2>
           <p class="legend-intro">
             Extension CS-spécifique de la taxonomie de Bloom publiée par Fuller et al. dans un rapport
             ITiCSE Working Group international de 2007. Elle croise les niveaux Bloom avec deux
@@ -160,7 +160,7 @@
                 <span class="ui-badge ui-badge--level">{{ concept.level }}</span>
                 <span class="ui-badge" :class="riskClass(fam.risk_ai)" style="margin-left:auto;">{{ fam.risk_ai }}</span>
               </div>
-              <p class="cs-name">{{ concept.name }}</p>
+              <h3 class="cs-name">{{ concept.name }}</h3>
               <p v-if="concept.gloss" class="cs-gloss">
                 <span class="cs-gloss-label">En clair</span>{{ concept.gloss }}
               </p>
@@ -201,8 +201,7 @@
 
                 <div v-if="getPatronsByConcept(concept.id).length" class="cs-block">
                   <span class="cs-block-label">
-                    {{ getPatronsByConcept(concept.id).length > 1 ? 'Patrons' : 'Patron' }}
-                    pédagogique{{ getPatronsByConcept(concept.id).length > 1 ? 's' : '' }}
+                    Modèle{{ getPatronsByConcept(concept.id).length > 1 ? 's' : '' }} d'activité
                   </span>
                   <div class="cs-patrons">
                     <PatronBlock
@@ -503,7 +502,7 @@ function bloomClass(b) {
 .legend-body { display: flex; flex-direction: column; gap: var(--space-8); }
 
 .legend-section { display: flex; flex-direction: column; gap: var(--space-3); }
-.legend-section h3 { font-size: var(--text-base); font-weight: 800; color: var(--color-text); }
+.legend-section h2 { font-size: var(--text-base); font-weight: 800; color: var(--color-text); }
 .legend-intro { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.65; }
 
 .bloom-grid {

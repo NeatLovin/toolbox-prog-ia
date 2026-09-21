@@ -2,6 +2,80 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Itération 3 — 2026-09-21
+
+Demandes du directeur de Travail de Bachelor avant l'envoi du lien aux 22 enseignants : rendre le
+questionnaire d'utilisabilité réellement visible, simplifier l'interface pour un enseignant qui
+découvre l'outil sans préparation, et pousser l'accessibilité au-delà de l'audit de contraste de
+l'itération 2. Aucune touche au Worker, à D1, aux plafonds, au déploiement, au moteur de
+recommandation ou aux fichiers de `src/data/`.
+
+- **Questionnaire d'utilisabilité enfin visible et répondable dans les deux parcours.** Deux
+  défauts empêchaient de le voir en pratique : un marqueur de session unique partagé entre l'arbre
+  et l'audit (répondre dans l'un le masquait dans l'autre) et une éligibilité conditionnée au
+  consentement à la télémétrie générale (un enseignant qui refusait ou ignorait le bandeau ne
+  voyait jamais le questionnaire). Marqueur `sessionStorage` désormais par parcours
+  (`tb_survey_shown_arbre` / `tb_survey_shown_audit`), intitulé d'introduction adapté au parcours,
+  `parcours` ajouté au payload de `survey_submitted`. Les deux items notés (« Cet outil répond à mes
+  besoins », « Cet outil est facile à utiliser ») restent identiques mot pour mot dans les deux
+  parcours pour rester comparables sur l'échelle UMUX-Lite/SUS.
+- **Soumission du questionnaire découplée du consentement télémétrie général**, décision validée
+  explicitement avant implémentation : cliquer « Envoyer » est un acte de consentement explicite et
+  suffisant pour cette réponse précise. Nouvelle fonction dédiée `submitSurveyResponse()` dans
+  `src/lib/telemetry.js`, volontairement séparée de `track()`/`flush()` : événement figé en dur
+  (`survey_submitted`, jamais un paramètre), une seule requête immédiate, aucune interaction avec la
+  file d'attente des autres événements — un refus de consentement ne peut donc jamais faire fuiter
+  un événement en attente. Une ligne discrète sous les boutons prévient l'enseignant que seule cette
+  réponse sera transmise quand le consentement général n'est pas accordé. Aucune activation
+  rétroactive de la collecte générale.
+- **Navigation hiérarchisée** : les deux parcours d'action (Recommandation, Audit PDF) se
+  distinguent visuellement des quatre vues de consultation (Catalogue, Concepts, Matrice,
+  Méthodologie) dans l'en-tête, sans suppression ni renommage de route.
+- **Orientation immédiate à l'arrivée** : l'accueil affiche désormais une phrase d'orientation juste
+  après le titre, avant les deux cartes de choix ; le paragraphe de recommandation générique, plus
+  dense, redescend après les cartes.
+- **Densité réduite, information déplacée jamais supprimée** : le profil de risque de zone du
+  résultat de l'arbre rejoint le niveau « Détails » repliable ; les recommandations par section de
+  l'audit passent en blocs repliables individuels (`<details>`) au lieu d'un affichage
+  intégralement déplié, qui devenait long sur un cours à nombreuses sections.
+- **Vocabulaire renommé à l'affichage uniquement**, validé explicitement avant application : « zone
+  conceptuelle » → « zone », « Patron pédagogique » → « Modèle d'activité », « Combinatoire
+  exacte/approchée » → « Correspondance exacte/approchée », « Score matriciel » → « Estimation par
+  pertinence ». Comme pour le renommage Fil rouge → Axe pédagogique de l'itération précédente :
+  aucune clé JSON, classe CSS ni comparaison JS modifiée, le vocabulaire technique reste sur la page
+  Méthodologie où il est expliqué.
+- **Accessibilité clavier** : trois lacunes réelles trouvées par lecture du code et corrigées par un
+  composable partagé (`src/composables/useFocusTrap.js` — piège Tab/Shift+Tab, fermeture Échap,
+  focus initial, restauration du focus au déclencheur) ou par l'ajout des attributs manquants :
+  - `ToolDetailModal.vue` n'avait aucune des quatre mécaniques (ni Échap, ni focus initial, ni
+    piège, ni restauration) alors qu'il est utilisé par les deux parcours principaux — lacune la
+    plus sévère trouvée dans cette itération.
+  - `ConceptDetailModal.vue` avait déjà Échap et le focus initial, mais ni piège de focus ni
+    restauration.
+  - `HeatmapMatrix.vue` (cellules de la matrice) et **`ToolCard.vue`** (carte outil cliquable de
+    l'arbre) n'avaient aucun chemin clavier (`@click` seul, sans `tabindex` ni rôle) ; `ToolCard`
+    n'avait pas été identifié pendant la préparation du plan et a été trouvé pendant la vérification
+    fonctionnelle de cette itération, en observant que le focus ne revenait pas au déclencheur après
+    fermeture de `ToolDetailModal` — corrigé du même geste mécanique (`role="button"`,
+    `tabindex="0"`, activation `Entrée`/`Espace`) que la matrice.
+  - Vérifié avec de vraies pressions de touche Tab (pas `.focus()` programmatique, qui donne un
+    faux négatif de non-visibilité du focus sous Chromium) : l'anneau de focus global de
+    `base.css` s'affiche correctement sur tous les éléments désormais focalisables.
+- **Titres réordonnés sans saut de niveau** sur `/catalogue` (H4 → H3) et `/concepts` (H3
+  d'introduction → H2, nom de concept → H3), sans changement visuel (sélecteurs CSS vérifiés
+  individuellement, adaptés quand ils ciblaient la balise plutôt qu'une classe).
+- **Contraste, clavier global, `prefers-reduced-motion` et zoom 200 %** : déjà conformes sur
+  l'échantillon mesuré en préparation de cette itération (voir le rapport de mission pour le détail
+  chiffré) ; aucune correction nécessaire au-delà des trois lacunes clavier ci-dessus.
+
+Vérifié en local (`npm run dev`, Playwright) : questionnaire répondable une fois par parcours,
+envoi effectif en mode console sans consentement accordé et avec le bon `parcours`, navigation et
+accueil réordonnés, sections d'audit repliables, matrice et `ToolCard` clavier-opérables, piège de
+focus et restauration testés sur les deux modales, hiérarchie de titres sans saut, `npm run
+prebuild` et `npm run build` au vert. Vérification sur l'environnement déployé (mêmes contrôles en
+conditions réelles, plus l'onglet réseau et la purge des données de test) en attente de la
+republication, soumise à accord explicite séparé — voir `docs/recette/README.md`.
+
 ## v0.2.1 — 2026-09-15
 
 Tag posé sur `main` (commit `c23bd16`) pour désigner sans ambiguïté la version soumise au pilote

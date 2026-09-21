@@ -5,7 +5,7 @@
         class="modal"
         role="dialog"
         :aria-label="concept.name"
-        @keydown.esc="$emit('close')"
+        @keydown="handleKeydown"
         tabindex="-1"
         ref="modalEl"
       >
@@ -65,25 +65,25 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch } from 'vue'
 import ReferenceLinks from './ReferenceLinks.vue'
 import InfoTooltip from './InfoTooltip.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 import { fullerHint } from '../lib/fuller.js'
+import { useFocusTrap } from '../composables/useFocusTrap.js'
 
 const props = defineProps({
   concept: { type: Object, default: null }
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
 
 const modalEl = ref(null)
+const { activate, deactivate, handleKeydown } = useFocusTrap(modalEl, () => emit('close'))
 
-watch(() => props.concept, async (val) => {
-  if (val) {
-    await nextTick()
-    modalEl.value?.focus()
-  }
+watch(() => props.concept, (val, prev) => {
+  if (val && !prev) activate()
+  else if (!val && prev) deactivate()
 })
 
 const zoneClass = computed(() => {

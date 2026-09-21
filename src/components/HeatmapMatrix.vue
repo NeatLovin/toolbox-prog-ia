@@ -125,9 +125,13 @@
               :style="tdStyle(tool.id, concept)"
               :title="tdLabel(tool, concept)"
               :aria-label="tdLabel(tool, concept)"
+              role="button"
+              tabindex="0"
               @mousemove="showTip($event, tdLabel(tool, concept))"
               @mouseleave="hideTip()"
               @click="onCellClick(tool, concept)"
+              @keydown.enter="onCellClick(tool, concept)"
+              @keydown.space.prevent="onCellClick(tool, concept)"
             >{{ SCORE_MAP[tool.id]?.[concept.id] || '' }}</td>
           </tr>
         </template>
@@ -577,7 +581,7 @@ function onFamilyLabelClick(fam) {
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
   border-right: 1px solid var(--color-border);
-  cursor: default;
+  cursor: pointer;
   transition: filter var(--dur-1) var(--ease);
   text-align: center;
   vertical-align: middle;
@@ -588,6 +592,14 @@ function onFamilyLabelClick(fam) {
   line-height: 1;
 }
 .hm-sc:hover { filter: brightness(0.82) saturate(1.15); }
+/* outline standard peu fiable sur <td> avec border-collapse : box-shadow inset a la place,
+   comme .ui-btn/.theme-toggle ailleurs dans l'appli. */
+.hm-sc:focus-visible {
+  outline: none;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 0 2px var(--color-accent-ring), inset 0 0 0 3px var(--color-accent);
+}
 .hm-sc.hm-sc--zone-last { border-right: 2px solid var(--color-border-strong); }
 
 /* Contraste du score en mode sombre : les fonds saturés ont une luminance intermédiaire

@@ -102,6 +102,37 @@ function flush(useBeacon = false) {
   }
 }
 
+// Envoi dédié du questionnaire de fin de parcours, volontairement indépendant de hasConsent() :
+// cliquer "Envoyer" sur ce formulaire est un acte de consentement explicite et suffisant pour
+// CETTE soumission précise, distinct du consentement général à la télémétrie. Ne touche jamais à
+// queue/flush() de track() : un seul événement, une seule requête immédiate, jamais combiné avec
+// d'autres événements en attente (et de toute façon track() ne met jamais rien en file tant que le
+// consentement général n'est pas accordé, donc il n'y a structurellement rien à faire fuiter).
+// Le nom d'événement est fixé en dur : cette fonction ne peut pas servir à envoyer autre chose.
+export function submitSurveyResponse(payload) {
+  const body = JSON.stringify({
+    session_id: getSessionId(),
+    app_version: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev',
+    schema_version: SCHEMA_VERSION,
+    campaign: getCampaign(),
+    events: [{ event: 'survey_submitted', payload, ts_client: Date.now(), viewport_bucket: viewportBucket() }]
+  })
+  if (CONSOLE_MODE) {
+    console.debug('[telemetry:survey]', payload)
+    return
+  }
+  try {
+    fetch(`${API_BASE}/events`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body,
+      keepalive: true
+    }).catch(() => {})
+  } catch {
+    // Échec réseau toujours silencieux, comme le reste de la télémétrie.
+  }
+}
+
 // Envoi de fin de session : sur visibilitychange -> hidden plutôt que beforeunload (qui manque
 // les abandons mobile/onglet-fermé et n'est pas fiable), via sendBeacon pour survivre au
 // déchargement de la page.

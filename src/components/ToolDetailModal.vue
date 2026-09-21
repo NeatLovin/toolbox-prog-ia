@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div v-if="tool" class="modal-backdrop" @click.self="$emit('close')">
-      <div class="modal" role="dialog" :aria-label="tool.name">
+      <div class="modal" role="dialog" :aria-label="tool.name" tabindex="-1" ref="modalEl" @keydown="handleKeydown">
         <button class="modal-close" @click="$emit('close')" aria-label="Fermer">&times;</button>
 
         <div class="modal-header">
@@ -103,18 +103,22 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useData } from '../composables/useData.js'
 import InfoTooltip from './InfoTooltip.vue'
 import { GLOSSARY } from '../lib/glossary.js'
 import ReferenceLinks from './ReferenceLinks.vue'
 import { track } from '../lib/telemetry.js'
+import { useFocusTrap } from '../composables/useFocusTrap.js'
 
 const props = defineProps({
   tool: { type: Object, default: null }
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
+
+const modalEl = ref(null)
+const { activate, deactivate, handleKeydown } = useFocusTrap(modalEl, () => emit('close'))
 
 // Auto-instrumentation : tool_detail_open (tool_id, dwell_ms) a chaque ouverture/fermeture,
 // quel que soit l'appelant (PatronBlock, CourseAudit...). Identifie les outils jamais consultes,
@@ -123,9 +127,11 @@ let openedAt = null
 watch(() => props.tool, (tool, prevTool) => {
   if (tool && !prevTool) {
     openedAt = Date.now()
+    activate()
   } else if (!tool && prevTool && openedAt) {
     track('tool_detail_open', { tool_id: prevTool.id, dwell_ms: Date.now() - openedAt })
     openedAt = null
+    deactivate()
   }
 })
 

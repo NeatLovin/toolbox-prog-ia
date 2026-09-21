@@ -4,7 +4,7 @@
       <h1>Cartographie</h1>
       <p>
         Matrice de pertinence complète : 48 outils × 21 concepts, 861 couples évalués.
-        La teinte encode la zone conceptuelle, l'intensité encode le score pédagogique (1 à 3).
+        La teinte encode la zone, l'intensité encode le score pédagogique (1 à 3).
       </p>
     </div>
     <HeatmapMatrix />

@@ -10,14 +10,9 @@
       </p>
     </div>
 
-    <p class="home-generic-rec">
-      Sans précision de votre part : privilégiez l'évaluation orale ou tracée sur la syntaxe, où
-      l'IA générative produit du code correct sans garantir la compréhension, et réservez les
-      exercices de conception et de débogage à la main avant tout recours à un assistant.
-      Répondez aux quelques questions ci-dessous pour une recommandation adaptée à votre cours.
+    <p class="home-orient">
+      Deux façons de démarrer, sans préparation nécessaire :
     </p>
-
-    <StatStrip class="reveal" />
 
     <div class="hub-grid">
 
@@ -43,13 +38,21 @@
       >
         <h2>Obtenir une recommandation</h2>
         <p>
-          Parcours guidé en trois étapes : zone conceptuelle, concept précis, contexte d'usage.
-          Résultat avec patron pédagogique et outils adaptés.
+          Parcours guidé en trois étapes : zone, concept précis, contexte d'usage.
+          Résultat avec modèle d'activité et outils adaptés.
         </p>
         <span class="hub-cta">Démarrer →</span>
       </router-link>
 
     </div>
+
+    <p class="home-generic-rec">
+      Sans précision de votre part : privilégiez l'évaluation orale ou tracée sur la syntaxe, où
+      l'IA générative produit du code correct sans garantir la compréhension, et réservez les
+      exercices de conception et de débogage à la main avant tout recours à un assistant.
+    </p>
+
+    <StatStrip class="reveal" />
 
     <ZoneProfile class="reveal" />
 
@@ -68,6 +71,12 @@ import { track } from '../lib/telemetry.js'
   flex-direction: column;
   gap: var(--space-6);
   max-width: 740px;
+}
+
+.home-orient {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-text);
 }
 
 .home-generic-rec {

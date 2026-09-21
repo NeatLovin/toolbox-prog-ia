@@ -89,7 +89,7 @@
             <span class="ts-id">{{ tool.id }}</span>
             <span class="ui-badge" :class="familyClass(tool)">{{ familyShort(tool) }}</span>
           </div>
-          <p class="ts-name">{{ tool.name }}</p>
+          <h2 class="ts-name">{{ tool.name }}</h2>
           <p class="ts-desc">{{ tool.description }}</p>
           <span v-if="tool.efficacite" class="ui-badge" :class="efficaciteClass(tool)">{{ tool.efficacite }}</span>
         </template>
@@ -143,7 +143,7 @@
             </div>
 
             <div v-if="resolvedScenarios(tool).length" class="td-section">
-              <h4 class="td-section-title">Scénarios <InfoTooltip :content="GLOSSARY.scenario.short" /></h4>
+              <h3 class="td-section-title">Scénarios <InfoTooltip :content="GLOSSARY.scenario.short" /></h3>
               <div class="td-items">
                 <div v-for="s in resolvedScenarios(tool)" :key="s.id" class="td-item">
                   <strong>{{ s.label }}</strong>
@@ -153,7 +153,7 @@
             </div>
 
             <div v-if="tool.fils_rouges && tool.fils_rouges.length" class="td-section">
-              <h4 class="td-section-title">Axes pédagogiques <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h4>
+              <h3 class="td-section-title">Axes pédagogiques <InfoTooltip :content="GLOSSARY.fil_rouge.short" /></h3>
               <div class="td-items">
                 <div v-for="fil in resolvedFils(tool)" :key="fil.id" class="td-item td-fil">
                   <span class="ui-badge" :class="filClass(fil.id)">{{ axeLabel(fil.id) }}</span>

@@ -1,5 +1,13 @@
 <template>
-  <article class="tool-card" :class="{ 'tool-card--clickable': clickable }" @click="clickable && $emit('open', tool)">
+  <article
+    class="tool-card"
+    :class="{ 'tool-card--clickable': clickable }"
+    :role="clickable ? 'button' : null"
+    :tabindex="clickable ? 0 : null"
+    @click="clickable && $emit('open', tool)"
+    @keydown.enter="clickable && $emit('open', tool)"
+    @keydown.space.prevent="clickable && $emit('open', tool)"
+  >
     <div class="card-header">
       <span class="tool-id">{{ tool.id }}</span>
       <span class="ui-badge" :class="familyClass">{{ familyShort }}</span>

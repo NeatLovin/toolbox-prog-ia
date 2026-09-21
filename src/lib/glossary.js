@@ -24,7 +24,7 @@ export const GLOSSARY = {
     short: 'Configuration précalculée liant famille, Bloom, contexte et outils. 16 combinatoires issues de la cartographie du TB, sans génération de texte.'
   },
   patron: {
-    term: 'Patron pédagogique',
+    term: 'Modèle d\'activité',
     short: 'Description concrète d\'une activité : compétence visée, activité, outils, risque IA du concept, parade et modalité d\'évaluation (Biggs 1996).'
   },
   bloom: {

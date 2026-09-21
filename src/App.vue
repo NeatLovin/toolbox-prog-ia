@@ -26,13 +26,16 @@ function toggleTheme() {
     <header class="site-header">
       <nav class="nav-container" aria-label="Navigation principale">
         <router-link to="/" class="site-title">Toolbox Prog IA</router-link>
-        <ul class="nav-links">
-          <li><router-link to="/arbre">Arbre</router-link></li>
+        <ul class="nav-links nav-links--primary">
+          <li><router-link to="/arbre">Recommandation</router-link></li>
+          <li><router-link to="/audit">Audit PDF</router-link></li>
+        </ul>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <ul class="nav-links nav-links--secondary">
           <li><router-link to="/catalogue">Catalogue</router-link></li>
           <li><router-link to="/concepts">Concepts</router-link></li>
           <li><router-link to="/cartographie">Matrice</router-link></li>
-          <li><router-link to="/methodologie">Methodologie</router-link></li>
-          <li><router-link to="/audit">Audit PDF</router-link></li>
+          <li><router-link to="/methodologie">Méthodologie</router-link></li>
         </ul>
         <button
           class="theme-toggle"
@@ -97,8 +100,19 @@ function toggleTheme() {
   display: flex;
   list-style: none;
   gap: 0.15rem;
-  margin-left: auto;
   flex-wrap: wrap;
+}
+
+.nav-links--primary {
+  margin-left: auto;
+}
+
+.nav-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 0.4rem 0;
+  background: var(--color-border);
+  flex-shrink: 0;
 }
 
 .nav-links a {
@@ -125,6 +139,22 @@ function toggleTheme() {
   color: var(--color-text);
   background: transparent;
   text-decoration-color: var(--color-accent);
+}
+
+/* Les deux parcours d'action se distinguent visuellement des vues de consultation : fond
+   permanent plutôt qu'au survol seulement, poids de police plus marqué. */
+.nav-links--primary a {
+  background: var(--color-accent-subtle);
+  font-weight: 700;
+}
+
+.nav-links--primary a.router-link-active {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+.nav-links--primary a.router-link-active:hover {
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
 .main-content {
@@ -213,6 +243,10 @@ function toggleTheme() {
     margin-left: 0;
     width: 100%;
     padding-bottom: 0.35rem;
+  }
+
+  .nav-sep {
+    display: none;
   }
 
   .nav-links a {
