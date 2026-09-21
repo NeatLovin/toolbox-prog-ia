@@ -35,7 +35,7 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | **`app_version` transmis par la télémétrie** | `1acaa62` — vérifié dans une vraie requête `POST /events` capturée en direct (soumission du questionnaire, consentement refusé) puis dans la ligne correspondante de D1, pas déduit du code |
 | **Date de mise en service pour le test d'usage** | 2026-09-15 (itération 2) |
 | **Date de republication (itération 3)** | 2026-09-21 |
-| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 — **date de révision `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21` atteinte** (signalé par `npm run preflight` au moment de cette republication) ; **non modifié dans cette itération**, ce paramètre étant un plafond d'infrastructure explicitement hors périmètre de la mission « questionnaire, clarté, accessibilité ». Décision à prendre séparément par le porteur du projet, voir `worker/README.md` |
+| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision repoussée au 2026-10-06** (14 jours après l'envoi réel du lien, 2026-09-22) dans une mission dédiée entre les itérations 3 et 4 — la valeur précédente (2026-09-21) avait sonné avant même le début de la semaine de lancement. Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
@@ -44,6 +44,50 @@ consentement et répondable par parcours, navigation et densité simplifiées, r
 correctifs d'accessibilité clavier) au-dessus de `1baf180` (dernier commit de l'itération 2 /
 durcissement), lui-même descendant du tag `v0.2.1`. C'est ce commit qu'`app_version` désigne dans
 les données réellement collectées lors de la vérification ci-dessous.
+
+## Itération 4 — outils cliquables, questionnaire à 6 items (2026-09-21)
+
+Deux retours du directeur de Travail de Bachelor après essai du prototype déployé, derniers avant
+l'envoi aux 22 enseignants — voir `CHANGELOG.md` pour le détail des changements. **Republication non
+encore effectuée au moment de la rédaction de cette section** : accord explicite séparé requis, comme
+pour l'itération précédente.
+
+### Vérifié en local (`npm run dev`, Playwright, mode console développement)
+
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Outils du niveau 1 (résultat de l'arbre) cliquables, ouvrent `ToolDetailModal` | ✅ | Clic souris et clavier (Enter) testés sur `.tool-pill`, modale ouverte dans les deux cas |
+| `reco_tool_open` identique au niveau 1 et au niveau 2, `from` distinct | ✅ | Capturé en mode console : `{tool_id: M01, from: summary}` au niveau 1, `{tool_id: M01, from: details}` au niveau 2 (même outil, même session) |
+| Proposition pédagogique cliquable, déplie le tiroir et fait défiler jusqu'au patron | ✅ | Tiroir fermé avant clic, ouvert après ; bloc `.result-patron` visible après défilement |
+| `reco_patron_open` émis une seule fois, jamais en double | ✅ | Un seul événement capturé au premier clic (tiroir fermé → ouvert) ; un second clic sur la proposition (tiroir déjà ouvert) ne réémet rien et ne referme pas le tiroir |
+| `.brief-lever` (audit, section « En bref ») cliquable, `audit_recommendation_open` avec `from` correct | ✅ | `{tool_id: M07, from: brief}` depuis « En bref », `{tool_id: M01, from: section}` depuis le détail par section, dans la même session |
+| Questionnaire à 6 items sur les deux parcours | ✅ | 6 blocs `.us-question` comptés ; libellés extraits littéralement |
+| Items 1 et 2 identiques au mot près aux deux parcours et à la version précédente | ✅ | Comparaison littérale : « Cet outil répond à mes besoins », « Cet outil est facile à utiliser » — inchangés |
+| Item 3 adapté par parcours | ✅ | Arbre : « La recommandation correspondait à mon contexte d'enseignement » · Audit : « L'analyse correspondait à mon contexte d'enseignement » |
+| Soumission partielle acceptée, items non répondus à `null` | ✅ | Réponse à 2 items sur 5 seulement : payload capturé intégralement (`jsonValue()`, pas la version tronquée du texte de log) confirme `ease_score: null, reuse_intent_score: null, clarity_score: null, comment: null` pour les items ignorés |
+| Bouton « Envoyer » jamais désactivé | ✅ | `isDisabled()` à `false` avant toute réponse |
+| `survey_shown` émis à l'affichage effectif, une fois | ✅ | `[telemetry:survey_shown] {parcours: arbre}` capturé à l'arrivée sur le résultat |
+| `survey_dismissed` émis au clic sur « Passer » | ✅ | `[telemetry:survey_dismissed] {parcours: audit}` capturé, questionnaire masqué ensuite |
+| Questionnaire tient sur un écran sans défiler | ✅ mesuré | Hauteur réelle du composant (`boundingBox()`) : **632px** aux trois viewports testés (1366×768, 1280×800, 1440×900) — marge confortable même au plus bas |
+| `npm run prebuild` range les 3 événements dédiés dans la bonne catégorie | ✅ | `survey_shown`, `survey_dismissed`, `survey_submitted` tous listés sous « voie d'envoi dédiée, hors track() », `reco_generative_used` seul sous « jamais émis » |
+| `npm run build` | ✅ | Aucune erreur |
+
+### Encore à vérifier sur l'environnement déployé (après republication du site, accord explicite requis)
+
+Le Worker est déjà redéployé (`survey_shown`/`survey_dismissed` ajoutés à `ALLOWED_EVENTS`, confirmé
+via `npm run preflight`) — cette partie ne dépend pas de la republication du site et est donc déjà
+faite. Reste, une fois le site republié :
+
+| Point du brief | Statut |
+|---|---|
+| Outils cliquables (niveau 1 arbre, proposition, `.brief-lever`) en conditions réelles, `reco_tool_open`/`audit_recommendation_open` avec le bon `from` en base | 🚫 en attente de republication |
+| Questionnaire à 6 items sur les deux parcours, en conditions réelles | 🚫 en attente de republication |
+| Soumission partielle confirmée en base (`null` pour les items non répondus) | 🚫 en attente de republication |
+| `survey_shown`, `survey_dismissed`, `survey_submitted` arrivent tous trois en base avec le bon `parcours` | 🚫 en attente de republication |
+| Fonctionnement complet avec consentement refusé, confirmé dans l'onglet réseau qu'aucune autre requête ne part | 🚫 en attente de republication |
+| `npm run preflight` sur le site republié | 🚫 en attente de republication |
+| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | 🚫 en attente de republication |
+| Mise à jour du tableau « Version évaluée » (nouveau commit, nouveau hash de bundle) | 🚫 en attente de republication |
 
 ## Itération 3 — questionnaire, clarté, accessibilité (2026-09-21)
 

@@ -149,3 +149,29 @@ SELECT campaign, COUNT(DISTINCT session_id) AS sessions
 FROM events
 GROUP BY campaign
 ORDER BY sessions DESC;
+
+-- 10. Taux de complétion du questionnaire (survey_submitted / survey_shown), global et par parcours.
+-- Dénominateur : survey_shown (affichage réel), pas les sessions ayant atteint le résultat — un
+-- questionnaire vu peut être passé (survey_dismissed) sans y répondre, dans la même session grâce
+-- au marqueur sessionStorage par parcours (voir src/components/UsabilitySurvey.vue). Sert à mesurer
+-- le coût en taux de réponse du passage de 2 à 6 items (itération 4).
+SELECT
+  json_extract(payload, '$.parcours') AS parcours,
+  SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END) AS affiches,
+  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) AS soumis,
+  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) * 1.0 /
+    NULLIF(SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END), 0) AS taux_completion
+FROM events
+WHERE event IN ('survey_shown', 'survey_submitted')
+GROUP BY parcours
+
+UNION ALL
+
+SELECT
+  'global' AS parcours,
+  SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END) AS affiches,
+  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) AS soumis,
+  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) * 1.0 /
+    NULLIF(SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END), 0) AS taux_completion
+FROM events
+WHERE event IN ('survey_shown', 'survey_submitted');

@@ -8,7 +8,7 @@
     </div>
 
     <!-- Niveau 2 - tiroir Détails -->
-    <details v-if="hasDetails" class="ui-collapsible" @toggle="onToggle('details', $event)">
+    <details v-if="hasDetails" ref="detailsRef" class="ui-collapsible" @toggle="onToggle('details', $event)">
       <summary>{{ detailsLabel }}</summary>
       <div class="ui-collapsible-body">
         <slot name="details" />
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, ref } from 'vue'
 
 defineProps({
   title:        { type: String, default: '' },
@@ -45,6 +45,18 @@ const hasDeep    = computed(() => !!slots.deep)
 function onToggle(section, event) {
   emit('toggle', { section, open: event.target.open })
 }
+
+// Ouverture programmatique du tiroir "details" depuis l'appelant (ex. un élément du niveau 1 qui
+// mène au contenu du niveau 2, voir ArboreView.vue). Un clic simulé sur le <summary> réel déclenche
+// le toggle natif normalement, donc le même événement @toggle ci-dessus (et tout ce qui l'écoute)
+// se déclenche exactement comme un clic manuel — jamais de logique d'émission dupliquée ici.
+const detailsRef = ref(null)
+function openDetails() {
+  if (detailsRef.value && !detailsRef.value.open) {
+    detailsRef.value.querySelector(':scope > summary')?.click()
+  }
+}
+defineExpose({ openDetails })
 </script>
 
 <style scoped>

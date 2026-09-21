@@ -102,26 +102,28 @@ function flush(useBeacon = false) {
   }
 }
 
-// Envoi dédié du questionnaire de fin de parcours, volontairement indépendant de hasConsent() :
-// cliquer "Envoyer" sur ce formulaire est un acte de consentement explicite et suffisant pour
-// CETTE soumission précise, distinct du consentement général à la télémétrie. Ne touche jamais à
-// queue/flush() de track() : un seul événement, une seule requête immédiate, jamais combiné avec
-// d'autres événements en attente (et de toute façon track() ne met jamais rien en file tant que le
-// consentement général n'est pas accordé, donc il n'y a structurellement rien à faire fuiter).
-// Le nom d'événement est fixé en dur : cette fonction ne peut pas servir à envoyer autre chose.
-// @client-event: survey_submitted — marqueur lu par worker/scripts/check-event-taxonomy.mjs, qui ne
-// voit pas les événements fixés en dur hors des appels track(...). Toute nouvelle voie d'envoi
-// dédiée qui contourne track() doit porter le même marqueur pour rester couverte par ce contrôle.
-export function submitSurveyResponse(payload) {
+// Voie d'envoi dédiée, volontairement indépendante de hasConsent() : utilisée par le questionnaire
+// de fin de parcours (voir UsabilitySurvey.vue), dont l'affichage et le fonctionnement ne doivent
+// jamais dépendre du consentement général à la télémétrie. Ne touche jamais à queue/flush() de
+// track() : un seul événement, une seule requête immédiate, jamais combiné avec d'autres événements
+// en attente (et de toute façon track() ne met jamais rien en file tant que le consentement général
+// n'est pas accordé, donc il n'y a structurellement rien à faire fuiter).
+//
+// N'est jamais exportée directement : chaque export public ci-dessous fixe son propre nom
+// d'événement en dur (jamais un paramètre) et porte son propre marqueur "@client-event", pour que
+// worker/scripts/check-event-taxonomy.mjs (qui ne voit pas les noms figés en dur hors des appels
+// track(...)) les détecte individuellement. Toute nouvelle voie d'envoi dédiée doit suivre le même
+// principe : un export fin, un nom en dur, un marqueur.
+function sendDedicatedEvent(event, payload) {
   const body = JSON.stringify({
     session_id: getSessionId(),
     app_version: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev',
     schema_version: SCHEMA_VERSION,
     campaign: getCampaign(),
-    events: [{ event: 'survey_submitted', payload, ts_client: Date.now(), viewport_bucket: viewportBucket() }]
+    events: [{ event, payload, ts_client: Date.now(), viewport_bucket: viewportBucket() }]
   })
   if (CONSOLE_MODE) {
-    console.debug('[telemetry:survey]', payload)
+    console.debug(`[telemetry:${event}]`, payload)
     return
   }
   try {
@@ -134,6 +136,21 @@ export function submitSurveyResponse(payload) {
   } catch {
     // Échec réseau toujours silencieux, comme le reste de la télémétrie.
   }
+}
+
+// @client-event: survey_shown
+export function trackSurveyShown(parcours) {
+  sendDedicatedEvent('survey_shown', { parcours })
+}
+
+// @client-event: survey_dismissed
+export function trackSurveyDismissed(parcours) {
+  sendDedicatedEvent('survey_dismissed', { parcours })
+}
+
+// @client-event: survey_submitted
+export function submitSurveyResponse(payload) {
+  sendDedicatedEvent('survey_submitted', payload)
 }
 
 // Envoi de fin de session : sur visibilitychange -> hidden plutôt que beforeunload (qui manque

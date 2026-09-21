@@ -2,6 +2,59 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Itération 4 — 2026-09-21
+
+Deux retours du directeur de Travail de Bachelor après essai du prototype déployé, derniers avant
+l'envoi aux 22 enseignants. Aucune touche au moteur de recommandation, à `src/data/`, à
+l'infrastructure ni aux plafonds.
+
+- **Outils recommandés rendus cliquables au niveau 1 du résultat.** Incohérence trouvée : le concept
+  ciblé (niveau 1, toujours visible) ouvrait déjà `ConceptDetailModal`, mais les outils recommandés
+  juste en dessous n'étaient que du texte, alors que les mêmes outils devenaient cliquables une fois
+  le tiroir « Modèle et outils » déplié (niveau 2) — ce qui, en plus de donner l'impression d'un
+  outil cassé, limitait `reco_tool_open` aux seuls clics faits après dépliage, un entonnoir plus
+  étroit que ce que la métrique est censée capter. Les outils du niveau 1 ouvrent désormais
+  `ToolDetailModal` et émettent le même `reco_tool_open` qu'au niveau 2, avec un champ `from`
+  (`summary` ou `details`) pour distinguer les deux sans perdre l'agrégat.
+- **Même correctif appliqué à deux autres éléments trouvés lors du même balayage** : la proposition
+  pédagogique du résultat de l'arbre (nommait un patron sans permettre de l'ouvrir, alors que
+  `reco_patron_open` existe déjà) devient cliquable — elle déplie le tiroir du niveau 2 si besoin
+  (un clic simulé sur son `<summary>` réel, qui déclenche l'émission existante, jamais un doublon) et
+  fait défiler jusqu'au bloc patron ; et les outils phares de la section « En bref » de l'audit
+  (`.brief-lever`), qui présentaient le même défaut que les outils du niveau 1 de l'arbre, ouvrent
+  désormais `ToolDetailModal` et émettent `audit_recommendation_open` (déjà utilisé par les outils du
+  détail par section) avec un champ `from` (`brief` ou `section`).
+- **Questionnaire étendu de 2 à 6 items.** Les deux items UMUX-Lite existants (« Cet outil répond à
+  mes besoins », « Cet outil est facile à utiliser ») restent inchangés au mot près, en tête, pour
+  rester comparables sur l'échelle SUS. Quatre nouveaux items, tous facultatifs comme les deux
+  premiers désormais (la soumission n'est plus bloquée par une réponse manquante, qui part à `null`) :
+  correspondance au contexte d'enseignement (formulation adaptée par parcours : « la recommandation »
+  pour l'arbre, « l'analyse » pour l'audit), intention de réutilisation, clarté des justifications, et
+  un champ libre reformulé (« Qu'est-ce qui manque ou vous a gêné ? »). Le conteneur passe de 480 à
+  640px et la légende d'échelle, répétée cinq fois auparavant, devient une seule ligne partagée : le
+  questionnaire tient sur un écran sans défiler (632px mesurés à 1366×768, 1280×800 et 1440×900).
+- **Coût du questionnaire plus long mesurable** : deux événements dédiés, `survey_shown` (affichage
+  réel) et `survey_dismissed` (clic sur « Passer »), suivant la même voie hors consentement que
+  `survey_submitted` — jamais conditionnés au consentement général, jamais autre chose que leur
+  propre nom d'événement. `worker/analysis.sql` gagne une requête de taux de complétion
+  (`survey_submitted` / `survey_shown`), globale et par parcours.
+- **`src/lib/telemetry.js`** : la voie dédiée hors consentement (jusqu'ici un seul export,
+  `submitSurveyResponse`) devient un helper privé partagé plus trois exports fins, chacun son nom
+  d'événement figé en dur et son propre marqueur `@client-event` — la propriété « ne peut pas servir
+  à envoyer autre chose » établie à la correction précédente du contrôle de taxonomie s'applique
+  identiquement aux trois.
+- **`worker/src/events.js`** : `survey_shown` et `survey_dismissed` ajoutés à `ALLOWED_EVENTS`,
+  Worker redéployé (confirmé via `npm run preflight`) — sans quoi ces deux événements auraient été
+  rejetés en silence, comme `audit_truncated` à l'itération 2.
+
+Vérifié en local (`npm run dev`, Playwright) : les trois éléments corrigés ouvrent le bon détail avec
+le bon `from`, sans doublon d'événement (`reco_patron_open` émis une seule fois même si le tiroir est
+déjà ouvert) ; les 6 items s'affichent sur les deux parcours avec les bons libellés ; une soumission
+partielle envoie bien `null` pour les items non répondus ; `survey_shown`/`survey_dismissed`
+s'émettent aux bons moments, indépendamment du consentement. Vérification sur l'environnement
+déployé en attente de republication, soumise à accord explicite séparé — voir
+`docs/recette/README.md`.
+
 ## Itération 3 — 2026-09-21
 
 Demandes du directeur de Travail de Bachelor avant l'envoi du lien aux 22 enseignants : rendre le

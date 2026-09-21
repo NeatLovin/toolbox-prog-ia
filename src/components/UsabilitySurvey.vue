@@ -3,6 +3,7 @@
     <template v-if="!submitted">
       <h3 class="us-title">Votre avis nous aide</h3>
       <p class="us-hint">{{ introHint }}</p>
+      <p class="us-scale-legend">Échelle : 1 = pas du tout, 7 = tout à fait.</p>
 
       <div class="us-question">
         <p class="us-label" id="us-needs-label">Cet outil répond à mes besoins</p>
@@ -16,7 +17,6 @@
             @click="needsScore = n"
           >{{ n }}</button>
         </div>
-        <div class="us-scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div>
       </div>
 
       <div class="us-question">
@@ -31,17 +31,58 @@
             @click="easeScore = n"
           >{{ n }}</button>
         </div>
-        <div class="us-scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div>
       </div>
 
       <div class="us-question">
-        <label class="us-label" for="us-comment">Commentaire (facultatif)</label>
-        <textarea id="us-comment" v-model="comment" class="us-textarea" maxlength="500" rows="3"></textarea>
+        <p class="us-label" id="us-context-label">{{ contextFitLabel }}</p>
+        <div class="us-scale" role="radiogroup" aria-labelledby="us-context-label">
+          <button
+            v-for="n in 7" :key="'context-' + n"
+            type="button"
+            class="us-scale-btn"
+            :class="{ 'us-scale-btn--active': contextFitScore === n }"
+            :aria-pressed="contextFitScore === n"
+            @click="contextFitScore = n"
+          >{{ n }}</button>
+        </div>
+      </div>
+
+      <div class="us-question">
+        <p class="us-label" id="us-reuse-label">J'utiliserais cet outil pour préparer un cours</p>
+        <div class="us-scale" role="radiogroup" aria-labelledby="us-reuse-label">
+          <button
+            v-for="n in 7" :key="'reuse-' + n"
+            type="button"
+            class="us-scale-btn"
+            :class="{ 'us-scale-btn--active': reuseIntentScore === n }"
+            :aria-pressed="reuseIntentScore === n"
+            @click="reuseIntentScore = n"
+          >{{ n }}</button>
+        </div>
+      </div>
+
+      <div class="us-question">
+        <p class="us-label" id="us-clarity-label">Les justifications m'ont permis de comprendre pourquoi ces outils étaient proposés</p>
+        <div class="us-scale" role="radiogroup" aria-labelledby="us-clarity-label">
+          <button
+            v-for="n in 7" :key="'clarity-' + n"
+            type="button"
+            class="us-scale-btn"
+            :class="{ 'us-scale-btn--active': clarityScore === n }"
+            :aria-pressed="clarityScore === n"
+            @click="clarityScore = n"
+          >{{ n }}</button>
+        </div>
+      </div>
+
+      <div class="us-question">
+        <label class="us-label" for="us-comment">Qu'est-ce qui manque ou vous a gêné ? (facultatif)</label>
+        <textarea id="us-comment" v-model="comment" class="us-textarea" maxlength="500" rows="2"></textarea>
       </div>
 
       <div class="us-actions">
         <button type="button" class="ui-btn ui-btn-ghost" @click="dismiss">Passer</button>
-        <button type="button" class="ui-btn ui-btn-primary" :disabled="!canSubmit" @click="submit">Envoyer</button>
+        <button type="button" class="ui-btn ui-btn-primary" @click="submit">Envoyer</button>
       </div>
       <p v-if="consentStatus !== 'granted'" class="us-consent-note">
         Vous n'avez pas activé (ou avez refusé) la mesure d'audience : seule cette réponse sera transmise, rien d'autre.
@@ -54,12 +95,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { consentStatus } from '../lib/consent.js'
-import { submitSurveyResponse } from '../lib/telemetry.js'
+import { submitSurveyResponse, trackSurveyShown, trackSurveyDismissed } from '../lib/telemetry.js'
 
 const props = defineProps({
   // 'arbre' | 'audit' : détermine le marqueur de session (un questionnaire par parcours) et
-  // l'intitulé d'introduction. Les deux items notés restent identiques quel que soit le parcours,
-  // pour rester comparables sur l'échelle UMUX-Lite/SUS.
+  // l'intitulé d'introduction et de l'item de contexte. Les deux items UMUX-Lite (besoins, facilité)
+  // restent identiques quel que soit le parcours, pour rester comparables sur l'échelle SUS.
   parcours: {
     type: String,
     required: true,
@@ -69,14 +110,20 @@ const props = defineProps({
 
 const SHOWN_KEY = computed(() => `tb_survey_shown_${props.parcours}`)
 const introHint = computed(() => props.parcours === 'audit'
-  ? 'Deux questions rapides sur l\'analyse de votre plan de cours, facultatives, une seule fois.'
-  : 'Deux questions rapides sur la recommandation obtenue, facultatives, une seule fois.')
+  ? 'Quelques questions rapides sur l\'analyse de votre plan de cours, toutes facultatives, une seule fois.'
+  : 'Quelques questions rapides sur la recommandation obtenue, toutes facultatives, une seule fois.')
+const contextFitLabel = computed(() => props.parcours === 'audit'
+  ? "L'analyse correspondait à mon contexte d'enseignement"
+  : 'La recommandation correspondait à mon contexte d\'enseignement')
 
 const localMarkedShown = ref(false)
 const dismissed = ref(false)
 const submitted = ref(false)
 const needsScore = ref(null)
 const easeScore = ref(null)
+const contextFitScore = ref(null)
+const reuseIntentScore = ref(null)
+const clarityScore = ref(null)
 const comment = ref('')
 
 // Indépendant du consentement à la télémétrie générale (voir submitSurveyResponse dans
@@ -101,18 +148,29 @@ watch(eligible, (val) => {
 }, { immediate: true })
 
 const visible = computed(() => eligible.value && !dismissed.value)
-const canSubmit = computed(() => needsScore.value !== null && easeScore.value !== null)
+
+// Mesure le coût en taux de complétion du passage à 6 items : émis une seule fois, à la première
+// transition vers "effectivement affiché" (jamais répété ensuite, dismiss()/submit() gardent visible
+// à false pour le reste du montage).
+watch(visible, (val, prev) => {
+  if (val && !prev) trackSurveyShown(props.parcours)
+}, { immediate: true })
 
 function dismiss() {
+  trackSurveyDismissed(props.parcours)
   dismissed.value = true
 }
 
+// Tous les items sont facultatifs, y compris les deux UMUX-Lite : la soumission n'est jamais
+// bloquée par une réponse manquante, qui part à null plutôt que d'empêcher l'envoi.
 function submit() {
-  if (!canSubmit.value) return
   submitSurveyResponse({
     parcours: props.parcours,
     needs_score: needsScore.value,
     ease_score: easeScore.value,
+    context_fit_score: contextFitScore.value,
+    reuse_intent_score: reuseIntentScore.value,
+    clarity_score: clarityScore.value,
     comment: comment.value.trim().slice(0, 500) || null
   })
   submitted.value = true
@@ -123,8 +181,8 @@ function submit() {
 .usability-survey {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  max-width: 480px;
+  gap: var(--space-3);
+  max-width: 640px;
 }
 
 .us-title {
@@ -136,13 +194,19 @@ function submit() {
 .us-hint {
   font-size: var(--text-sm);
   color: var(--color-text-faint);
-  margin-top: -0.5rem;
+  margin-top: -0.4rem;
+}
+
+.us-scale-legend {
+  font-size: var(--text-2xs);
+  color: var(--color-text-faint);
+  margin-top: -0.6rem;
 }
 
 .us-question {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .us-label {
@@ -175,13 +239,6 @@ function submit() {
   color: var(--color-surface);
 }
 
-.us-scale-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-2xs);
-  color: var(--color-text-faint);
-}
-
 .us-textarea {
   font: inherit;
   font-size: var(--text-sm);
@@ -189,7 +246,7 @@ function submit() {
   background: var(--color-bg);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem 0.7rem;
   resize: vertical;
 }
 

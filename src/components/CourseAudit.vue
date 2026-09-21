@@ -62,8 +62,15 @@
       <template v-if="keyTools.length">
         <p class="brief-subtitle">Ce qu'on vous conseille</p>
         <div class="brief-levers">
-          <div v-for="t in keyTools" :key="t.id" class="brief-lever">
-            <span class="bl-name">{{ t.name }}</span>
+          <button
+            v-for="t in keyTools"
+            :key="t.id"
+            type="button"
+            class="brief-lever"
+            :aria-label="`Voir l'outil ${t.name}`"
+            @click="openLeverTool(t)"
+          >
+            <span class="bl-name">{{ t.name }} <span class="bl-hint" aria-hidden="true">ⓘ</span></span>
             <MetricGauge
               label="Niveau de preuve"
               :value="efficaciteNum(t)"
@@ -71,7 +78,7 @@
               :value-label="t.efficacite || 'Émergente'"
               variant="ramp"
             />
-          </div>
+          </button>
         </div>
       </template>
     </section>
@@ -295,7 +302,12 @@ function exportPDF() {
 
 function openRecommendedTool(tool) {
   selectedTool.value = tool
-  track('audit_recommendation_open', { tool_id: tool.id })
+  track('audit_recommendation_open', { tool_id: tool.id, from: 'section' })
+}
+
+function openLeverTool(tool) {
+  selectedTool.value = tool
+  track('audit_recommendation_open', { tool_id: tool.id, from: 'brief' })
 }
 
 onMounted(() => {
@@ -544,12 +556,31 @@ function patronsForSectionConcept(sectionIndex, conceptId) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 0.75rem;
+  /* reset bouton */
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
+  transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
+}
+.brief-lever:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+.brief-lever:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .bl-name {
   font-size: var(--text-base);
   font-weight: 600;
   color: var(--color-text);
+}
+
+.bl-hint {
+  font-size: 0.85em;
+  color: var(--color-info-text);
 }
 
 /* === Aperçu visuel === */

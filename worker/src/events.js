@@ -26,7 +26,7 @@ export const ALLOWED_EVENTS = new Set([
   'audit_result_shown', 'audit_recommendation_open', 'audit_export', 'audit_unavailable',
   'audit_truncated',
   // Transversal
-  'app_error', 'survey_submitted'
+  'app_error', 'survey_shown', 'survey_dismissed', 'survey_submitted'
 ])
 
 const MAX_EVENTS_PER_BATCH = 25

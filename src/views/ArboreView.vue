@@ -120,7 +120,7 @@
     <!-- Resultat -->
     <section v-else-if="step === 'result' && result" class="result-section reveal">
 
-      <DisclosureCard details-label="Modèle et outils" deep-label="Sources" @toggle="onResultToggle">
+      <DisclosureCard ref="resultDisclosure" details-label="Modèle et outils" deep-label="Sources" @toggle="onResultToggle">
 
         <!-- ── Niveau 1 : l'essentiel ── -->
         <template #summary>
@@ -152,20 +152,29 @@
           </div>
 
           <!-- Proposition pédagogique (si concept choisi et patron disponible) -->
-          <div v-if="selectedConcept && patronForResult?.all?.length" class="result-proposal">
+          <button
+            v-if="selectedConcept && patronForResult?.all?.length"
+            type="button"
+            class="result-proposal"
+            @click="openPatronFromSummary"
+          >
             <span class="u-eyebrow">Ce qu'on vous propose</span>
-            <p class="proposal-name">
+            <span class="proposal-name">
               {{ patronForResult.hasExact ? patronForResult.exact[0]?.titre : patronForResult.all[0]?.titre }}
-            </p>
-          </div>
+              <span class="rp-hint" aria-hidden="true">ⓘ</span>
+            </span>
+          </button>
 
           <!-- Outils conseillés -->
           <div class="result-approach">
             <span class="u-eyebrow">Outils conseillés</span>
             <ul class="result-tool-pills" aria-label="Outils recommandés">
-              <li v-for="tool in result.tools.slice(0, 3)" :key="tool.id" class="tool-pill">
-                <span class="ui-badge" :class="toolFamilyClass(tool)">{{ toolFamilyShort(tool) }}</span>
-                {{ tool.name }}
+              <li v-for="tool in result.tools.slice(0, 3)" :key="tool.id">
+                <button type="button" class="tool-pill" @click="openToolFromResult(tool, 'summary')">
+                  <span class="ui-badge" :class="toolFamilyClass(tool)">{{ toolFamilyShort(tool) }}</span>
+                  <span class="tp-name">{{ tool.name }}</span>
+                  <span class="tp-hint" aria-hidden="true">ⓘ</span>
+                </button>
               </li>
             </ul>
           </div>
@@ -271,7 +280,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getRecommendation, ZONE_PRINCIPLES } from '../lib/recommendation.js'
 import { useData } from '../composables/useData.js'
@@ -316,6 +325,7 @@ const selectedContext = ref('')
 const selectedBloom   = ref(null)
 const conceptDetail   = ref(null)
 const arboreSelectedTool = ref(null)
+const resultDisclosure = ref(null)
 
 // Instrumentation du tunnel de recommandation. recoStartedAt sert au latency_ms de
 // reco_result_shown ; lastShownParams permet de détecter un reco_restart (résultat re-affiché
@@ -492,9 +502,20 @@ function onResultToggle({ section, open }) {
   }
 }
 
-function openToolFromResult(tool) {
+function openToolFromResult(tool, from = 'details') {
   arboreSelectedTool.value = tool
-  track('reco_tool_open', { tool_id: tool.id })
+  track('reco_tool_open', { tool_id: tool.id, from })
+}
+
+// Ouvre le tiroir "Modèle et outils" s'il est fermé (un clic simulé sur son <summary> déclenche le
+// toggle natif déjà écouté par onResultToggle, qui émet reco_detail_expand/reco_patron_open — jamais
+// une seconde émission ici), puis fait défiler jusqu'au bloc patron. S'il est déjà ouvert, on se
+// contente de défiler : re-cliquer le résumé le refermerait.
+function openPatronFromSummary() {
+  resultDisclosure.value?.openDetails()
+  nextTick(() => {
+    document.querySelector('.result-patron')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 // Synchro URL : écriture quand on atteint le résultat
@@ -855,13 +876,36 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.12s, background 0.12s;
+}
+.result-proposal:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+.result-proposal:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .proposal-name {
+  display: block;
   font-size: var(--text-md);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.35;
+}
+
+.rp-hint {
+  font-size: 0.85em;
+  color: var(--color-info-text);
+  margin-left: 0.1rem;
 }
 
 .result-approach {
@@ -885,6 +929,29 @@ onBeforeUnmount(() => {
   font-weight: 600;
   color: var(--color-text);
   line-height: 1.4;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.12s, background 0.12s;
+}
+.tool-pill:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+.tool-pill:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.tp-name { flex: 1; }
+
+.tp-hint {
+  font-size: 0.85em;
+  color: var(--color-info-text);
 }
 
 /* Invitation zone entière */
