@@ -28,29 +28,27 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | aucun nouveau tag posé pour l'itération 3 (non demandé) ; `v0.2.1` reste le tag le plus proche, ancêtre direct du commit republié ci-dessous |
-| **Commit republié** | `1acaa62` |
+| **Tag** | aucun nouveau tag posé depuis l'itération 3 (non demandé) ; `v0.2.1` reste le tag le plus proche |
+| **Commit republié** | `9d90f4d` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-DIfKLun8.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `1acaa62` — vérifié dans une vraie requête `POST /events` capturée en direct (soumission du questionnaire, consentement refusé) puis dans la ligne correspondante de D1, pas déduit du code |
+| **Fichier JavaScript principal servi** | `assets/index-BPzPGY0v.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `9d90f4d` — vérifié dans plusieurs vraies requêtes `POST /events` capturées en direct (`survey_shown`, `survey_submitted`, consentement refusé) puis dans les lignes correspondantes de D1, pas déduit du code |
 | **Date de mise en service pour le test d'usage** | 2026-09-15 (itération 2) |
-| **Date de republication (itération 3)** | 2026-09-21 |
+| **Date de republication (itération 4)** | 2026-09-21 |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision repoussée au 2026-10-06** (14 jours après l'envoi réel du lien, 2026-09-22) dans une mission dédiée entre les itérations 3 et 4 — la valeur précédente (2026-09-21) avait sonné avant même le début de la semaine de lancement. Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
-Le commit `1acaa62` contient l'ensemble des changements de l'itération 3 (questionnaire découplé du
-consentement et répondable par parcours, navigation et densité simplifiées, renommages d'affichage,
-correctifs d'accessibilité clavier) au-dessus de `1baf180` (dernier commit de l'itération 2 /
-durcissement), lui-même descendant du tag `v0.2.1`. C'est ce commit qu'`app_version` désigne dans
-les données réellement collectées lors de la vérification ci-dessous.
+Le commit `9d90f4d` contient l'ensemble des changements de l'itération 4 (outils recommandés
+cliquables au niveau 1, proposition pédagogique cliquable, questionnaire à 6 items) au-dessus de
+`1acaa62` (itération 3), lui-même descendant du tag `v0.2.1`. C'est ce commit qu'`app_version`
+désigne dans les données réellement collectées lors de la vérification ci-dessous.
 
 ## Itération 4 — outils cliquables, questionnaire à 6 items (2026-09-21)
 
 Deux retours du directeur de Travail de Bachelor après essai du prototype déployé, derniers avant
-l'envoi aux 22 enseignants — voir `CHANGELOG.md` pour le détail des changements. **Republication non
-encore effectuée au moment de la rédaction de cette section** : accord explicite séparé requis, comme
-pour l'itération précédente.
+l'envoi aux 22 enseignants — voir `CHANGELOG.md` pour le détail des changements. Republiée avec votre
+accord explicite le 2026-09-21.
 
 ### Vérifié en local (`npm run dev`, Playwright, mode console développement)
 
@@ -72,22 +70,21 @@ pour l'itération précédente.
 | `npm run prebuild` range les 3 événements dédiés dans la bonne catégorie | ✅ | `survey_shown`, `survey_dismissed`, `survey_submitted` tous listés sous « voie d'envoi dédiée, hors track() », `reco_generative_used` seul sous « jamais émis » |
 | `npm run build` | ✅ | Aucune erreur |
 
-### Encore à vérifier sur l'environnement déployé (après republication du site, accord explicite requis)
+### Vérifié sur l'environnement déployé (après republication, accord explicite obtenu — 2026-09-21)
 
-Le Worker est déjà redéployé (`survey_shown`/`survey_dismissed` ajoutés à `ALLOWED_EVENTS`, confirmé
-via `npm run preflight`) — cette partie ne dépend pas de la republication du site et est donc déjà
-faite. Reste, une fois le site republié :
+Worker redéployé avant la republication du site (`survey_shown`/`survey_dismissed` ajoutés à
+`ALLOWED_EVENTS`, confirmé via `npm run preflight`).
 
-| Point du brief | Statut |
-|---|---|
-| Outils cliquables (niveau 1 arbre, proposition, `.brief-lever`) en conditions réelles, `reco_tool_open`/`audit_recommendation_open` avec le bon `from` en base | 🚫 en attente de republication |
-| Questionnaire à 6 items sur les deux parcours, en conditions réelles | 🚫 en attente de republication |
-| Soumission partielle confirmée en base (`null` pour les items non répondus) | 🚫 en attente de republication |
-| `survey_shown`, `survey_dismissed`, `survey_submitted` arrivent tous trois en base avec le bon `parcours` | 🚫 en attente de republication |
-| Fonctionnement complet avec consentement refusé, confirmé dans l'onglet réseau qu'aucune autre requête ne part | 🚫 en attente de republication |
-| `npm run preflight` sur le site republié | 🚫 en attente de republication |
-| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | 🚫 en attente de republication |
-| Mise à jour du tableau « Version évaluée » (nouveau commit, nouveau hash de bundle) | 🚫 en attente de republication |
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Outils du niveau 1 (arbre), proposition pédagogique et `.brief-lever` (audit) ouvrent le détail en conditions réelles | ✅ | `ToolDetailModal` ouverte depuis `.tool-pill` et `.brief-lever` sur le site publié ; tiroir « Modèle et outils » ouvert après clic sur la proposition |
+| Questionnaire à 6 items sur les deux parcours, en conditions réelles | ✅ | 6 blocs affichés, libellé de contexte correctement adapté (« L'analyse correspondait… » sur l'audit) sur le site publié |
+| Soumission partielle confirmée en base, `null` pour les items non répondus | ✅ | Ligne D1 réelle : `{"parcours":"audit","needs_score":6,"ease_score":null,"context_fit_score":null,"reuse_intent_score":null,"clarity_score":null,"comment":null}` |
+| `survey_shown`, `survey_dismissed`, `survey_submitted` arrivent tous trois en base avec le bon `parcours` | ✅ | Les trois événements lus directement en D1 distant, `app_version` = `9d90f4d` sur chacun |
+| Fonctionnement complet avec consentement refusé, aucune autre requête ne part | ✅ | Sur le site réel, consentement refusé : exactement 2 requêtes `POST /events` au total pour un parcours complet jusqu'à soumission (`survey_shown` puis `survey_submitted`), aucune autre — vérifié en inspectant le corps de chaque requête, pas seulement leur nombre |
+| `npm run preflight` sur le site republié | ✅ | « Préflight : OK », nouvelle date de révision confirmée servie |
+| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | ✅ | `DELETE FROM events` / `DELETE FROM audit_calls` sur D1 distant, `SELECT COUNT(*)` confirme 0/0 après |
+| Mise à jour du tableau « Version évaluée » | ✅ | Voir tableau ci-dessus |
 
 ## Itération 3 — questionnaire, clarté, accessibilité (2026-09-21)
 

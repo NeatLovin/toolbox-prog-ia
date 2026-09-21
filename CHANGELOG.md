@@ -47,13 +47,15 @@ l'infrastructure ni aux plafonds.
   Worker redéployé (confirmé via `npm run preflight`) — sans quoi ces deux événements auraient été
   rejetés en silence, comme `audit_truncated` à l'itération 2.
 
-Vérifié en local (`npm run dev`, Playwright) : les trois éléments corrigés ouvrent le bon détail avec
-le bon `from`, sans doublon d'événement (`reco_patron_open` émis une seule fois même si le tiroir est
+Vérifié en local (`npm run dev`, Playwright) puis, après republication avec accord explicite séparé
+(commit `9d90f4d`), sur le site publié : les trois éléments corrigés ouvrent le bon détail avec le
+bon `from`, sans doublon d'événement (`reco_patron_open` émis une seule fois même si le tiroir est
 déjà ouvert) ; les 6 items s'affichent sur les deux parcours avec les bons libellés ; une soumission
-partielle envoie bien `null` pour les items non répondus ; `survey_shown`/`survey_dismissed`
-s'émettent aux bons moments, indépendamment du consentement. Vérification sur l'environnement
-déployé en attente de republication, soumise à accord explicite séparé — voir
-`docs/recette/README.md`.
+partielle envoie bien `null` pour les items non répondus, confirmé en D1 ; `survey_shown`,
+`survey_dismissed` et `survey_submitted` arrivent tous trois en base avec le bon `parcours` ; sur le
+site réel, consentement refusé, un parcours complet jusqu'à soumission ne produit que deux requêtes
+(`survey_shown` puis `survey_submitted`), aucune autre ; `npm run preflight` au vert ; données de
+vérification purgées (D1 à zéro ligne). Détail complet dans `docs/recette/README.md`.
 
 ## Itération 3 — 2026-09-21
 
