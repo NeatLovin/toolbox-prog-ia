@@ -109,6 +109,9 @@ function flush(useBeacon = false) {
 // d'autres événements en attente (et de toute façon track() ne met jamais rien en file tant que le
 // consentement général n'est pas accordé, donc il n'y a structurellement rien à faire fuiter).
 // Le nom d'événement est fixé en dur : cette fonction ne peut pas servir à envoyer autre chose.
+// @client-event: survey_submitted — marqueur lu par worker/scripts/check-event-taxonomy.mjs, qui ne
+// voit pas les événements fixés en dur hors des appels track(...). Toute nouvelle voie d'envoi
+// dédiée qui contourne track() doit porter le même marqueur pour rester couverte par ce contrôle.
 export function submitSurveyResponse(payload) {
   const body = JSON.stringify({
     session_id: getSessionId(),

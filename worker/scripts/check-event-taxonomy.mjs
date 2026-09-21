@@ -1,9 +1,14 @@
 // Verrou anti-derive entre le code et ce qui tourne (point 1 de la mission "durcissement avant le
 // pilote enseignant"). Deux controles statiques, aucun appel reseau :
 //
-// 1. Tout evenement emis par un track(...) cote client doit exister dans ALLOWED_EVENTS
-//    (worker/src/events.js) - sinon le Worker le rejette silencieusement, comme cela s'est
-//    produit pour audit_truncated avant que le Worker ne soit redeploye.
+// 1. Tout evenement emis cote client doit exister dans ALLOWED_EVENTS (worker/src/events.js) -
+//    sinon le Worker le rejette silencieusement, comme cela s'est produit pour audit_truncated
+//    avant que le Worker ne soit redeploye. Deux voies d'emission sont detectees : les appels
+//    track('...') et les voies d'envoi dediees qui contournent volontairement track() (ex.
+//    submitSurveyResponse() dans src/lib/telemetry.js) en fixant un nom d'evenement en dur - ces
+//    dernieres sont reperees par un marqueur de commentaire explicite (`@client-event: nom`) plutot
+//    que par une detection heuristique du litteral, pour eviter tout faux positif. Toute nouvelle
+//    voie dediee doit porter ce marqueur pour rester couverte par ce controle.
 // 2. AUDIT_MAX_CHARS (worker/wrangler.toml, plafond de refus par requete) doit toujours rester
 //    strictement superieur a CHUNK_MAX (src/stores/audit.js, taille reelle d'une tranche envoyee
 //    par le client) - sinon une tranche legitime commencerait a etre refusee.
@@ -39,32 +44,51 @@ function walk(dir, exts, out = []) {
 
 const srcFiles = walk(path.join(ROOT, 'src'), ['.js', '.vue'])
 const TRACK_RE = /track\(\s*['"]([a-zA-Z0-9_]+)['"]/g
+const DEDICATED_RE = /@client-event:\s*([a-zA-Z0-9_]+)/g
 
-const clientEvents = new Map() // event name -> Set of files
+function collect(content, re) {
+  const found = new Map() // event name -> ignored here, filled by caller
+  let m
+  while ((m = re.exec(content))) found.set(m[1], true)
+  return [...found.keys()]
+}
+
+const trackEvents = new Map()    // event name -> Set of files, via track('...')
+const dedicatedEvents = new Map() // event name -> Set of files, via @client-event marker
 for (const file of srcFiles) {
   const content = readFileSync(file, 'utf8')
-  let m
-  while ((m = TRACK_RE.exec(content))) {
-    const name = m[1]
-    if (!clientEvents.has(name)) clientEvents.set(name, new Set())
-    clientEvents.get(name).add(path.relative(ROOT, file))
+  const rel = path.relative(ROOT, file)
+  for (const name of collect(content, TRACK_RE)) {
+    if (!trackEvents.has(name)) trackEvents.set(name, new Set())
+    trackEvents.get(name).add(rel)
+  }
+  for (const name of collect(content, DEDICATED_RE)) {
+    if (!dedicatedEvents.has(name)) dedicatedEvents.set(name, new Set())
+    dedicatedEvents.get(name).add(rel)
   }
 }
 
-const missingInWorker = [...clientEvents.keys()].filter(name => !ALLOWED_EVENTS.has(name))
-const unusedByClient = [...ALLOWED_EVENTS].filter(name => !clientEvents.has(name))
+const allEmittedNames = new Set([...trackEvents.keys(), ...dedicatedEvents.keys()])
+const missingInWorker = [...allEmittedNames].filter(name => !ALLOWED_EVENTS.has(name))
+const neverEmitted = [...ALLOWED_EVENTS].filter(name => !allEmittedNames.has(name))
 
 if (missingInWorker.length) {
   for (const name of missingInWorker) {
-    const files = [...clientEvents.get(name)].join(', ')
-    fail(`événement '${name}' émis côté client (${files}) mais absent de ALLOWED_EVENTS dans worker/src/events.js — sera rejeté silencieusement par le Worker déployé`)
+    const files = new Set([...(trackEvents.get(name) || []), ...(dedicatedEvents.get(name) || [])])
+    const via = dedicatedEvents.has(name) ? 'voie dédiée' : 'track()'
+    fail(`événement '${name}' émis côté client via ${via} (${[...files].join(', ')}) mais absent de ALLOWED_EVENTS dans worker/src/events.js — sera rejeté silencieusement par le Worker déployé`)
   }
 } else {
-  ok(`tous les événements émis côté client (${clientEvents.size}) sont dans la liste blanche du Worker`)
+  ok(`tous les événements émis côté client (${trackEvents.size} via track(), ${dedicatedEvents.size} via voie dédiée) sont dans la liste blanche du Worker`)
 }
 
-if (unusedByClient.length) {
-  console.log(`ℹ événements de la liste blanche jamais émis côté client (peut être volontaire, ex. reco_generative_used) : ${unusedByClient.join(', ')}`)
+if (dedicatedEvents.size) {
+  const list = [...dedicatedEvents.entries()].map(([name, files]) => `${name} (${[...files].join(', ')})`).join(', ')
+  console.log(`ℹ événements émis via une voie d'envoi dédiée, hors track() : ${list}`)
+}
+
+if (neverEmitted.length) {
+  console.log(`ℹ événements de la liste blanche jamais émis, ni par track() ni par une voie dédiée (peut être volontaire, ex. reco_generative_used) : ${neverEmitted.join(', ')}`)
 }
 
 // --- 2. Cohérence CHUNK_MAX (client) / AUDIT_MAX_CHARS (Worker) ---
