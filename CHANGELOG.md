@@ -68,13 +68,12 @@ recommandation ou aux fichiers de `src/data/`.
   l'échantillon mesuré en préparation de cette itération (voir le rapport de mission pour le détail
   chiffré) ; aucune correction nécessaire au-delà des trois lacunes clavier ci-dessus.
 
-Vérifié en local (`npm run dev`, Playwright) : questionnaire répondable une fois par parcours,
-envoi effectif en mode console sans consentement accordé et avec le bon `parcours`, navigation et
-accueil réordonnés, sections d'audit repliables, matrice et `ToolCard` clavier-opérables, piège de
-focus et restauration testés sur les deux modales, hiérarchie de titres sans saut, `npm run
-prebuild` et `npm run build` au vert. Vérification sur l'environnement déployé (mêmes contrôles en
-conditions réelles, plus l'onglet réseau et la purge des données de test) en attente de la
-republication, soumise à accord explicite séparé — voir `docs/recette/README.md`.
+Vérifié en local (`npm run dev`, Playwright) puis, après republication avec accord explicite
+séparé (commit `1acaa62`), sur le site publié : questionnaire répondable une fois par parcours,
+envoi effectif sans consentement accordé (0 requête Worker avant l'envoi, exactement 1 après),
+`survey_submitted` confirmé en D1 avec le bon `parcours` et l'`app_version` du commit republié,
+`npm run preflight` au vert, données de vérification purgées (D1 à zéro ligne dans `events` et
+`audit_calls`). Détail complet dans `docs/recette/README.md`.
 
 ## v0.2.1 — 2026-09-15
 

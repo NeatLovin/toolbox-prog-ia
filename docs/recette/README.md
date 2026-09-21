@@ -28,23 +28,22 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | `v0.2.1` |
-| **Commit republié** | `a59b482` |
+| **Tag** | aucun nouveau tag posé pour l'itération 3 (non demandé) ; `v0.2.1` reste le tag le plus proche, ancêtre direct du commit republié ci-dessous |
+| **Commit republié** | `1acaa62` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-D01DZfx1.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `a59b482` — vérifié dans une vraie requête `POST /events` capturée en direct puis dans les lignes correspondantes de D1, pas déduit du code |
-| **Date de mise en service pour le test d'usage** | 2026-09-15 |
-| **Date de republication (alignement `app_version`)** | 2026-09-15 |
-| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 (valeur de lancement ; date de révision prévue `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21`, au-delà de laquelle une valeur de croisière de 40-50 est envisagée — voir `worker/README.md`) |
+| **Fichier JavaScript principal servi** | `assets/index-DIfKLun8.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `1acaa62` — vérifié dans une vraie requête `POST /events` capturée en direct (soumission du questionnaire, consentement refusé) puis dans la ligne correspondante de D1, pas déduit du code |
+| **Date de mise en service pour le test d'usage** | 2026-09-15 (itération 2) |
+| **Date de republication (itération 3)** | 2026-09-21 |
+| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120 — **date de révision `AUDIT_DAILY_CAP_REVIEW_DATE=2026-09-21` atteinte** (signalé par `npm run preflight` au moment de cette republication) ; **non modifié dans cette itération**, ce paramètre étant un plafond d'infrastructure explicitement hors périmètre de la mission « questionnaire, clarté, accessibilité ». Décision à prendre séparément par le porteur du projet, voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
-Le tag `v0.2.1` pointe sur le commit `c23bd16`, un ancêtre direct de `a59b482` sans aucune
-différence de `src/` entre les deux (seule de la documentation s'est ajoutée) : les deux désignent
-la même version fonctionnelle du site. Le commit effectivement republié (`a59b482`) est celui
-retenu ci-dessus, précisément parce que c'est lui que `app_version` désigne dans les données
-réellement collectées — c'est ce couple (tag `v0.2.1`, commit publié `a59b482`) qui identifie sans
-ambiguïté la version évaluée par les enseignants.
+Le commit `1acaa62` contient l'ensemble des changements de l'itération 3 (questionnaire découplé du
+consentement et répondable par parcours, navigation et densité simplifiées, renommages d'affichage,
+correctifs d'accessibilité clavier) au-dessus de `1baf180` (dernier commit de l'itération 2 /
+durcissement), lui-même descendant du tag `v0.2.1`. C'est ce commit qu'`app_version` désigne dans
+les données réellement collectées lors de la vérification ci-dessous.
 
 ## Itération 3 — questionnaire, clarté, accessibilité (2026-09-21)
 
@@ -113,17 +112,18 @@ questionnaire), sont conformes. `prefers-reduced-motion` et le zoom 200 % resten
 changement (déjà vérifiés en préparation du plan, aucune des modifications de cette itération n'a
 touché aux animations ni à la mise en page responsive).
 
-### Encore à vérifier sur l'environnement déployé (après republication, accord explicite requis)
+### Vérifié sur l'environnement déployé (après republication, accord explicite obtenu — 2026-09-21)
 
-| Point du brief | Statut |
-|---|---|
-| Les deux parcours affichent chacun leur questionnaire sur le site publié, répondable deux fois | 🚫 en attente de republication |
-| Envoi du questionnaire sans consentement confirmé dans l'onglet réseau (aucune autre requête ne part) | 🚫 en attente de republication |
-| `survey_submitted` arrive réellement en D1 avec le bon `parcours` | 🚫 en attente de republication |
-| `npm run preflight` sur le site republié | 🚫 en attente de republication |
-| Les trois parcours restent fonctionnels avec et sans consentement, en conditions réelles | 🚫 en attente de republication |
-| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | 🚫 en attente de republication |
-| Mise à jour du tableau « Version évaluée » (nouveau commit, nouveau hash de bundle, nouvel `app_version`) | 🚫 en attente de republication |
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Republication effective, bundle et `app_version` alignés sur le commit republié | ✅ | `curl` sur `https://neatlovin.github.io/toolbox-prog-ia/` confirme `assets/index-DIfKLun8.js` ; requête réelle `POST /events` capturée avec `app_version: "1acaa62"` |
+| Les deux parcours affichent leur questionnaire sur le site publié | ✅ | Parcours arbre (site réel, consentement refusé) et parcours audit (site réel, consentement accepté, fixture démo) : questionnaire affiché dans les deux, intitulés distincts |
+| Envoi du questionnaire sans consentement, aucune autre requête vers le Worker | ✅ | Sur le site réel : « Refuser » cliqué, 0 requête Worker avant l'envoi, exactement 1 requête (`POST /events`) après clic sur « Envoyer », toujours 1 après 11 s supplémentaires (aucun flush périodique caché derrière) |
+| `survey_submitted` arrive réellement en D1 avec le bon `parcours` | ✅ | Ligne réelle lue en D1 distant : `{"parcours":"arbre","needs_score":6,"ease_score":6,"comment":null}`, `app_version:"1acaa62"`, associée à la session ayant refusé le consentement |
+| `npm run preflight` sur le site republié | ✅ | « Préflight : OK » — site répondant, `/events` et `/audit` fonctionnels, coupure d'urgence inactive, plafonds déployés conformes au dépôt. Signale par ailleurs que la date de révision du plafond de lancement (2026-09-21) est atteinte — **non traité ici**, hors périmètre de cette mission (plafond d'infrastructure), reporté au porteur du projet |
+| Les trois parcours restent fonctionnels avec et sans consentement, en conditions réelles | ✅ | Arbre (refus) et audit (acceptation) testés de bout en bout sur le site réel jusqu'à la soumission du questionnaire ; catalogue non re-testé spécifiquement cette itération (aucun changement de comportement réseau sur ce parcours) |
+| Purge des données de vérification, confirmation de zéro ligne dans `events`/`audit_calls` | ✅ | `DELETE FROM events` (21 lignes, y compris les données de test antérieures à cette itération) et `DELETE FROM audit_calls` (1 ligne) sur D1 distant ; `SELECT COUNT(*)` confirme 0/0 après |
+| Mise à jour du tableau « Version évaluée » | ✅ | Voir tableau ci-dessus |
 
 ## §2 — Chaîne de configuration
 
