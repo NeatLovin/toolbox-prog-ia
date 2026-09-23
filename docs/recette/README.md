@@ -28,21 +28,48 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | aucun nouveau tag posé depuis l'itération 3 (non demandé) ; `v0.2.1` reste le tag le plus proche |
-| **Commit republié** | `9d90f4d` |
+| **Tag** | `v0.4.1` |
+| **Commit republié** | `0c242a0` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-BPzPGY0v.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `9d90f4d` — vérifié dans plusieurs vraies requêtes `POST /events` capturées en direct (`survey_shown`, `survey_submitted`, consentement refusé) puis dans les lignes correspondantes de D1, pas déduit du code |
-| **Date de mise en service pour le test d'usage** | 2026-09-15 (itération 2) |
-| **Date de republication (itération 4)** | 2026-09-21 |
-| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision repoussée au 2026-10-06** (14 jours après l'envoi réel du lien, 2026-09-22) dans une mission dédiée entre les itérations 3 et 4 — la valeur précédente (2026-09-21) avait sonné avant même le début de la semaine de lancement. Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
+| **Fichier JavaScript principal servi** | `assets/index-z0bjqoZx.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `0c242a0` — vérifié dans plusieurs vraies requêtes `POST /events` capturées en direct sur les trois scénarios de consentement, puis dans les lignes correspondantes de D1, pas déduit du code |
+| **Date d'envoi aux participants** | à compléter |
+| **Date de republication (correctif de consentement)** | 2026-09-23 |
+| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-07** (14 jours après l'envoi réel du lien, confirmé au 2026-09-23 — la valeur précédente, 2026-10-06, supposait un envoi le 2026-09-22 qui n'a pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
-Le commit `9d90f4d` contient l'ensemble des changements de l'itération 4 (outils recommandés
-cliquables au niveau 1, proposition pédagogique cliquable, questionnaire à 6 items) au-dessus de
-`1acaa62` (itération 3), lui-même descendant du tag `v0.2.1`. C'est ce commit qu'`app_version`
-désigne dans les données réellement collectées lors de la vérification ci-dessous.
+Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée seule. Le tag `v0.4.1`
+pointe sur `0c242a0`, qui ajoute au-dessus la correction d'une fuite de consentement trouvée en
+recette : `survey_shown` et `survey_dismissed` partaient sans consentement, contrairement à la page
+de transparence, au bandeau et au document envoyé aux enseignants (voir `CHANGELOG.md`). C'est
+`0c242a0` qu'`app_version` désigne dans les données réellement collectées lors de la vérification
+ci-dessous — la seule version qui sera effectivement envoyée aux 22 enseignants.
+
+## Correctif — fuite de consentement (2026-09-23)
+
+Recheck complet du dépôt avant l'envoi aux 22 enseignants, après l'itération 4. Un point bloquant
+trouvé : `trackSurveyShown()` et `trackSurveyDismissed()` (`src/lib/telemetry.js`) passaient par la
+voie dédiée hors consentement prévue pour `survey_submitted`, alors qu'un affichage automatique et
+un refus de répondre ne sont pas des actes de consentement explicite — contrairement à `survey_submitted`,
+dont la justification (cliquer « Envoyer » vaut consentement pour cette réponse) ne s'étend pas à
+ces deux cas. L'erreur venait de la spécification de l'itération 4, pas de son implémentation. Voir
+`CHANGELOG.md` pour le détail complet des changements (télémétrie, `worker/analysis.sql`, page de
+transparence).
+
+### Vérifié sur l'environnement déployé (après republication, accord explicite obtenu — 2026-09-23)
+
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Consentement refusé, fermeture sans répondre (« Passer ») | ✅ | 0 requête vers le Worker, contenu de chaque requête inspecté (pas seulement leur nombre) |
+| Consentement refusé, réponse envoyée | ✅ | Exactement 1 requête, `survey_submitted`, rien avant ni après |
+| Aucun choix fait (bandeau ignoré) | ✅ | Même comportement que le refus dans les deux cas ci-dessus (testé sur `/audit`) |
+| Consentement accepté | ✅ | `survey_shown` puis `survey_dismissed` (ou `survey_submitted`) arrivent en base avec le bon `parcours`, capturés via une vraie session complète |
+| `npm run prebuild` | ✅ | `survey_submitted` seul sous « voie dédiée » ; `survey_shown`/`survey_dismissed` comptés avec les 36 appels `track()` ordinaires |
+| `npm run preflight` | ✅ | Au vert, date de révision 2026-10-07 confirmée servie |
+| Requête 10 de `analysis.sql` (taux de complétion) | ✅ | Rejouée sur les données de vérification : une soumission sans consentement (session distincte de celle ayant vu le questionnaire) n'est pas comptée dans le taux, confirmé par un `LEFT JOIN` qui ne matche pas les deux sessions différentes |
+| Requête 10b (soumissions brutes) | ✅ | Confirme séparément les 2 soumissions hors consentement (1 arbre, 1 audit) que la requête 10 exclut à raison de son taux |
+| Purge des données de vérification | ✅ | `events` et `audit_calls` à 0 ligne confirmé après |
 
 ## Itération 4 — outils cliquables, questionnaire à 6 items (2026-09-21)
 

@@ -2,6 +2,46 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Correctif — 2026-09-23
+
+**Correction d'un défaut de consentement**, trouvé lors d'une recette complète du dépôt avant
+l'envoi aux 22 enseignants. Deux événements de télémétrie, `survey_shown` et `survey_dismissed`,
+partaient sans consentement — l'un automatiquement à l'affichage du questionnaire, l'autre au refus
+explicite d'y répondre — alors que ni l'un ni l'autre n'est un acte de consentement, contrairement
+à `survey_submitted` (cliquer « Envoyer » vaut consentement pour cette réponse précise, et pour
+elle seule). Cela contredisait la page de transparence (« tant que vous n'avez rien choisi, rien
+n'est envoyé »), le bandeau de consentement et le document envoyé aux enseignants. L'erreur venait
+de la spécification de l'itération 4, pas de son implémentation.
+
+- **`src/lib/telemetry.js`** : `trackSurveyShown()` et `trackSurveyDismissed()` passent désormais
+  par `track()`, sous la garde normale du consentement, et perdent leur marqueur `@client-event`
+  (ce sont des appels `track()` ordinaires, détectés comme tels). `submitSurveyResponse()` garde sa
+  voie dédiée hors consentement, la seule qui reste justifiée. Le commentaire de
+  `sendDedicatedEvent()` énonce désormais explicitement la règle : cette voie n'est légitime que
+  pour un envoi déclenché par un acte explicite de la personne, jamais pour un événement automatique
+  ni pour un refus de répondre.
+- **`worker/analysis.sql`** : la requête de taux de complétion du questionnaire (n° 10) ne comptait
+  jusqu'ici que des totaux globaux ; une soumission sans consentement (possible via la voie dédiée)
+  aurait gonflé le numérateur sans dénominateur correspondant. Rapproche désormais `survey_shown` et
+  `survey_submitted` par paire session/parcours ; nouvelle requête 10b pour le nombre brut de
+  soumissions toutes sessions confondues, séparée du taux.
+- **`src/views/TransparenceView.vue`** : la section « Votre choix » nomme désormais l'exception
+  (le questionnaire, envoyé uniquement au clic sur « Envoyer », même sans consentement) au lieu de
+  laisser une affirmation générale devenue fausse ; la description du questionnaire reflète ses 6
+  items actuels (5 échelles + 1 question ouverte) au lieu des 2 d'origine.
+- **`AUDIT_DAILY_CAP_REVIEW_DATE`** recalculée à `2026-10-07` (14 jours après la date d'envoi
+  effective, confirmée au 2026-09-23) ; `AUDIT_DAILY_GLOBAL_CAP` inchangé (120). Worker redéployé,
+  valeur confirmée servie via `npm run preflight`.
+- **Étiquetage de version** : `v0.4.0` sur `9d90f4d` (fin de l'itération 4, jamais republiée seule),
+  `v0.4.1` sur `0c242a0` (ce correctif) — la version effectivement republiée et évaluée par les 22
+  enseignants.
+
+Vérifié sur l'environnement déployé (commit `0c242a0`) : les trois scénarios de consentement
+(refusé, aucun choix, accepté) produisent exactement le trafic attendu, contenu de chaque requête
+inspecté ; `npm run prebuild`/`preflight` au vert ; requêtes 10/10b de `analysis.sql` rejouées sur
+les données de vérification, cohérentes ; D1 purgé à zéro ligne. Détail dans
+`docs/recette/README.md`.
+
 ## Itération 4 — 2026-09-21
 
 Deux retours du directeur de Travail de Bachelor après essai du prototype déployé, derniers avant
