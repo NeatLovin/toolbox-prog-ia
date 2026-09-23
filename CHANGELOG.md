@@ -2,7 +2,25 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
-## Correctif — 2026-09-23
+## Correctif — 2026-09-23 (v0.4.2)
+
+**Information honnête sur la transmission des plans de cours.** L'audit envoie le texte extrait du
+PDF à l'API d'Anthropic pour la classification, par conception, mais rien ne le disait à
+l'enseignant, et la page de transparence rangeait le contenu des documents parmi ce qui n'est
+jamais collecté, ce qui laissait croire qu'il ne quittait pas le site.
+
+- **Écran d'audit** : avertissement visible avant tout dépôt (et sur petit écran) : le texte est
+  transmis à un modèle de langage externe (Anthropic) le temps de l'analyse, ce site ne le conserve
+  pas, mieux vaut éviter un document confidentiel ; le cours d'exemple n'envoie rien. Aucune case à
+  cocher, aucun blocage.
+- **Page de transparence** : nouvelle section « Analyse d'un plan de cours » (ce qui est transmis, à
+  qui, pourquoi, ce qui n'est pas fait, liens vérifiés vers les conditions d'Anthropic, sans
+  recopier de durée de conservation côté fournisseur) ; la ligne « jamais collecté » et la
+  catégorie de télémétrie de l'audit reformulées pour rester vraies sans induire en erreur.
+- **Worker** : journalisation vérifiée, aucun contenu journalisé ; inchangé.
+- Tag `v0.4.2` sur `a43b790`, version republiée et désormais évaluée par les enseignants.
+
+## Correctif — 2026-09-23 (v0.4.1)
 
 **Correction d'un défaut de consentement**, trouvé lors d'une recette complète du dépôt avant
 l'envoi aux 22 enseignants. Deux événements de télémétrie, `survey_shown` et `survey_dismissed`,

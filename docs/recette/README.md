@@ -28,23 +28,53 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | `v0.4.1` |
-| **Commit republié** | `0c242a0` |
+| **Tag** | `v0.4.2` |
+| **Commit republié** | `a43b790` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-z0bjqoZx.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `0c242a0` — vérifié dans plusieurs vraies requêtes `POST /events` capturées en direct sur les trois scénarios de consentement, puis dans les lignes correspondantes de D1, pas déduit du code |
+| **Fichier JavaScript principal servi** | `assets/index-Bt6sBefD.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `a43b790` — vérifié directement dans le JavaScript servi (`__APP_VERSION__` est figé au build : la chaîne `a43b790` apparaît dans `index-Bt6sBefD.js` récupéré en direct), pas déduit du code |
 | **Date d'envoi aux participants** | à compléter |
-| **Date de republication (correctif de consentement)** | 2026-09-23 |
+| **Date de republication (information sur la transmission des plans de cours)** | 2026-09-23 |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-07** (14 jours après l'envoi réel du lien, confirmé au 2026-09-23 — la valeur précédente, 2026-10-06, supposait un envoi le 2026-09-22 qui n'a pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
-Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée seule. Le tag `v0.4.1`
-pointe sur `0c242a0`, qui ajoute au-dessus la correction d'une fuite de consentement trouvée en
-recette : `survey_shown` et `survey_dismissed` partaient sans consentement, contrairement à la page
-de transparence, au bandeau et au document envoyé aux enseignants (voir `CHANGELOG.md`). C'est
-`0c242a0` qu'`app_version` désigne dans les données réellement collectées lors de la vérification
-ci-dessous — la seule version qui sera effectivement envoyée aux 22 enseignants.
+Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée seule. `v0.4.1`
+(`0c242a0`) y ajoute la correction d'une fuite de consentement (voir plus bas), et `v0.4.2`
+(`a43b790`) l'information des enseignants sur la transmission de leur plan de cours à Anthropic
+lors d'un audit. C'est `v0.4.2`/`a43b790` qui est servi, et la seule version qui sera effectivement
+envoyée aux 22 enseignants.
+
+## Correctif — transmission des plans de cours (2026-09-23)
+
+L'audit transmet le texte extrait du PDF à l'API d'Anthropic pour la classification, par
+conception, mais rien ne le disait : aucun avertissement avant le dépôt, et la page de transparence
+rangeait « le contenu de vos documents » parmi ce qui n'est jamais collecté (vrai pour la base de
+télémétrie, trompeur sur le fait que le document quitte le site). Voir `CHANGELOG.md`.
+
+Journalisation du Worker vérifiée par lecture du code avant toute modification : le seul
+`console.*` de `worker/src/` (`audit.js`) n'affiche que le plafond et sa date de révision ;
+`logUnavailable` n'écrit qu'un code (`reason`) ; le garde-fou de pertinence fait partie du même
+appel unique au modèle ; `wrangler.toml` n'active pas `[observability]`. **Aucune journalisation de
+contenu trouvée, aucune correction côté Worker.**
+
+### Vérifié sur l'environnement déployé (republication avec accord explicite — 2026-09-23)
+
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Avertissement visible avant tout dépôt | ✅ | Site publié, 1366 px : au-dessus du contexte et de la zone de dépôt ; disparaît une fois un document ou l'exemple chargé |
+| Lisible à 380 px | ✅ | Affiché aussi au-dessus du message « écran large requis », aucun débordement horizontal |
+| Contraste de l'avertissement | ✅ | Mesuré (luminance relative WCAG) : 4,80:1 au plus bas (titre et lien, thème clair), 9,31:1 en sombre, texte 16,06:1 / 14,00:1 |
+| Page de transparence : nouvelle section et liens | ✅ | Section « Analyse d'un plan de cours » présente ; `anthropic.com/legal/commercial-terms` et la page de conservation `privacy.claude.com` répondent 200 depuis la page publiée ; aucune durée fournisseur recopiée |
+| Audit réel de bout en bout | ✅ | PDF de programmation généré pour l'occasion (5 sections, 1 131 caractères, phrases-marqueurs uniques) : 1 requête `/audit` contenant uniquement `session_id` et `text`, 5 sections classées, résultat affiché |
+| Journaux du Worker pendant l'audit (`wrangler tail --format pretty`) | ✅ | Sortie complète : 4 lignes (`OPTIONS`/`POST` sur `/audit` et `/events`, statut, horodatage). Aucune occurrence des marqueurs, d'un titre de section, de `course_summary`, `is_programming` ni de la clé d'API |
+| Aucune trace de contenu en base | ✅ | Recherche des marqueurs, phrases et nom de fichier dans `events.payload` : 0 ; `audit_calls` n'a que `id`, `session_id`, `ts_server`, `day` |
+| `npm run prebuild` / `npm run preflight` | ✅ | Au vert |
+| Purge | ✅ | `events` et `audit_calls` à 0 ligne |
+
+Signalé, non modifié : `src/stores/audit.js` écrit les titres de sections détectés dans la console
+du navigateur de l'enseignant (`console.debug`). Cela reste sur son poste, sans lien avec les
+journaux du Worker.
 
 ## Correctif — fuite de consentement (2026-09-23)
 
