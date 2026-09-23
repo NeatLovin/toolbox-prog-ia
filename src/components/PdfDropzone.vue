@@ -9,8 +9,8 @@
       @click="fileInput.click()"
     >
       <div class="dropzone-icon">&#128196;</div>
-      <p class="dropzone-main">Deposez un PDF de cours ici</p>
-      <p class="dropzone-sub">ou cliquez pour selectionner un fichier</p>
+      <p class="dropzone-main">Déposez un PDF de cours ici</p>
+      <p class="dropzone-sub">ou cliquez pour sélectionner un fichier</p>
       <input ref="fileInput" type="file" accept=".pdf" class="file-hidden" @change="onFileChange" />
     </div>
 
@@ -23,8 +23,8 @@
     </button>
 
     <p class="demo-note">
-      Le mode demo rejoue un pipeline precalcule sur un cours d'introduction a la programmation S1.
-      Aucun appel API ni PDF requis.
+      Le cours d'exemple rejoue une analyse déjà calculée sur un cours d'introduction à la
+      programmation (S1). Rien n'est transmis.
     </p>
   </div>
 </template>

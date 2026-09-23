@@ -8,6 +8,26 @@
       </p>
     </div>
 
+    <!-- Avant tout dépôt, et aussi sur petit écran : le lien d'envoi invite à déposer un plan de
+         cours, l'information doit donc être lue quelle que soit la largeur. -->
+    <aside
+      v-if="!isWideEnough || audit.phase === 'idle'"
+      class="transmission-notice ui-card"
+      aria-labelledby="transmission-notice-title"
+    >
+      <p id="transmission-notice-title" class="tn-title">Avant de déposer un document</p>
+      <p class="tn-text">
+        Pour l'analyse, le texte extrait de votre PDF est transmis à un modèle de langage externe
+        (Anthropic), le temps du traitement. Ce site ne conserve ni le texte ni le fichier. Évitez
+        donc d'y déposer un document confidentiel.
+      </p>
+      <p class="tn-text">
+        Le cours d'exemple, lui, n'envoie rien : il rejoue une analyse déjà calculée, sans aucun
+        appel au modèle. C'est un bon moyen de découvrir la fonction.
+      </p>
+      <router-link to="/transparence" class="tn-link">En savoir plus sur la transmission</router-link>
+    </aside>
+
     <!-- Réservé au grand écran : jamais de dégradation silencieuse, un message explicite -->
     <div v-if="!isWideEnough" class="audit-narrow ui-card">
       <p>
@@ -193,6 +213,31 @@ function friendlyErrorMessage(reason) {
 }
 
 .header-desc { max-width: 680px; }
+
+.transmission-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-info-border);
+  max-width: 720px;
+}
+.tn-title {
+  font-weight: 700;
+  color: var(--color-info-text);
+}
+.tn-text {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+.tn-link {
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-info-text);
+  text-decoration: underline;
+}
 
 .audit-narrow {
   max-width: 480px;

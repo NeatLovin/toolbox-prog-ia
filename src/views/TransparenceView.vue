@@ -64,8 +64,10 @@
           <p>
             Des statistiques sur le document déposé : nombre de pages, nombre de caractères, si
             l'extraction a réussi. Les corrections que vous apportez aux notions détectées par
-            l'IA (quelle notion remplacée par quelle autre), sans jamais transmettre le contenu
-            du document lui-même. Sert à mesurer la fiabilité de la classification automatique.
+            l'IA (quelle notion remplacée par quelle autre), sans jamais inclure le contenu du
+            document lui-même dans cette mesure (sa transmission pour l'analyse est décrite dans
+            « Analyse d'un plan de cours » ci-dessous). Sert à mesurer la fiabilité de la
+            classification automatique.
           </p>
         </div>
         <div class="tr-cat">
@@ -93,18 +95,61 @@
       <ul class="tr-never-list">
         <li>Votre identité, votre nom ou votre institution</li>
         <li>Votre adresse IP ou toute autre donnée réseau permettant de vous localiser</li>
-        <li>Le contenu de vos documents ou plans de cours</li>
+        <li>
+          Le contenu de vos documents ou plans de cours n'est jamais conservé par ce site (il est
+          transmis pour analyse, voir « Analyse d'un plan de cours » ci-dessous)
+        </li>
         <li>Le nom des fichiers que vous déposez</li>
         <li>Les détails techniques bruts de votre navigateur ou appareil</li>
         <li>Un identifiant qui vous suivrait d'une visite à l'autre</li>
       </ul>
     </section>
 
+    <section id="analyse-plan-de-cours" class="tr-section ui-card">
+      <h2>Analyse d'un plan de cours</h2>
+      <p>
+        Cette fonction est distincte de la mesure d'audience et ne dépend pas de votre choix sur
+        celle-ci.
+      </p>
+      <ul class="tr-audit-list">
+        <li>
+          <strong>Ce qui est transmis :</strong> le texte extrait de votre PDF, jamais le fichier
+          lui-même ni son nom.
+        </li>
+        <li>
+          <strong>À qui :</strong> un modèle de langage d'Anthropic, via le serveur du prototype,
+          qui garde la clé d'accès (elle n'est jamais dans votre navigateur).
+        </li>
+        <li>
+          <strong>Pourquoi :</strong> identifier les concepts de programmation abordés dans chaque
+          section, et vérifier que le document porte bien sur l'informatique.
+        </li>
+        <li>
+          <strong>Ce qui n'est pas fait :</strong> le prototype ne conserve pas ce texte, ni dans sa
+          base de données ni dans ses journaux, et ne le relie pas à la mesure d'audience. Le
+          résultat de l'analyse (titres de sections et résumé) reste seulement dans votre propre
+          navigateur, jusqu'à ce que vous cliquiez sur « Nouvelle analyse ».
+        </li>
+        <li>
+          <strong>Côté Anthropic :</strong> le traitement relève de ses conditions pour l'API. Voir
+          ses
+          <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener noreferrer">conditions commerciales</a>
+          et sa page sur la
+          <a href="https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data" target="_blank" rel="noopener noreferrer">durée de conservation des données de l'API</a>
+          (en anglais).
+        </li>
+      </ul>
+      <p>
+        Pour découvrir la fonction sans rien transmettre, utilisez le cours d'exemple : il rejoue
+        une analyse déjà calculée, sans aucun appel au modèle.
+      </p>
+    </section>
+
     <section class="tr-section ui-card">
       <h2>Durée de conservation</h2>
       <p>
-        Les données sont conservées 12 mois, puis supprimées automatiquement. Aucune action de
-        votre part n'est nécessaire.
+        Les données de mesure d'audience sont conservées 12 mois, puis supprimées
+        automatiquement. Aucune action de votre part n'est nécessaire.
       </p>
     </section>
 
@@ -191,6 +236,19 @@ function withdraw() {
   color: var(--color-text-muted);
   line-height: 1.6;
 }
+
+.tr-audit-list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.tr-audit-list strong { color: var(--color-text); }
+.tr-audit-list a { color: var(--color-info-text); text-decoration: underline; }
 
 .tr-email {
   font-family: var(--font-mono);
