@@ -150,28 +150,52 @@ FROM events
 GROUP BY campaign
 ORDER BY sessions DESC;
 
--- 10. Taux de complétion du questionnaire (survey_submitted / survey_shown), global et par parcours.
--- Dénominateur : survey_shown (affichage réel), pas les sessions ayant atteint le résultat — un
--- questionnaire vu peut être passé (survey_dismissed) sans y répondre, dans la même session grâce
--- au marqueur sessionStorage par parcours (voir src/components/UsabilitySurvey.vue). Sert à mesurer
--- le coût en taux de réponse du passage de 2 à 6 items (itération 4).
+-- 10. Taux de complétion du questionnaire, mesurable seulement sur les sessions consentantes.
+-- survey_shown passe par track() (voir src/lib/telemetry.js, correction du consentement) : il
+-- n'existe donc que pour les sessions ayant accepté la mesure d'usage. survey_submitted reste hors
+-- consentement (voie dédiée : cliquer "Envoyer" vaut consentement pour cette seule réponse), donc
+-- une session qui a refusé peut soumettre sans jamais avoir de survey_shown correspondant. Compter
+-- ces soumissions au numérateur sans les compter au dénominateur gonflerait artificiellement le
+-- taux affiché. Rapproche donc les deux par paire (session_id, parcours) plutôt que par comptage
+-- global : le numérateur ne retient qu'une soumission dont la paire (session_id, parcours) a aussi
+-- un survey_shown. Voir la requête 10b pour le nombre brut de soumissions non retenues ici.
+WITH shown AS (
+  SELECT DISTINCT session_id, json_extract(payload, '$.parcours') AS parcours
+  FROM events WHERE event = 'survey_shown'
+),
+submitted AS (
+  SELECT DISTINCT session_id, json_extract(payload, '$.parcours') AS parcours
+  FROM events WHERE event = 'survey_submitted'
+)
 SELECT
-  json_extract(payload, '$.parcours') AS parcours,
-  SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END) AS affiches,
-  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) AS soumis,
-  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) * 1.0 /
-    NULLIF(SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END), 0) AS taux_completion
-FROM events
-WHERE event IN ('survey_shown', 'survey_submitted')
-GROUP BY parcours
+  shown.parcours AS parcours,
+  COUNT(*) AS affiches,
+  SUM(CASE WHEN submitted.session_id IS NOT NULL THEN 1 ELSE 0 END) AS soumis_parmi_consentants,
+  SUM(CASE WHEN submitted.session_id IS NOT NULL THEN 1 ELSE 0 END) * 1.0 / COUNT(*) AS taux_completion
+FROM shown
+LEFT JOIN submitted
+  ON submitted.session_id = shown.session_id AND submitted.parcours = shown.parcours
+GROUP BY shown.parcours
 
 UNION ALL
 
 SELECT
   'global' AS parcours,
-  SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END) AS affiches,
-  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) AS soumis,
-  SUM(CASE WHEN event = 'survey_submitted' THEN 1 ELSE 0 END) * 1.0 /
-    NULLIF(SUM(CASE WHEN event = 'survey_shown' THEN 1 ELSE 0 END), 0) AS taux_completion
+  COUNT(*) AS affiches,
+  SUM(CASE WHEN submitted.session_id IS NOT NULL THEN 1 ELSE 0 END) AS soumis_parmi_consentants,
+  SUM(CASE WHEN submitted.session_id IS NOT NULL THEN 1 ELSE 0 END) * 1.0 / COUNT(*) AS taux_completion
+FROM shown
+LEFT JOIN submitted
+  ON submitted.session_id = shown.session_id AND submitted.parcours = shown.parcours;
+
+-- 10b. Nombre brut de soumissions du questionnaire, toutes sessions confondues (consentantes ou
+-- non) — inclut les réponses envoyées après un refus ou sans choix fait, invisibles dans la requête
+-- 10 ci-dessus faute de survey_shown correspondant. À lire à côté de 10, jamais à sa place : ce
+-- nombre ne peut pas se diviser par un "affiché" pour donner un taux, puisqu'on ne sait justement
+-- pas combien de sessions non consentantes ont vu le questionnaire.
+SELECT
+  json_extract(payload, '$.parcours') AS parcours,
+  COUNT(*) AS soumissions_brutes
 FROM events
-WHERE event IN ('survey_shown', 'survey_submitted');
+WHERE event = 'survey_submitted'
+GROUP BY parcours;

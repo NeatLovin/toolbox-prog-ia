@@ -102,18 +102,21 @@ function flush(useBeacon = false) {
   }
 }
 
-// Voie d'envoi dédiée, volontairement indépendante de hasConsent() : utilisée par le questionnaire
-// de fin de parcours (voir UsabilitySurvey.vue), dont l'affichage et le fonctionnement ne doivent
-// jamais dépendre du consentement général à la télémétrie. Ne touche jamais à queue/flush() de
-// track() : un seul événement, une seule requête immédiate, jamais combiné avec d'autres événements
-// en attente (et de toute façon track() ne met jamais rien en file tant que le consentement général
-// n'est pas accordé, donc il n'y a structurellement rien à faire fuiter).
+// Voie d'envoi dédiée, volontairement indépendante de hasConsent(). N'est légitime que pour un
+// envoi déclenché par un acte explicite de la personne, à ce moment précis (ex. cliquer "Envoyer"
+// sur le questionnaire de fin de parcours) : cet acte vaut consentement pour cet envoi-là, et pour
+// lui seul. Jamais pour un événement automatique (affichage, ouverture) ni pour un refus de
+// répondre — ces deux cas doivent passer par track(), sous la garde normale de hasConsent(). Une
+// première version de survey_shown/survey_dismissed passait par ici à tort (un affichage
+// automatique et un refus de répondre ne sont pas des actes de consentement) ; corrigé, voir
+// trackSurveyShown/trackSurveyDismissed plus bas. Ne touche jamais à queue/flush() de track() : un
+// seul événement, une seule requête immédiate, jamais combiné avec d'autres événements en attente.
 //
 // N'est jamais exportée directement : chaque export public ci-dessous fixe son propre nom
 // d'événement en dur (jamais un paramètre) et porte son propre marqueur "@client-event", pour que
 // worker/scripts/check-event-taxonomy.mjs (qui ne voit pas les noms figés en dur hors des appels
-// track(...)) les détecte individuellement. Toute nouvelle voie d'envoi dédiée doit suivre le même
-// principe : un export fin, un nom en dur, un marqueur.
+// track(...)) les détecte individuellement. Toute nouvelle voie d'envoi dédiée doit remplir la
+// condition ci-dessus (acte explicite, jamais automatique, jamais un refus) ET porter ce marqueur.
 function sendDedicatedEvent(event, payload) {
   const body = JSON.stringify({
     session_id: getSessionId(),
@@ -138,14 +141,17 @@ function sendDedicatedEvent(event, payload) {
   }
 }
 
-// @client-event: survey_shown
+// Ni l'un ni l'autre n'est un acte explicite de consentement (un affichage est automatique, un
+// "Passer" est un refus de répondre) : passent par track(), sous la garde normale du consentement
+// général, comme n'importe quel autre événement. N'existeront donc pas pour une session qui a
+// refusé ou n'a pas encore choisi — voir worker/analysis.sql (requête 10) pour la conséquence sur
+// le calcul du taux de complétion du questionnaire.
 export function trackSurveyShown(parcours) {
-  sendDedicatedEvent('survey_shown', { parcours })
+  track('survey_shown', { parcours })
 }
 
-// @client-event: survey_dismissed
 export function trackSurveyDismissed(parcours) {
-  sendDedicatedEvent('survey_dismissed', { parcours })
+  track('survey_dismissed', { parcours })
 }
 
 // @client-event: survey_submitted

@@ -14,10 +14,12 @@
       <h2>Votre choix</h2>
       <p>
         Un bandeau vous propose d'accepter ou de refuser cette mesure lors de votre première
-        visite. Tant que vous n'avez rien choisi, rien n'est envoyé. Si vous refusez, l'outil
-        reste entièrement utilisable : aucune fonctionnalité n'en dépend. Votre choix est
-        mémorisé pour la durée de votre visite seulement ; il vous sera reproposé la prochaine
-        fois que vous ouvrirez le site.
+        visite. Tant que vous n'avez rien choisi, rien n'est envoyé, à une exception près : le
+        questionnaire de satisfaction en fin de parcours peut être rempli et envoyé même sans ce
+        choix, voir « Questionnaire de satisfaction » ci-dessous. Si vous refusez, l'outil reste
+        entièrement utilisable : aucune fonctionnalité n'en dépend. Votre choix est mémorisé pour
+        la durée de votre visite seulement ; il vous sera reproposé la prochaine fois que vous
+        ouvrirez le site.
       </p>
       <button class="ui-btn ui-btn-secondary" @click="withdraw">
         {{ withdrawn ? 'Consentement retiré' : 'Retirer mon consentement maintenant' }}
@@ -75,8 +77,12 @@
         <div class="tr-cat">
           <h3>Questionnaire de satisfaction</h3>
           <p>
-            Si vous choisissez d'y répondre en fin de parcours : deux scores sur l'utilité et la
-            facilité d'utilisation, et un commentaire libre si vous en laissez un.
+            Si vous choisissez d'y répondre en fin de parcours : cinq échelles (utilité, facilité
+            d'utilisation, adéquation à votre contexte d'enseignement, intention de réutilisation,
+            clarté des justifications) et une question ouverte facultative. Vous pouvez y répondre
+            même si vous avez refusé (ou n'avez pas encore choisi) la mesure d'usage ci-dessus :
+            dans ce cas, seule votre réponse est transmise, uniquement au moment où vous cliquez
+            sur « Envoyer », rien d'autre.
           </p>
         </div>
       </div>
