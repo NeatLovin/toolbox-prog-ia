@@ -28,13 +28,13 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | `v0.4.3` |
-| **Commit republié** | `5b32ea7` |
+| **Tag** | `v0.4.4` |
+| **Commit republié** | `4db8aa0` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-D0k40RcO.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `5b32ea7` — vérifié deux fois en direct : la chaîne apparaît dans `index-D0k40RcO.js` servi, et une vraie réponse au questionnaire envoyée depuis le site publié est arrivée en D1 avec `app_version = 5b32ea7` |
+| **Fichier JavaScript principal servi** | `assets/index-p5E1XUkC.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `4db8aa0` — vérifié deux fois en direct : la chaîne apparaît dans `index-p5E1XUkC.js` servi, et les six sessions de vérification envoyées depuis le site publié sont arrivées en D1 avec `app_version = 4db8aa0` |
 | **Date d'envoi aux participants** | 2026-09-24 |
-| **Date de republication (audit par onglet, stockage bloqué)** | 2026-09-24 |
+| **Date de republication (marqueur de campagne)** | 2026-09-24 |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-08** (14 jours après l'envoi du 2026-09-24 ; les valeurs précédentes supposaient des envois les 22 et 23 septembre, qui n'ont pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
@@ -43,8 +43,39 @@ Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée s
 (`0c242a0`) y ajoute la correction d'une fuite de consentement (voir plus bas), et `v0.4.2`
 (`a43b790`) l'information des enseignants sur la transmission de leur plan de cours à Anthropic
 lors d'un audit. `v0.4.3` (`5b32ea7`) garde le résultat d'audit le temps de l'onglet seulement et
-rend l'application utilisable quand le navigateur bloque le stockage. C'est `v0.4.3`/`5b32ea7` qui
-est servi, et la version envoyée aux 22 enseignants le 2026-09-24.
+rend l'application utilisable quand le navigateur bloque le stockage. `v0.4.4` (`4db8aa0`) garde le
+marqueur de campagne même quand le stockage est bloqué et ajoute l'étiquette `selftest`. C'est
+`v0.4.4`/`4db8aa0` qui est servi, et la version envoyée aux 22 enseignants le 2026-09-24.
+
+## Correctif — marqueur de campagne (2026-09-24)
+
+Le marqueur `?src=` n'était écrit qu'en `sessionStorage` : si le stockage est bloqué, un enseignant
+arrivé par `?src=tb2026` était relu comme `direct` et sortait du corpus. Il est désormais capturé et
+lu par un seul module (`src/lib/campaign.js`, qui remplace trois endroits : `main.js`,
+`telemetry.js` et `ConsentBanner.vue`), gardé en mémoire en plus du stockage, avec une liste
+blanche fermée : `tb2026`, `selftest` (vos passages de test), et `direct` pour tout le reste.
+`worker/analysis.sql` exclut `selftest` de toutes les requêtes sauf la 9, avec `campaign IS NOT
+'selftest'`. Le test en direct sur D1 a confirmé le piège qu'éviterait `<>` : `NULL <> 'selftest'`
+vaut `NULL`, ce qui écarterait les lignes `audit_unavailable` du Worker, alors que
+`NULL IS NOT 'selftest'` vaut 1.
+
+### Vérifié sur l'environnement déployé (republication avec accord explicite — 2026-09-24)
+
+Chaque cas : contexte de navigateur neuf, lien sous sa forme réelle (`?src=` avant le `#`),
+consentement accepté, `session_id` relevé dans la requête puis **relu en D1**.
+
+| Cas | Attendu | `campaign` lu en base | `channel` de `session_start` en base |
+|---|---|---|---|
+| `?src=tb2026`, stockage normal | `tb2026` | `tb2026` ✅ | `tb2026` |
+| `?src=tb2026`, stockage bloqué (`SecurityError` sur les deux stockages) | `tb2026` | `tb2026` ✅ | `tb2026` |
+| `?src=tb2026`, puis arbre jusqu'au résultat (query réécrite en `#/arbre?zone=…`) et catalogue, consentement accepté après navigation, filtre appliqué | `tb2026` | `tb2026` ✅ (y compris `catalogue_filter`, émis après navigation) | `tb2026` |
+| `?src=selftest` | `selftest` | `selftest` ✅ | `selftest` |
+| `?src=nimportequoi` | `direct` | `direct` ✅ | `direct` |
+| sans paramètre | `direct` | `direct` ✅ | `direct` |
+
+Requête 9 rejouée : `tb2026` 3 sessions, `direct` 2, `selftest` 1. Avec l'exclusion, 5 sessions
+sur 6 comptées. `npm run prebuild` et `npm run preflight` au vert. Purge : `events` et
+`audit_calls` à 0 ligne. Aucune erreur de page dans les six cas.
 
 ## Correctif — audit par onglet, stockage bloqué (2026-09-24)
 

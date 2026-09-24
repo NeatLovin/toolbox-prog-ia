@@ -2,6 +2,18 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Correctif — 2026-09-24 (v0.4.4)
+
+- **Marqueur de campagne fiabilisé.** Écrit seulement en `sessionStorage`, il était relu comme
+  `direct` quand le stockage est bloqué : un enseignant arrivé par `?src=tb2026` sortait du corpus.
+  Un seul module (`src/lib/campaign.js`) le capture, le garde aussi en mémoire et le fournit à la
+  télémétrie comme au bandeau de consentement.
+- **Étiquette `selftest`** pour les passages de test du porteur du projet. Liste blanche fermée
+  (`tb2026`, `selftest`) : toute autre valeur de `?src=` est enregistrée `direct`. `analysis.sql`
+  exclut `selftest` de toutes les requêtes qui mélangent les campagnes ; les trois valeurs sont
+  documentées dans `worker/README.md` et `docs/recette/pilote.md`.
+- Tag `v0.4.4` sur `4db8aa0`, version republiée et envoyée aux 22 enseignants. Worker inchangé.
+
 ## Correctif — 2026-09-24 (v0.4.3)
 
 - **Résultat d'audit gardé le temps de l'onglet seulement.** Il était persisté en `localStorage`, donc
