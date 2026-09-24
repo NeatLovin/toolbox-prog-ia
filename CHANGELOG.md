@@ -2,6 +2,23 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Correctif — 2026-09-24 (v0.4.3)
+
+- **Résultat d'audit gardé le temps de l'onglet seulement.** Il était persisté en `localStorage`, donc
+  indéfiniment : sur un poste partagé, la personne suivante voyait l'analyse du plan de cours
+  précédent. Passé en `sessionStorage` (survit à un rechargement, disparaît à la fermeture de
+  l'onglet) ; tout résidu `audit_v1` en `localStorage` est effacé au démarrage. Phrase de la page de
+  transparence mise à jour.
+- **Plus de page blanche quand le navigateur bloque le stockage.** `App.vue` lisait le thème sans
+  protection au montage du composant racine ; le plugin de persistance de Pinia lisait
+  `window.localStorage` hors de tout `try` ; `ConsentBanner.vue` lisait `sessionStorage` sans
+  protection au clic « Accepter ». Tous passent par `src/lib/safeStorage.js`. Sans stockage,
+  `session.js` génère un identifiant aléatoire par page au lieu d'une constante partagée par tous
+  (qui fusionnait les sessions et mettait en commun le plafond d'audit par session).
+- `AUDIT_DAILY_CAP_REVIEW_DATE` fixée au 2026-10-08, 14 jours après l'envoi du 2026-09-24. Worker
+  redéployé.
+- Tag `v0.4.3` sur `5b32ea7`, version republiée et envoyée aux 22 enseignants.
+
 ## Correctif — 2026-09-23 (v0.4.2)
 
 **Information honnête sur la transmission des plans de cours.** L'audit envoie le texte extrait du

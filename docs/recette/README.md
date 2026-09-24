@@ -28,22 +28,59 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | `v0.4.2` |
-| **Commit republié** | `a43b790` |
+| **Tag** | `v0.4.3` |
+| **Commit republié** | `5b32ea7` |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-Bt6sBefD.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `a43b790` — vérifié directement dans le JavaScript servi (`__APP_VERSION__` est figé au build : la chaîne `a43b790` apparaît dans `index-Bt6sBefD.js` récupéré en direct), pas déduit du code |
-| **Date d'envoi aux participants** | à compléter |
-| **Date de republication (information sur la transmission des plans de cours)** | 2026-09-23 |
-| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-07** (14 jours après l'envoi réel du lien, confirmé au 2026-09-23 — la valeur précédente, 2026-10-06, supposait un envoi le 2026-09-22 qui n'a pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
+| **Fichier JavaScript principal servi** | `assets/index-D0k40RcO.js`, vérifié en direct (`curl`) après republication |
+| **`app_version` transmis par la télémétrie** | `5b32ea7` — vérifié deux fois en direct : la chaîne apparaît dans `index-D0k40RcO.js` servi, et une vraie réponse au questionnaire envoyée depuis le site publié est arrivée en D1 avec `app_version = 5b32ea7` |
+| **Date d'envoi aux participants** | 2026-09-24 |
+| **Date de republication (audit par onglet, stockage bloqué)** | 2026-09-24 |
+| **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-08** (14 jours après l'envoi du 2026-09-24 ; les valeurs précédentes supposaient des envois les 22 et 23 septembre, qui n'ont pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
 
 Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée seule. `v0.4.1`
 (`0c242a0`) y ajoute la correction d'une fuite de consentement (voir plus bas), et `v0.4.2`
 (`a43b790`) l'information des enseignants sur la transmission de leur plan de cours à Anthropic
-lors d'un audit. C'est `v0.4.2`/`a43b790` qui est servi, et la seule version qui sera effectivement
-envoyée aux 22 enseignants.
+lors d'un audit. `v0.4.3` (`5b32ea7`) garde le résultat d'audit le temps de l'onglet seulement et
+rend l'application utilisable quand le navigateur bloque le stockage. C'est `v0.4.3`/`5b32ea7` qui
+est servi, et la version envoyée aux 22 enseignants le 2026-09-24.
+
+## Correctif — audit par onglet, stockage bloqué (2026-09-24)
+
+Deux défauts trouvés au dernier passage. Le résultat d'audit (titres de sections, résumé, contexte,
+recommandations, tous dérivés du plan de cours) restait indéfiniment en `localStorage` : sur un poste
+partagé, la personne suivante le voyait. Et un navigateur qui bloque les données de site affichait
+une **page blanche**, reproduite sur le site publié en `v0.4.2` avant correction (`#app` vide).
+
+Accès au stockage recensés dans `src/` et leur sort :
+
+| Accès | Avant | Après |
+|---|---|---|
+| `App.vue` : lecture et écriture du thème | Non protégés, au montage du composant racine (cause de la page blanche) | Via `safeLocalStorage` ; le thème reste en `localStorage`, repli sur la préférence système |
+| Plugin `pinia-plugin-persistedstate` : `storage` par défaut `window.localStorage`, évalué hors de tout `try` à la création du store | Plantage de l'audit | `storage: safeSessionStorage` explicite, le défaut n'est plus jamais évalué ; lecture et écriture déjà protégées par le plugin |
+| `ConsentBanner.vue`, `accept()` : lecture de `tb_campaign` | Non protégée (exception au clic « Accepter ») | Via `safeSessionStorage`, même valeur envoyée |
+| `stores/audit.js`, `reset()` | Protégé, mais visait `localStorage` | Vise `sessionStorage` |
+| `session.js` sans stockage | Constante `'no-storage'` partagée par tous (sessions fusionnées, plafond d'audit par session commun) | Identifiant aléatoire propre à la page, en mémoire |
+| `consent.js`, `telemetry.js`, `main.js`, `UsabilitySurvey.vue` | Déjà protégés | Inchangés |
+
+Build de production inspecté : plus aucun accès non protégé. Hors périmètre, pour information :
+`npm run dev` plante encore sous stockage bloqué, à cause de l'intégration devtools de Pinia
+(`getTimelineLayersStateFromStorage`), absente du build de production que reçoivent les enseignants.
+
+### Vérifié sur l'environnement déployé (republication avec accord explicite — 2026-09-24)
+
+| Point du brief | Statut | Preuve |
+|---|---|---|
+| Stockage bloqué (`localStorage` et `sessionStorage` redéfinis pour lever une `SecurityError` avant tout script) : l'application s'affiche | ✅ | Accueil rendu ; même test sur `v0.4.2` avant correction : page blanche |
+| Stockage bloqué : trois parcours de bout en bout | ✅ | Arbre jusqu'au résultat + fiche outil ; catalogue 48 fiches, 13 après filtre, détail déplié ; audit sur le cours d'exemple jusqu'au résultat |
+| Stockage bloqué : bandeau fonctionnel, refus respecté | ✅ | Bandeau affiché puis masqué au refus ; seule requête vers le Worker : `survey_submitted` (contenu inspecté) |
+| Stockage bloqué : questionnaire affiché et soumis | ✅ | Arbre et audit ; aucune erreur de page sur tout le parcours ; `session_id` reçu en D1 = UUID aléatoire, plus `no-storage` |
+| Résidu `audit_v1` en `localStorage` d'une visite antérieure | ✅ | Clé factice déposée avant le chargement : absente après chargement |
+| Rechargement dans le même onglet | ✅ | Analyse du cours d'exemple toujours affichée ; clé `audit_v1` en `sessionStorage`, absente de `localStorage` |
+| Onglet fermé, site rouvert dans un nouvel onglet | ✅ | Analyse disparue, zone de dépôt affichée ; seule clé restante en `localStorage` : `theme` |
+| `npm run prebuild` / `npm run preflight` | ✅ | Au vert, date de révision 2026-10-08 servie |
+| Purge | ✅ | `events` et `audit_calls` à 0 ligne |
 
 ## Correctif — transmission des plans de cours (2026-09-23)
 
