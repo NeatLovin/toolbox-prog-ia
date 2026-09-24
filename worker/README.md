@@ -146,6 +146,24 @@ npx wrangler d1 execute toolbox-telemetry --remote --command "SELECT * FROM even
   | node worker/scripts/export-csv.mjs > events.csv
 ```
 
+## Marqueur de campagne (colonne `campaign`)
+
+Capturé une seule fois au premier chargement depuis le paramètre `?src=` du lien
+(`src/lib/campaign.js`), puis joint à chaque envoi. Trois valeurs possibles, liste blanche fermée :
+
+| Valeur | Signification |
+|---|---|
+| `tb2026` | Lien envoyé aux 22 enseignants (`https://neatlovin.github.io/toolbox-prog-ia/?src=tb2026`) |
+| `selftest` | Passages de test du porteur du projet (`?src=selftest`). **À exclure de toute analyse** : les requêtes de `analysis.sql` le font déjà |
+| `direct` | Tout le reste : visite sans paramètre, ou avec une valeur inconnue (`?src=nimportequoi` donne `direct`) |
+
+Aucune valeur libre venant de l'URL n'atteint la base par l'interface. Le Worker, lui, accepte
+encore n'importe quelle chaîne de 32 caractères au plus dans ce champ (`events.js`) : un appel direct
+hors interface pourrait donc en écrire une autre. Les lignes `audit_unavailable` écrites par le
+Worker lui-même ont une campagne `NULL`. Si le navigateur bloque le stockage, la campagne est gardée
+en mémoire le temps de la page (même principe que l'identifiant de session) au lieu de retomber sur
+`direct`.
+
 ## Requêtes d'analyse
 
 Voir `worker/analysis.sql` (lot 7) pour les requêtes préparées correspondant aux métriques

@@ -8,6 +8,17 @@ demander de faire, et comment vérifier ensuite que sa session est bien remonté
 
 Lien à envoyer : `https://neatlovin.github.io/toolbox-prog-ia/?src=tb2026`
 
+Le paramètre `?src=` marque la provenance des sessions (colonne `campaign`, liste blanche fermée) :
+
+- `tb2026` : le lien ci-dessus, envoyé aux enseignants ;
+- `selftest` : **vos propres passages de test**, avec
+  `https://neatlovin.github.io/toolbox-prog-ia/?src=selftest`. Ces sessions sont exclues de toutes
+  les requêtes de `worker/analysis.sql` (sauf la 9, qui répartit par campagne) ;
+- `direct` : tout le reste, visite sans paramètre ou avec une valeur inconnue.
+
+`npm run pilot:replay` signale « campagne inattendue » sur une session `selftest` : c'est attendu,
+le script ne connaît que `tb2026`.
+
 1. **Accepter (ou refuser) le bandeau de consentement** qui apparaît en bas d'écran — les deux
    choix sont valides, le site fonctionne dans les deux cas.
 2. **Obtenir une recommandation** (`/arbre`) : choisir une zone, un concept précis (pas "toute la
@@ -17,7 +28,8 @@ Lien à envoyer : `https://neatlovin.github.io/toolbox-prog-ia/?src=tb2026`
 4. **Auditer son propre plan de cours** (`/audit`) : déposer un vrai PDF de son cours (pas la
    fixture de démonstration), corriger au moins une classification si elle lui semble incorrecte
    avant de valider, aller jusqu'à l'écran de résultat.
-5. **Répondre au questionnaire UMUX-Lite** s'il apparaît en bas du résultat de l'arbre.
+5. **Répondre au questionnaire de satisfaction** (six questions, toutes facultatives) s'il
+   apparaît en bas du résultat de l'arbre ou de l'audit.
 
 Aucune autre consigne technique n'est nécessaire — le but est un usage naturel, pas un test scripté.
 

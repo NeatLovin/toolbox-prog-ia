@@ -1,6 +1,7 @@
 import { getSessionId } from './session.js'
 import { hasConsent } from './consent.js'
 import { API_BASE, isApiConfigured } from './apiBase.js'
+import { getCampaign } from './campaign.js'
 
 const SCHEMA_VERSION = '1.0'
 const FLUSH_INTERVAL_MS = 10_000
@@ -22,14 +23,6 @@ let flushTimer = null
 // l'arbre de décision (seul l'audit appelle un modèle, pour la classification). Câbler cet
 // événement sur un comportement inexistant fabriquerait un signal. Il sera émis le jour où cette
 // couche optionnelle (cf. Choix_stack_technique_PoC_Toolbox.md, section 4.3) sera implémentée.
-
-function getCampaign() {
-  try {
-    return sessionStorage.getItem('tb_campaign') || 'direct'
-  } catch {
-    return 'direct'
-  }
-}
 
 function viewportBucket() {
   const w = window.innerWidth

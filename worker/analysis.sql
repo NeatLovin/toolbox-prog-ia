@@ -13,31 +13,42 @@
 -- worker/src/index.js, fonction scheduled()). Aucune des requêtes ci-dessous n'a besoin de trier
 -- par timestamp (agrégats), mais toute requête de reconstitution de session doit trier sur
 -- ts_client (voir worker/scripts/session-replay.mjs).
+--
+-- Campagne (colonne `campaign`, liste blanche fermée côté client, voir src/lib/campaign.js) :
+--   tb2026   = sessions arrivées par le lien envoyé aux 22 enseignants ;
+--   selftest = passages de test du porteur du projet : À EXCLURE DE TOUTE ANALYSE ;
+--   direct   = tout le reste (visite sans paramètre ou avec une valeur inconnue) ;
+--   NULL     = lignes audit_unavailable écrites par le Worker lui-même, sans campagne.
+-- Toutes les requêtes ci-dessous excluent déjà selftest, sauf la 9 qui répartit par campagne et
+-- l'affiche donc sur sa propre ligne. L'exclusion s'écrit `campaign IS NOT 'selftest'` et jamais
+-- `campaign <> 'selftest'` : cette dernière écarterait aussi les lignes à campagne NULL.
+-- Aucune requête ne se restreint à tb2026 : les visiteurs direct sont comptés avec les
+-- enseignants. Ajouter `AND campaign = 'tb2026'` pour isoler le corpus du test d'usage.
 
 -- 1. Taux de complétion du tunnel de recommandation, étape par étape.
 -- Funnel par session (une session peut relancer le tunnel plusieurs fois ; on mesure ici
 -- combien de sessions distinctes atteignent chaque étape au moins une fois, pas chaque tentative).
 WITH starts AS (
-  SELECT DISTINCT session_id FROM events WHERE event = 'reco_start'
+  SELECT DISTINCT session_id FROM events WHERE campaign IS NOT 'selftest' AND event = 'reco_start'
 ),
 step_zone AS (
   SELECT DISTINCT session_id FROM events
-  WHERE event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'zone'
+  WHERE campaign IS NOT 'selftest' AND event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'zone'
 ),
 step_concept AS (
   SELECT DISTINCT session_id FROM events
-  WHERE event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'concept'
+  WHERE campaign IS NOT 'selftest' AND event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'concept'
 ),
 step_context AS (
   SELECT DISTINCT session_id FROM events
-  WHERE event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'context'
+  WHERE campaign IS NOT 'selftest' AND event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'context'
 ),
 step_bloom AS (
   SELECT DISTINCT session_id FROM events
-  WHERE event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'bloom'
+  WHERE campaign IS NOT 'selftest' AND event = 'reco_question_answered' AND json_extract(payload, '$.step') = 'bloom'
 ),
 step_result AS (
-  SELECT DISTINCT session_id FROM events WHERE event = 'reco_result_shown'
+  SELECT DISTINCT session_id FROM events WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown'
 )
 SELECT
   (SELECT COUNT(*) FROM starts) AS sessions_started,
@@ -53,7 +64,7 @@ SELECT
   SUM(CASE WHEN json_extract(payload, '$.resolution') = 'matrix_fallback' THEN 1 ELSE 0 END) AS replis_matrice,
   SUM(CASE WHEN json_extract(payload, '$.resolution') = 'matrix_fallback' THEN 1 ELSE 0 END) * 1.0 / COUNT(*) AS taux_repli_matrice
 FROM events
-WHERE event = 'reco_result_shown';
+WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown';
 
 -- 2b. Quadruplets (zone, concept, contexte, bloom) les plus souvent en repli matriciel.
 SELECT
@@ -63,7 +74,7 @@ SELECT
   json_extract(payload, '$.bloom')   AS bloom,
   COUNT(*) AS occurrences
 FROM events
-WHERE event = 'reco_result_shown' AND json_extract(payload, '$.resolution') = 'matrix_fallback'
+WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown' AND json_extract(payload, '$.resolution') = 'matrix_fallback'
 GROUP BY zone, concept, context, bloom
 ORDER BY occurrences DESC
 LIMIT 20;
@@ -71,19 +82,19 @@ LIMIT 20;
 -- 3. Répartition des zones conceptuelles interrogées (syntaxe, logique, architecture).
 SELECT json_extract(payload, '$.zone') AS zone, COUNT(*) AS occurrences
 FROM events
-WHERE event = 'reco_result_shown'
+WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown'
 GROUP BY zone
 ORDER BY occurrences DESC;
 
 -- 4a. Taux de relance avec paramètre modifié (reco_restart / reco_result_shown).
 SELECT
-  (SELECT COUNT(*) FROM events WHERE event = 'reco_restart') * 1.0 /
-  NULLIF((SELECT COUNT(*) FROM events WHERE event = 'reco_result_shown'), 0) AS taux_relance;
+  (SELECT COUNT(*) FROM events WHERE campaign IS NOT 'selftest' AND event = 'reco_restart') * 1.0 /
+  NULLIF((SELECT COUNT(*) FROM events WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown'), 0) AS taux_relance;
 
 -- 4b. Paramètre le plus souvent changé lors d'une relance.
 SELECT json_extract(payload, '$.changed_param') AS changed_param, COUNT(*) AS occurrences
 FROM events
-WHERE event = 'reco_restart'
+WHERE campaign IS NOT 'selftest' AND event = 'reco_restart'
 GROUP BY changed_param
 ORDER BY occurrences DESC;
 
@@ -93,14 +104,14 @@ ORDER BY occurrences DESC;
 -- worker/scripts/verify-e2e.mjs pour un exemple de croisement.
 SELECT json_extract(payload, '$.tool_id') AS tool_id, COUNT(*) AS ouvertures
 FROM events
-WHERE event IN ('tool_detail_open', 'reco_tool_open')
+WHERE campaign IS NOT 'selftest' AND event IN ('tool_detail_open', 'reco_tool_open')
 GROUP BY tool_id
 ORDER BY ouvertures DESC;
 
 -- 6a. Taux de correction de la classification de l'audit, global (moyenne des taux par validation).
 SELECT AVG(CAST(json_extract(payload, '$.correction_rate') AS REAL)) AS taux_correction_moyen
 FROM events
-WHERE event = 'audit_validation_confirmed';
+WHERE campaign IS NOT 'selftest' AND event = 'audit_validation_confirmed';
 
 -- 6b. Corrections par concept (ajout ou retrait d'un concept lors de la relecture).
 SELECT
@@ -108,7 +119,7 @@ SELECT
   json_extract(payload, '$.action') AS action,
   COUNT(*) AS occurrences
 FROM events
-WHERE event = 'audit_classification_edited' AND json_extract(payload, '$.action') IN ('add', 'remove')
+WHERE campaign IS NOT 'selftest' AND event = 'audit_classification_edited' AND json_extract(payload, '$.action') IN ('add', 'remove')
 GROUP BY concept_id, action
 ORDER BY occurrences DESC;
 
@@ -117,7 +128,7 @@ ORDER BY occurrences DESC;
 WITH latencies AS (
   SELECT CAST(json_extract(payload, '$.latency_ms') AS INTEGER) AS latency_ms
   FROM events
-  WHERE event = 'reco_result_shown' AND json_extract(payload, '$.latency_ms') IS NOT NULL
+  WHERE campaign IS NOT 'selftest' AND event = 'reco_result_shown' AND json_extract(payload, '$.latency_ms') IS NOT NULL
 ),
 ordered AS (
   SELECT latency_ms,
@@ -136,7 +147,7 @@ WITH scores AS (
     ((CAST(json_extract(payload, '$.needs_score') AS REAL) - 1) +
      (CAST(json_extract(payload, '$.ease_score')  AS REAL) - 1)) * 100.0 / 12 AS umux_lite_score
   FROM events
-  WHERE event = 'survey_submitted'
+  WHERE campaign IS NOT 'selftest' AND event = 'survey_submitted'
 )
 SELECT
   COUNT(*) AS nb_reponses,
@@ -144,7 +155,7 @@ SELECT
   AVG(umux_lite_score) * 0.65 + 22.9 AS equivalent_sus_moyen
 FROM scores;
 
--- 9. Répartition des sessions par campagne (distinguer les participants tb2026 des visiteurs directs).
+-- 9. Répartition des sessions par campagne (tb2026 = enseignants, selftest = tests, direct = le reste).
 SELECT campaign, COUNT(DISTINCT session_id) AS sessions
 FROM events
 GROUP BY campaign
@@ -161,11 +172,11 @@ ORDER BY sessions DESC;
 -- un survey_shown. Voir la requête 10b pour le nombre brut de soumissions non retenues ici.
 WITH shown AS (
   SELECT DISTINCT session_id, json_extract(payload, '$.parcours') AS parcours
-  FROM events WHERE event = 'survey_shown'
+  FROM events WHERE campaign IS NOT 'selftest' AND event = 'survey_shown'
 ),
 submitted AS (
   SELECT DISTINCT session_id, json_extract(payload, '$.parcours') AS parcours
-  FROM events WHERE event = 'survey_submitted'
+  FROM events WHERE campaign IS NOT 'selftest' AND event = 'survey_submitted'
 )
 SELECT
   shown.parcours AS parcours,
@@ -197,5 +208,5 @@ SELECT
   json_extract(payload, '$.parcours') AS parcours,
   COUNT(*) AS soumissions_brutes
 FROM events
-WHERE event = 'survey_submitted'
+WHERE campaign IS NOT 'selftest' AND event = 'survey_submitted'
 GROUP BY parcours;
