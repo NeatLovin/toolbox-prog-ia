@@ -73,7 +73,7 @@ Toutes dans `worker/wrangler.toml [vars]`, sauf la clé API (secret).
 | `AUDIT_MAX_CHARS` | Taille max du texte extrait envoyé au modèle | `160000` |
 | `AUDIT_RATE_LIMIT_PER_SESSION_HOUR` | Appels `/audit` max par session et par heure | `5` |
 | `AUDIT_DAILY_GLOBAL_CAP` | Appels `/audit` max, tous visiteurs confondus, par jour UTC | `120` (valeur de lancement, à redescendre à 40-50 ensuite) |
-| `AUDIT_DAILY_CAP_REVIEW_DATE` | Date au-delà de laquelle le Worker signale (jamais ne modifie) que le plafond ci-dessus mérite d'être révisé | `2026-10-07` (14 jours après l'envoi du lien aux 22 enseignants, 2026-09-23) |
+| `AUDIT_DAILY_CAP_REVIEW_DATE` | Date au-delà de laquelle le Worker signale (jamais ne modifie) que le plafond ci-dessus mérite d'être révisé | `2026-10-08` (14 jours après l'envoi du lien aux 22 enseignants, 2026-09-24) |
 | `RETENTION_DAYS` | Ancienneté au-delà de laquelle les `events` sont purgés | `365` |
 
 Modifier une variable puis `npm run worker:deploy` pour l'appliquer. `AUDIT_KILL_SWITCH=true` est la

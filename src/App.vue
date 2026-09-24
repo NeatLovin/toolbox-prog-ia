@@ -2,16 +2,18 @@
 import { ref } from 'vue'
 import ConsentBanner from './components/ConsentBanner.vue'
 import { reopenBanner } from './lib/consent.js'
+import { safeLocalStorage } from './lib/safeStorage.js'
 
-// Theme toggle - initialise depuis localStorage, sinon suit la préférence OS
-const saved = localStorage.getItem('theme')
+// Theme toggle - initialise depuis localStorage, sinon suit la préférence OS (aussi quand le
+// stockage est bloqué : un accès direct ferait planter le composant racine, page blanche)
+const saved = safeLocalStorage.getItem('theme')
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 const isDark = ref(saved ? saved === 'dark' : prefersDark)
 
 function applyTheme(dark) {
   isDark.value = dark
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
-  localStorage.setItem('theme', dark ? 'dark' : 'light')
+  safeLocalStorage.setItem('theme', dark ? 'dark' : 'light')
 }
 
 applyTheme(isDark.value)

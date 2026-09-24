@@ -128,7 +128,8 @@
           <strong>Ce qui n'est pas fait :</strong> le prototype ne conserve pas ce texte, ni dans sa
           base de données ni dans ses journaux, et ne le relie pas à la mesure d'audience. Le
           résultat de l'analyse (titres de sections et résumé) reste seulement dans votre propre
-          navigateur, jusqu'à ce que vous cliquiez sur « Nouvelle analyse ».
+          navigateur, le temps de votre visite : il disparaît à la fermeture de l'onglet ou au clic
+          sur « Nouvelle analyse ».
         </li>
         <li>
           <strong>Côté Anthropic :</strong> le traitement relève de ses conditions pour l'API. Voir

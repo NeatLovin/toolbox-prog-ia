@@ -19,6 +19,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { consentStatus, bannerForcedOpen, grantConsent, denyConsent, closeBanner } from '../lib/consent.js'
+import { safeSessionStorage } from '../lib/safeStorage.js'
 import { track } from '../lib/telemetry.js'
 
 const route = useRoute()
@@ -55,7 +56,7 @@ function accept() {
   // session_start / consent_choice se déclenchent ici plutôt qu'au chargement : c'est le
   // premier instant où un envoi est autorisé, donc le vrai "début de session" mesurable.
   track('session_start', {
-    channel: sessionStorage.getItem('tb_campaign') || 'direct',
+    channel: safeSessionStorage.getItem('tb_campaign') || 'direct',
     viewport: window.innerWidth < 640 ? 'small' : window.innerWidth < 1024 ? 'medium' : 'large',
     lang: navigator.language || ''
   })

@@ -4,6 +4,7 @@ import { getRecommendation, getToolsForConcept, getMatchingCombos, BLOOM_ORDER }
 import { getSessionId } from '../lib/session.js'
 import { track } from '../lib/telemetry.js'
 import { API_BASE, isApiConfigured } from '../lib/apiBase.js'
+import { safeSessionStorage } from '../lib/safeStorage.js'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 // Le prompt système, le modèle et max_tokens sont fixés côté serveur (worker/src/audit.js) :
@@ -464,12 +465,16 @@ export const useAuditStore = defineStore('audit', {
 
     reset() {
       this.$reset()
-      try { localStorage.removeItem('audit_v1') } catch (_) {}
+      safeSessionStorage.removeItem('audit_v1')
     }
   },
 
+  // sessionStorage, jamais localStorage : le résultat dérive du plan de cours déposé et ne doit pas
+  // survivre à la fermeture de l'onglet (poste partagé). storage explicite et protégé : sans lui, le
+  // plugin lit window.localStorage hors de tout try et fait planter l'audit si le stockage est bloqué.
   persist: {
     key:  'audit_v1',
+    storage: safeSessionStorage,
     pick: ['phase', 'sections', 'validated', 'swot', 'recommendations', 'courseContext', 'courseSummary', 'isDemo', 'truncation']
   }
 })

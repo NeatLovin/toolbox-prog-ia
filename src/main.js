@@ -6,6 +6,7 @@ import piniaPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router/index.js'
 import { track } from './lib/telemetry.js'
+import { safeLocalStorage } from './lib/safeStorage.js'
 import './assets/tokens.css'
 import './assets/base.css'
 
@@ -28,6 +29,10 @@ function captureCampaignOnce() {
   }
 }
 captureCampaignOnce()
+
+// Le résultat d'audit était persisté en localStorage avant de passer en sessionStorage : efface
+// l'éventuel résidu laissé par une visite antérieure sur ce navigateur.
+safeLocalStorage.removeItem('audit_v1')
 
 const pinia = createPinia()
 pinia.use(piniaPersistedstate)
