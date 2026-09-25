@@ -153,7 +153,7 @@ Capturé une seule fois au premier chargement depuis le paramètre `?src=` du li
 
 | Valeur | Signification |
 |---|---|
-| `tb2026` | Lien envoyé aux 22 enseignants (`https://neatlovin.github.io/toolbox-prog-ia/?src=tb2026`) |
+| `tb2026` | Lien envoyé aux 22 enseignants (paramètre `?src=tb2026`) |
 | `selftest` | Passages de test du porteur du projet (`?src=selftest`). **À exclure de toute analyse** : les requêtes de `analysis.sql` le font déjà |
 | `direct` | Tout le reste : visite sans paramètre, ou avec une valeur inconnue (`?src=nimportequoi` donne `direct`) |
 

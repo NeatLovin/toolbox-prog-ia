@@ -6,7 +6,7 @@ demander de faire, et comment vérifier ensuite que sa session est bien remonté
 
 ## Consignes à transmettre au pilote
 
-Lien à envoyer : `https://neatlovin.github.io/toolbox-prog-ia/?src=tb2026`
+Paramètre à ajouter à l'adresse du site dans le lien envoyé : `?src=tb2026`
 
 Le paramètre `?src=` marque la provenance des sessions (colonne `campaign`, liste blanche fermée) :
 

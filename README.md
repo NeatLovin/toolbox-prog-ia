@@ -134,7 +134,12 @@ docs/
 
 ## Licence
 
-<!-- à compléter : partie B (titulaire des droits à confirmer avec le directeur ; MIT pour le code, CC BY 4.0 pour le contenu) -->
+- **Code** (tout le dépôt, sauf le contenu ci-dessous) : licence MIT, voir [`LICENSE`](LICENSE).
+- **Contenu** (cartographie et données de `src/data/`, documentation de `docs/` et fichiers
+  Markdown) : Creative Commons Attribution 4.0 International (CC BY 4.0), voir
+  [`LICENSE-CONTENT`](LICENSE-CONTENT).
+
+© 2026 Valentino Di Donato et Haute École Arc (HE-Arc). Les noms des outils tiers cités restent la propriété de leurs titulaires.
 
 ---
 
