@@ -1,8 +1,16 @@
 # Toolbox Prog IA
 
-Proof of concept développé dans le cadre du Travail de Bachelor *« Apprendre à programmer à l'ère de l'IA générative »* (HEG Arc, HES-SO, 2025-2026).
+Toolbox Prog IA aide les enseignants en programmation à choisir des activités et des modalités
+d'évaluation qui gardent leur sens quand les étudiants ont accès à l'IA générative. En quelques
+questions, l'outil propose des outils pédagogiques adaptés à un concept et à un contexte
+d'enseignement, avec leurs justifications et leurs sources ; il peut aussi analyser un plan de
+cours. Il s'adresse aux enseignants et aux responsables de filière en informatique, sans
+préparation technique.
 
-**Démo en ligne :** https://neatlovin.github.io/toolbox-prog-ia/
+**[Essayer l'outil en ligne](https://neatlovin.github.io/toolbox-prog-ia/)**
+
+Prototype développé dans le cadre du Travail de Bachelor *« Apprendre à programmer à l'ère de l'IA
+générative »* (HEG Arc, HES-SO, 2025-2026). Voir la section [Rapport](#rapport).
 
 ---
 
@@ -117,6 +125,16 @@ worker/
 docs/
   recette/      grille de recette, identité de la version évaluée, passage pilote
 ```
+
+---
+
+## Rapport
+
+<!-- à compléter : partie B (adresse de la version officielle du rapport, à confirmer avec le directeur) -->
+
+## Licence
+
+<!-- à compléter : partie B (titulaire des droits à confirmer avec le directeur ; MIT pour le code, CC BY 4.0 pour le contenu) -->
 
 ---
 
