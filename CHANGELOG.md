@@ -2,6 +2,21 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## À faire après la période de test
+
+- **Conflit de dépendances à résoudre.** `@vitejs/plugin-vue@5.2.4` déclare `vite ^5 || ^6` alors
+  que le projet utilise `vite@8.1.0` : sans `.npmrc`, `npm ci` et `npm install` échouent avec
+  `ERESOLVE` sur un clone propre. Vraie résolution : adopter une version de `@vitejs/plugin-vue`
+  compatible avec Vite 8, puis retirer `.npmrc`. Non fait pendant la période de test pour ne
+  modifier aucune dépendance de la version évaluée.
+
+## Installation — 2026-09-29
+
+- **`.npmrc` ajouté** (`legacy-peer-deps=true`) : `npm ci` et `npm install` aboutissent de nouveau
+  sur un clone propre (Node 22, npm 10). Aucune dépendance modifiée, `package-lock.json` inchangé.
+  Vérifié : le build de `4db8aa0` (`v0.4.4`) avec ce fichier reproduit octet pour octet le site
+  publié sur `gh-pages`, à fins de ligne des sources égales. Site non republié.
+
 ## Documentation — 2026-09-29 (rapport-tb-2026)
 
 - Rapport du Travail de Bachelor publié (version déposée et évaluée, 82 pages) en pièce jointe

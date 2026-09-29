@@ -52,6 +52,10 @@ npm run dev
 npm run dev:full
 ```
 
+Le fichier `.npmrc` (`legacy-peer-deps=true`) permet l'installation malgré un conflit de dépendances
+connu : `@vitejs/plugin-vue` 5 déclare Vite 5 ou 6, le projet utilise Vite 8. Il sera retiré quand
+une version de `@vitejs/plugin-vue` compatible avec Vite 8 sera adoptée.
+
 Pour tester l'audit avec un vrai appel en mode complet, copier `worker/.dev.vars.example` en
 `worker/.dev.vars` (gitignore) et y renseigner `ANTHROPIC_API_KEY`. Sans cette clé, l'audit
 bascule automatiquement sur un message convivial et propose de charger un cours d'exemple
