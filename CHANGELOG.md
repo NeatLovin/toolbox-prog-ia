@@ -9,6 +9,31 @@ Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative »
   `ERESOLVE` sur un clone propre. Vraie résolution : adopter une version de `@vitejs/plugin-vue`
   compatible avec Vite 8, puis retirer `.npmrc`. Non fait pendant la période de test pour ne
   modifier aucune dépendance de la version évaluée.
+- **Build reproductible d'une machine à l'autre.** Ajouter un fichier `.gitattributes` qui
+  uniformise les fins de ligne des sources : aujourd'hui, un même commit publié depuis Windows
+  (CRLF) ou Linux (LF) donne des identifiants de CSS scopé, donc un hash de bundle, différents.
+
+## Correctif — 2026-09-29 (v0.4.5)
+
+**Page Méthodologie alignée sur l'architecture réelle.** Elle affichait encore « JSON statiques
+chargés au démarrage (pas de backend) », faux depuis l'itération 2 et contraire à la page de
+transparence.
+
+- **Stack technique** : données de la cartographie statiques, recommandation calculée dans le
+  navigateur sans modèle de langage, service serveur (Cloudflare Worker et D1) pour la mesure
+  d'usage avec consentement et le relais de l'audit vers un modèle de langage d'Anthropic, clé
+  gardée sur le serveur ; lien vers la page Transparence. Accents corrigés (« Hébergement »,
+  « dépôt », « partagées »).
+- **Principe de traçabilité** : aucun modèle de langage n'intervient dans la recommandation, seul
+  l'audit en utilise un pour classer les sections.
+- **Logique de recommandation** décrite comme la cascade réelle en trois passes (exacte, fonction
+  relâchée, niveau Bloom relâché), puis repli sur la matrice de pertinence.
+- **Carte `tools.json`** : elle ne s'attribue plus les concepts, scores, niveaux Bloom et contextes,
+  portés par `matrix.json` et `combos.json`.
+- Texte uniquement : moteur, données, télémétrie, questionnaire, Worker et plafonds inchangés.
+  Worker non redéployé.
+- Tag `v0.4.5` sur `e63c36b`, republié le 2026-09-29 (`assets/index-TYBkRivM.js`,
+  `app_version = e63c36b`), même URL, sans nouvel envoi aux enseignants.
 
 ## Installation — 2026-09-29
 

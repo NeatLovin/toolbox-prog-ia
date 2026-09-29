@@ -28,13 +28,14 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | | |
 |---|---|
 | **Dépôt** | [NeatLovin/toolbox-prog-ia](https://github.com/NeatLovin/toolbox-prog-ia) |
-| **Tag** | `v0.4.4` |
-| **Commit republié** | `4db8aa0` |
+| **Tag** | `v0.4.4` du 2026-09-24 au 2026-09-29, puis `v0.4.5` depuis le 2026-09-29 |
+| **Commit republié** | `4db8aa0` (`v0.4.4`), puis `e63c36b` (`v0.4.5`) |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `assets/index-p5E1XUkC.js`, vérifié en direct (`curl`) après republication |
-| **`app_version` transmis par la télémétrie** | `4db8aa0` — vérifié deux fois en direct : la chaîne apparaît dans `index-p5E1XUkC.js` servi, et les six sessions de vérification envoyées depuis le site publié sont arrivées en D1 avec `app_version = 4db8aa0` |
+| **Fichier JavaScript principal servi** | `v0.4.4` : `assets/index-p5E1XUkC.js`, vérifié en direct (`curl`) après republication. `v0.4.5` : `assets/index-TYBkRivM.js`, vérifié sur `origin/gh-pages` après republication (identique octet pour octet au build de `e63c36b` publié). Ce nom dépend de la machine qui a publié, voir sous le tableau |
+| **`app_version` transmis par la télémétrie** | `v0.4.4` : `4db8aa0` — vérifié deux fois en direct : la chaîne apparaît dans `index-p5E1XUkC.js` servi, et les six sessions de vérification envoyées depuis le site publié sont arrivées en D1 avec `app_version = 4db8aa0`. `v0.4.5` : `e63c36b`, présent dans `index-TYBkRivM.js` publié sur `origin/gh-pages` |
 | **Date d'envoi aux participants** | 2026-09-24 |
 | **Date de republication (marqueur de campagne)** | 2026-09-24 |
+| **Date de republication (`v0.4.5`)** | 2026-09-29, même URL, sans nouvel envoi aux participants |
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-08** (14 jours après l'envoi du 2026-09-24 ; les valeurs précédentes supposaient des envois les 22 et 23 septembre, qui n'ont pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
@@ -45,8 +46,20 @@ Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée s
 (`a43b790`) l'information des enseignants sur la transmission de leur plan de cours à Anthropic
 lors d'un audit. `v0.4.3` (`5b32ea7`) garde le résultat d'audit le temps de l'onglet seulement et
 rend l'application utilisable quand le navigateur bloque le stockage. `v0.4.4` (`4db8aa0`) garde le
-marqueur de campagne même quand le stockage est bloqué et ajoute l'étiquette `selftest`. C'est
-`v0.4.4`/`4db8aa0` qui est servi, et la version envoyée aux 22 enseignants le 2026-09-24.
+marqueur de campagne même quand le stockage est bloqué et ajoute l'étiquette `selftest` : c'est
+la version envoyée aux 22 enseignants le 2026-09-24.
+
+Les enseignants ont utilisé `v0.4.4` (`4db8aa0`) du 2026-09-24 au 2026-09-29, date de la
+republication, puis `v0.4.5` (`e63c36b`). Les deux versions ne diffèrent que par le texte de la page
+Méthodologie, sans effet sur les parcours mesurés. Dans les données, `app_version` les distingue.
+
+**Hash du bundle et `app_version`.** Le nom du fichier JavaScript servi (son hash) dépend de la
+machine qui a publié : `@vitejs/plugin-vue` calcule les identifiants du CSS scopé à partir du
+contenu des sources, fins de ligne comprises, si bien qu'un même commit publié depuis Windows
+(CRLF) ou Linux (LF) produit des noms de fichiers différents, sans aucune différence de
+comportement. Reconstruit avec les fins de ligne du poste qui l'avait publié, `4db8aa0` redonne
+octet pour octet le site publié en `v0.4.4`. `app_version`, tiré du commit au moment du build,
+identifie le code de façon fiable : c'est lui qu'il faut citer.
 
 ## Correctif — marqueur de campagne (2026-09-24)
 
