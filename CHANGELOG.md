@@ -2,6 +2,14 @@
 
 Travail de Bachelor « Apprendre à programmer à l'ère de l'IA générative », HEG Arc, HES-SO.
 
+## Documentation — 2026-09-29 (rapport-tb-2026)
+
+- Rapport du Travail de Bachelor publié (version déposée et évaluée, 82 pages) en pièce jointe
+  de la release `rapport-tb-2026`, lien dans la section « Rapport » du README.
+- `rapport-tb-2026` n'est pas une version de l'outil : rien de changé dans `src/`, `worker/` ni
+  `src/data/`, site non republié, Worker non redéployé. La version évaluée reste `v0.4.4`.
+- Le rapport passe sous CC BY 4.0 (`LICENSE-CONTENT`), sauf figures de tiers, citations et logo.
+
 ## Correctif — 2026-09-24 (v0.4.4)
 
 - **Marqueur de campagne fiabilisé.** Écrit seulement en `sessionStorage`, il était relu comme

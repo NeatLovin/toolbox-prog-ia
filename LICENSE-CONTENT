@@ -8,7 +8,11 @@ Cette licence couvre le contenu du dépôt, par opposition au code :
   pertinence, combinatoires, modèles d'activité, explications des outils,
   cours d'exemple) ;
 - la documentation : le dossier docs/ (captures d'écran comprises) et tous les
-  fichiers Markdown (*.md).
+  fichiers Markdown (*.md) ;
+- le rapport du Travail de Bachelor « Apprendre à programmer à l'ère de l'IA
+  générative », publié hors de l'historique Git comme pièce jointe de la
+  release rapport-tb-2026 :
+  https://github.com/NeatLovin/toolbox-prog-ia/releases/tag/rapport-tb-2026
 Tout le reste du dépôt (code source, configuration, scripts) est sous licence
 MIT : voir le fichier LICENSE.
 
@@ -17,11 +21,21 @@ Ne sont pas couverts par cette licence :
   propriété de leurs titulaires ;
 - les publications citées dans les champs "sources" et "references", dont seule
   la référence bibliographique est reprise ;
-- le rapport du Travail de Bachelor, qui ne fait pas partie de ce dépôt.
+- dans le rapport, les figures reprises ou adaptées de publications tierces,
+  signalées dans leur légende par « Adapté de » ou « Source : » (figures 2 à 6,
+  8 et 13), qui restent régies par les droits de leurs auteurs ;
+- les citations reproduites dans le rapport, qui restent régies par les droits
+  de leurs auteurs ;
+- le logo de la Haute École Arc figurant dans le rapport.
 
 Attribution suggérée :
 « Toolbox Prog IA », Valentino Di Donato et Haute École Arc (HE-Arc), 2026, CC BY 4.0,
 https://github.com/NeatLovin/toolbox-prog-ia
+
+Attribution suggérée pour le rapport :
+« Apprendre à programmer à l'ère de l'IA générative », Valentino Di Donato,
+Travail de Bachelor, HEG Arc, HES-SO, 2026, CC BY 4.0,
+https://github.com/NeatLovin/toolbox-prog-ia/releases/download/rapport-tb-2026/Di_Donato_2026_Apprendre_a_programmer_a_l_ere_de_l_IA_generative.pdf
 
 Résumé de la licence en français :
 https://creativecommons.org/licenses/by/4.0/deed.fr

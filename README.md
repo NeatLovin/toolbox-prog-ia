@@ -130,14 +130,35 @@ docs/
 
 ## Rapport
 
-<!-- à compléter : partie B (adresse de la version officielle du rapport, à confirmer avec le directeur) -->
+*Apprendre à programmer à l'ère de l'IA générative*, Travail de Bachelor d'informaticien de
+gestion, HEG Arc, HES-SO, 2026.
+
+- Auteur : Valentino Di Donato
+- Directeur : Boris Fritscher
+- Assistant : Melvyn Vogelsang
+
+**[Télécharger le rapport (PDF, 82 pages)](https://github.com/NeatLovin/toolbox-prog-ia/releases/download/rapport-tb-2026/Di_Donato_2026_Apprendre_a_programmer_a_l_ere_de_l_IA_generative.pdf)**
+
+C'est la version déposée et évaluée du rapport, rendue publique conformément au règlement du
+module.
+
+Le rapport décrit une couche générative optionnelle chargée de reformuler la recommandation de
+l'arbre de décision. Elle n'est pas implémentée dans le prototype : la recommandation est
+entièrement déterministe, et seul l'audit d'un plan de cours appelle un modèle de langage. Voir
+[`Choix_stack_technique_PoC_Toolbox.md`](Choix_stack_technique_PoC_Toolbox.md), section 4.5
+« État à l'itération 2 ». Le rapport présente aussi le prototype sans service serveur ;
+l'itération 2 y a ajouté un Worker Cloudflare (relais de l'audit, télémétrie avec consentement),
+décrit dans la section 7 du même document.
 
 ## Licence
 
 - **Code** (tout le dépôt, sauf le contenu ci-dessous) : licence MIT, voir [`LICENSE`](LICENSE).
-- **Contenu** (cartographie et données de `src/data/`, documentation de `docs/` et fichiers
-  Markdown) : Creative Commons Attribution 4.0 International (CC BY 4.0), voir
-  [`LICENSE-CONTENT`](LICENSE-CONTENT).
+- **Contenu** (cartographie et données de `src/data/`, documentation de `docs/`, fichiers
+  Markdown et rapport du Travail de Bachelor, publié en pièce jointe de la release
+  `rapport-tb-2026`) : Creative Commons Attribution 4.0 International (CC BY 4.0), voir
+  [`LICENSE-CONTENT`](LICENSE-CONTENT). Dans le rapport, les figures reprises ou adaptées de
+  publications tierces, les citations et le logo de la Haute École Arc restent régis par les
+  droits de leurs titulaires.
 
 © 2026 Valentino Di Donato et Haute École Arc (HE-Arc). Les noms des outils tiers cités restent la propriété de leurs titulaires.
 

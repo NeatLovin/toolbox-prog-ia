@@ -38,6 +38,7 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | **Plafond journalier d'appels à l'audit (`AUDIT_DAILY_GLOBAL_CAP`)** | 120, inchangé. **Date de révision : 2026-10-08** (14 jours après l'envoi du 2026-09-24 ; les valeurs précédentes supposaient des envois les 22 et 23 septembre, qui n'ont pas eu lieu). Worker redéployé et valeur confirmée servie via `npm run preflight`. Voir `worker/README.md` |
 | **Plafond par session et par heure (`AUDIT_RATE_LIMIT_PER_SESSION_HOUR`)** | 5 |
 | **Durée de conservation des données de télémétrie** | 12 mois (`RETENTION_DAYS=365`), voir la page `/transparence` du site publié |
+| **Rapport du Travail de Bachelor** | [PDF](https://github.com/NeatLovin/toolbox-prog-ia/releases/download/rapport-tb-2026/Di_Donato_2026_Apprendre_a_programmer_a_l_ere_de_l_IA_generative.pdf), release `rapport-tb-2026`, qui n'est pas une version de l'outil |
 
 Le tag `v0.4.0` marque la fin de l'itération 4 (`9d90f4d`), jamais republiée seule. `v0.4.1`
 (`0c242a0`) y ajoute la correction d'une fuite de consentement (voir plus bas), et `v0.4.2`
