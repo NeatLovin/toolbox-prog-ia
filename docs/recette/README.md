@@ -31,8 +31,8 @@ enseignants participants, pour être citée telle quelle dans un document extern
 | **Tag** | `v0.4.4` du 2026-09-24 au 2026-09-29, puis `v0.4.5` depuis le 2026-09-29 |
 | **Commit republié** | `4db8aa0` (`v0.4.4`), puis `e63c36b` (`v0.4.5`) |
 | **URL publique** | https://neatlovin.github.io/toolbox-prog-ia/ |
-| **Fichier JavaScript principal servi** | `v0.4.4` : `assets/index-p5E1XUkC.js`, vérifié en direct (`curl`) après republication. `v0.4.5` : `assets/index-TYBkRivM.js`, vérifié sur `origin/gh-pages` après republication (identique octet pour octet au build de `e63c36b` publié). Ce nom dépend de la machine qui a publié, voir sous le tableau |
-| **`app_version` transmis par la télémétrie** | `v0.4.4` : `4db8aa0` — vérifié deux fois en direct : la chaîne apparaît dans `index-p5E1XUkC.js` servi, et les six sessions de vérification envoyées depuis le site publié sont arrivées en D1 avec `app_version = 4db8aa0`. `v0.4.5` : `e63c36b`, présent dans `index-TYBkRivM.js` publié sur `origin/gh-pages` |
+| **Fichier JavaScript principal servi** | `v0.4.4` : `assets/index-p5E1XUkC.js`, vérifié en direct (`curl`) après republication. `v0.4.5` : `assets/index-TYBkRivM.js`, identique octet pour octet au build de `e63c36b` publié sur `origin/gh-pages`, puis vérifié en direct (`curl`) le 2026-09-29, avec `npm run preflight` OK. Ce nom dépend de la machine qui a publié, voir sous le tableau |
+| **`app_version` transmis par la télémétrie** | `v0.4.4` : `4db8aa0` — vérifié deux fois en direct : la chaîne apparaît dans `index-p5E1XUkC.js` servi, et les six sessions de vérification envoyées depuis le site publié sont arrivées en D1 avec `app_version = 4db8aa0`. `v0.4.5` : `e63c36b`, vérifié en direct : la chaîne apparaît dans `index-TYBkRivM.js` servi |
 | **Date d'envoi aux participants** | 2026-09-24 |
 | **Date de republication (marqueur de campagne)** | 2026-09-24 |
 | **Date de republication (`v0.4.5`)** | 2026-09-29, même URL, sans nouvel envoi aux participants |
