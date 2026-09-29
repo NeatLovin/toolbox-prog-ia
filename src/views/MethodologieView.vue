@@ -32,7 +32,7 @@
         <div class="ui-card data-card">
           <div class="data-icon">&#128295;</div>
           <h3>tools.json</h3>
-          <p>{{ toolCount }} outils. Attributs pédagogiques : concept couvert, niveau Bloom, fonction, contexte, score de pertinence, coût enseignant.</p>
+          <p>{{ toolCount }} outils en 4 familles. Attributs : fonction pédagogique, coût enseignant, robustesse face à l'IA, niveau de preuve, sources. Les concepts couverts et les scores de pertinence sont portés par matrix.json, les niveaux Bloom et les contextes d'usage par combos.json.</p>
         </div>
         <div class="ui-card data-card">
           <div class="data-icon">&#128218;</div>
@@ -55,18 +55,29 @@
     <section class="section">
       <h2>Logique de recommandation</h2>
       <p>
-        La recommandation est entièrement déterministe. Les paramètres saisis
-        (famille de concepts, niveau Bloom, contexte) sont croisés avec les
-        {{ comboCount }} combinatoires préconfigurées.
+        La recommandation est entièrement déterministe. Les paramètres saisis (famille de
+        concepts, niveau Bloom, contexte d'usage, et fonction pédagogique, formative par défaut)
+        sont croisés en cascade avec les {{ comboCount }} combinatoires préconfigurées :
       </p>
+      <ol class="cascade-list">
+        <li>correspondance exacte : famille, niveau Bloom, fonction et contexte ;</li>
+        <li>à défaut, la fonction pédagogique est relâchée : famille, niveau Bloom et contexte ;</li>
+        <li>à défaut, le niveau Bloom est relâché à son tour : famille et contexte seulement.</li>
+      </ol>
       <p>
-        Si une correspondance exacte est trouvée, les outils de cette combinatoire
-        sont retournés avec leur justification. Sinon, un repli automatique classe les
-        outils selon leur score dans la matrice de pertinence pour la famille de concepts sélectionnée.
+        Les outils de la première combinatoire trouvée sont retournés avec sa justification, et
+        le résultat indique si la correspondance est exacte ou approchée. Si aucune combinatoire
+        ne convient, un repli automatique retient les trois outils les mieux notés dans la
+        matrice de pertinence pour la famille de concepts sélectionnée, parmi ceux compatibles
+        avec la fonction visée.
       </p>
+
       <div class="info-box">
-        <strong>Principe de traçabilité :</strong> le modèle ne génère aucun outil. Chaque
-        recommandation est directement dérivable de la cartographie du TB.
+        <strong>Principe de traçabilité :</strong> aucun modèle de langage n'intervient dans la
+        recommandation : chaque recommandation est directement dérivable de la cartographie du
+        TB. Seul l'audit d'un plan de cours fait appel à un modèle de langage, pour classer les
+        sections du document ; les recommandations qui en découlent sont calculées de la même
+        façon.
       </div>
     </section>
 
@@ -108,10 +119,18 @@
       <h2>Stack technique</h2>
       <ul class="tech-list">
         <li><strong>Framework :</strong> Vue 3, Composition API</li>
-        <li><strong>Données :</strong> JSON statiques chargés au démarrage (pas de backend)</li>
+        <li><strong>Données de la cartographie :</strong> fichiers JSON statiques embarqués dans l'application, jamais modifiés à l'exécution</li>
+        <li><strong>Recommandation :</strong> calculée entièrement dans le navigateur, de façon déterministe, sans modèle de langage</li>
+        <li>
+          <strong>Service serveur :</strong> Cloudflare Worker et base D1, pour la mesure d'usage
+          anonyme avec consentement (voir la page
+          <router-link to="/transparence">Transparence</router-link>) et pour le relais de
+          l'audit d'un plan de cours vers un modèle de langage d'Anthropic. La clé d'accès reste
+          sur le serveur, jamais dans le navigateur.
+        </li>
         <li><strong>Build :</strong> Vite</li>
-        <li><strong>Hebergement :</strong> GitHub Pages (depot NeatLovin/toolbox-prog-ia)</li>
-        <li><strong>Styling :</strong> CSS tokens + primitives partagees (pas de framework UI)</li>
+        <li><strong>Hébergement :</strong> GitHub Pages pour le site (dépôt NeatLovin/toolbox-prog-ia), Cloudflare pour le service serveur</li>
+        <li><strong>Styling :</strong> CSS tokens + primitives partagées (pas de framework UI)</li>
       </ul>
     </section>
   </div>
@@ -207,6 +226,17 @@ const comboCount   = combos.length
   color: var(--color-text-muted);
 }
 .tech-list strong { color: var(--color-text); }
+.tech-list a { color: var(--color-accent); text-decoration: underline; }
+.cascade-list {
+  padding-left: 1.5rem;
+  list-style: decimal;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
 
 @media (max-width: 640px) {
   .data-cards { grid-template-columns: 1fr; }
